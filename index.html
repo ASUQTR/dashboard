@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				max-width: 100%;
+				overflow-x: hidden;
+			}
+
+			body {
+				font-family: Arial, Verdana, sans-serif
+			}
+
+			h1, h3 {
+				text-align: center;
+				margin: 0;
+				padding-top: 10px;
+				padding-right: 10px;
+				padding-bottom: 10px;
+			}
+
+			
+
+			.motor_pannel {
+				float: left;
+				width: 50%;
+				height: 300px;
+				text-align: center;
+			}
+
+			
+
+			.column {
+				float: left;
+				width: 33%;
+			}
+
+			.slider {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 15px;
+				border-radius: 5px;
+				background: #ecf0f1;
+			}
+
+			.slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 15px;
+				height: 25px;
+				border-radius: 50%;
+				background: #1059ce;
+			}
+			.slider::-moz-range-thumb {
+				width: 15px;
+				height: 25px;
+				background: #1059ce;
+			}
+			body {
+				//background-image: url('Blitzcrank.jpg');
+				background-size: cover;
+				background-repeat: no-repeat;
+			}
+
+			img {
+				width: 320px;
+				height: 240px;
+				background-color: #666;
+			}
+
+			#motorTable{
+				width:100%;
+				padding-right: 0px;
+				padding-left: 0px;
+			}
+		</style>
+		<script type="text/javascript" src="roslib.js"></script>
+		<script type="text/javascript" src="ros_joy.js"></script>
+	</head>
+   	<body>
+		<h1 style="background: #1059ce;">ROS ROBOT</h1>		
+		<h3 id="feedback" style="background: #bdc3c7;"></h3>
+		<h3 id="gamepadinfo" style="background: #ecf0f1;">Waiting for joystick...</h3>
+		
+		<div id="container" style="width:100%;">
+			<div class="motor_pannel">
+				<h3> Motors </h3>
+				<table id="motorTable" cellpadding="10" cellspacing="5">
+					<tr>
+						<td>Motor 1</td>
+						<td><input disabled="true" type="range" class="slider" id="pbMotor1" value="0" min="-1023" max="1023"></input></td>
+					</tr>
+					<tr>
+						<td>Motor 2</td>
+						<td><input disabled="true" type="range" class="slider" id="pbMotor2" value="0" min="-1023" max="1023"></input></td>
+					</tr>
+					<tr>
+						<td>Motor 3</td>
+						<td><input disabled="true" type="range" class="slider" id="pbMotor3" value="0" min="-1023" max="1023"></input></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
