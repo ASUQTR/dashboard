@@ -13,7 +13,7 @@ ASUQTR - Webpage for sending Xbox controller data to ROS network via rosbridge w
 
     <pre><code>roslaunch rosbridge_server rosbridge_websocket.launch</code></pre>
 	
-2.1 Alternatively, you can launch this node and the all the necessary ones for manual control with:
+2.1. Alternatively, you can launch this node and the all the necessary ones for manual control with:
 	<pre><code>roslaunch ~/catkin_ws/src/asuqtr_mission_node/launch/manual_mode.launch</code></pre>
 	
     This will allow controling the AUV with the Xbox controller when accessing the webpage.
