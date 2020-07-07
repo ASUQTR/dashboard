@@ -5,9 +5,12 @@ ASUQTR - Webpage for sending Xbox controller data to ROS network via rosbridge w
 0. Make sure a webserver listens to port 80, usually apache or nginx.
 
 1. Put files **index.thml ros_joy.js roslib.js** from Webpage folder into /var/www/html/
+   and make sure they have execute permission
    This can be done with the cmd lines :
    <pre><code>sudo mv /home/asuqtr/catkin_ws/src/control-interface/*ros* /var/www/html/ </code></pre>
    <pre><code>sudo mv /home/asuqtr/catkin_ws/src/control-interface/index.html /var/www/html/ </code></pre>
+   <pre><code>sudo chmod +x /var/www/html/*ros* </code></pre>
+   
    
 2. Start rosbridge with : 
 
