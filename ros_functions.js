@@ -48,38 +48,22 @@ axis_stick_left_LR.value = (joy_msg.axes[0]+1)*50;
 joy_msg.axes[1] = gamepadData.axes[1]*-1; // Left stick Y
 axis_stick_left_UD.value = (joy_msg.axes[1]+1)*50;
 
-joy_msg.axes[2] = gamepadData.buttons[6].value; // Left shoulder
+joy_msg.axes[2] = gamepadData.axes[2]; // Left shoulder
 axis_trigger_left.value = joy_msg.axes[2]*100;
 
-joy_msg.axes[3] = gamepadData.axes[2]; // Right stick X
+joy_msg.axes[3] = gamepadData.axes[3]; // Right stick X
 axis_stick_right_LR.value = (joy_msg.axes[3]+1)*50;
 
-joy_msg.axes[4] = gamepadData.axes[3]*-1; // Right stick Y
+joy_msg.axes[4] = gamepadData.axes[4]; // Right stick Y
 axis_stick_right_UD.value = (joy_msg.axes[4]+1)*50;
 
-joy_msg.axes[5] = gamepadData.buttons[7].value; // Right shoulder
+joy_msg.axes[5] = gamepadData.axes[5]; // Right shoulder
 axis_trigger_right.value = joy_msg.axes[5]*100;
 
 // DPAD Left/Right
-if (gamepadData.buttons[14].pressed) {
-  joy_msg.axes[6] = 1;
-}
-else if (gamepadData.buttons[15].pressed) {
-  joy_msg.axes[6] = -1;
-}
-else {
-  joy_msg.axes[6] = 0;
-}
+  joy_msg.axes[6] = gamepadData.axes[6];
 // DPAD Left/Right
-if (gamepadData.buttons[12].pressed) {
-  joy_msg.axes[7] = 1;
-}
-else if (gamepadData.buttons[13].pressed) {
-  joy_msg.axes[7] = -1;
-}
-else {
-  joy_msg.axes[7] = 0;
-}
+  joy_msg.axes[7] = -gamepadData.axes[7]; 
 //#endregion
 
 //#region Buttons
@@ -90,11 +74,11 @@ joy_msg.buttons[2] = Number(gamepadData.buttons[2].pressed); // Button X
 joy_msg.buttons[3] = Number(gamepadData.buttons[3].pressed); // Button Y
 joy_msg.buttons[4] = Number(gamepadData.buttons[4].pressed); // Button Left trigger
 joy_msg.buttons[5] = Number(gamepadData.buttons[5].pressed); // Button Right trigger
-joy_msg.buttons[6] = Number(gamepadData.buttons[8].pressed); // Button Back
-joy_msg.buttons[7] = Number(gamepadData.buttons[9].pressed); // Button Start
-joy_msg.buttons[8] = Number(gamepadData.buttons[16].pressed); // Button Xbox
-joy_msg.buttons[9] = Number(gamepadData.buttons[10].pressed); // Button Click left stick
-joy_msg.buttons[10] = Number(gamepadData.buttons[11].pressed); // Button Click right stick
+joy_msg.buttons[6] = Number(gamepadData.buttons[6].pressed); // Button Back
+joy_msg.buttons[7] = Number(gamepadData.buttons[7].pressed); // Button Start
+joy_msg.buttons[8] = Number(gamepadData.buttons[8].pressed); // Button Xbox
+joy_msg.buttons[9] = Number(gamepadData.buttons[9].pressed); // Button Click left stick
+joy_msg.buttons[10] = Number(gamepadData.buttons[10].pressed); // Button Click right stick
 
 //#endregion
 
