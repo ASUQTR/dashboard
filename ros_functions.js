@@ -27,21 +27,6 @@ rbServer.on('close', function() {
  });
  //#endregion
 
- //Subscribe to topics
-
-var depth = new ROSLIB.Topic({
-  ros : rbServer,
-  name : '/Depth',
-  messageType : 'std_msgs/Float32'
-});
-
-depth.subscribe(function(message) {
-  var depthDiv = document.getElementById('depthDiv');
-  //depthDiv.innerHTML = message.data;
-  depthDiv.innerHTML = message.data;
-});
-
-
 var joy_topic = new ROSLIB.Topic({
   ros : rbServer,
   name : '/joy',
@@ -67,7 +52,7 @@ function pubJoystick(gamepadData) {
   joy_msg.axes[3] = gamepadData.axes[3]; // Right stick X
   axis_stick_right_LR.value = (joy_msg.axes[3]+1)*50;
 
-  joy_msg.axes[4] = gamepadData.axes[4]; // Right stick Y
+  joy_msg.axes[4] = gamepadData.axes[4]*-1; // Right stick Y
   axis_stick_right_UD.value = (joy_msg.axes[4]+1)*50;
 
   joy_msg.axes[5] = gamepadData.axes[5]; // Right shoulder
