@@ -25,8 +25,31 @@ rbServer.on('close', function() {
     var fbDiv = document.getElementById('feedback');
     fbDiv.innerHTML = "Connexion au serveur ROS terminée";
  });
- //#endregion
 
+//#region Gamepad
+var gameloopInterval;
+
+window.addEventListener("gamepadconnected", function() {
+  var gp = navigator.getGamepads()[0];
+  var gamepadInfo = document.getElementById('gamepadinfo');
+  gamepadInfo.innerHTML = "Gamepad mapping :" + gp.mapping + "<br>Gamepad ID:" + gp.id + "<br>Has " + gp.buttons.length + " boutons and " + gp.axes.length + " axes.";
+  gameloopInterval = setInterval(gameLoop, 35);
+});
+
+window.addEventListener("gamepaddisconnected", function() {
+  gamepadInfo.innerHTML = "Waiting for gamepad.";
+  clearInterval(gameloopInterval);
+});
+
+function gameLoop() {
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+  if (gamepads)
+    pubJoystick(gamepads[0]);
+};
+//#endregion Gamepad
+
+////#region ROS joy publisher 
+//Joy topic publisher, msg and callback
 var joy_topic = new ROSLIB.Topic({
   ros : rbServer,
   name : '/joy',
@@ -37,24 +60,18 @@ var joy_msg = new ROSLIB.Message({
 axes : [0,0,0,0,0,0,0,0],
 buttons :  [0,0,0,0,0,0,0,0,0,0,0]  
 });
-//#region extraction Joystick
+
 function pubJoystick(gamepadData) {   
-  //#region Axes
   joy_msg.axes[0] = gamepadData.axes[0]; // Left stick X
   axis_stick_left_LR.value = (joy_msg.axes[0]+1)*50;
-
   joy_msg.axes[1] = gamepadData.axes[1]*-1; // Left stick Y
   axis_stick_left_UD.value = (joy_msg.axes[1]+1)*50;
-
   joy_msg.axes[2] = gamepadData.axes[2]; // Left shoulder
   axis_trigger_left.value = joy_msg.axes[2]*100;
-
   joy_msg.axes[3] = gamepadData.axes[3]; // Right stick X
   axis_stick_right_LR.value = (joy_msg.axes[3]+1)*50;
-
   joy_msg.axes[4] = gamepadData.axes[4]*-1; // Right stick Y
   axis_stick_right_UD.value = (joy_msg.axes[4]+1)*50;
-
   joy_msg.axes[5] = gamepadData.axes[5]; // Right shoulder
   axis_trigger_right.value = joy_msg.axes[5]*100;
 
@@ -62,9 +79,6 @@ function pubJoystick(gamepadData) {
   joy_msg.axes[6] = gamepadData.axes[6];
   // DPAD Left/Right
   joy_msg.axes[7] = -gamepadData.axes[7]; 
-  //#endregion
-
-  //#region Buttons
 
   joy_msg.buttons[0] = Number(gamepadData.buttons[0].pressed); // Button A
   joy_msg.buttons[1] = Number(gamepadData.buttons[1].pressed); // Button B
@@ -78,47 +92,9 @@ function pubJoystick(gamepadData) {
   joy_msg.buttons[9] = Number(gamepadData.buttons[9].pressed); // Button Click left stick
   joy_msg.buttons[10] = Number(gamepadData.buttons[10].pressed); // Button Click right stick
 
-  //#endregion
-
   joy_topic.publish(joy_msg);
 }
-//#endregion
+//#endregion ROS joy publisher 
 
-var gameloopInterval;
+//#region Thrusters color
 
-window.addEventListener("gamepadconnected", function() {
-  var gp = navigator.getGamepads()[0];
-  var gamepadInfo = document.getElementById('gamepadinfo');
-  gamepadInfo.innerHTML = "Contrôleur connecté avec l'index " + gp.index + ": " + gp.id + ". Il a " + gp.buttons.length + " boutons et " + gp.axes.length + " axes.";
-  gameloopInterval = setInterval(gameLoop, 35);
-});
-
-window.addEventListener("gamepaddisconnected", function() {
-  gamepadInfo.innerHTML = "Waiting for gamepad.";
-  clearInterval(gameloopInterval);
-});
-
-if(!('GamepadEvent' in window)) {
-  // No gamepad events available, poll instead.
-  var interval = setInterval(pollGamepads, 500);
-}
-
-function pollGamepads() {
-  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-  for (var i = 0; i < gamepads.length; i++) {
-    var gp = gamepads[i];
-    if(gp) {
-      gamepadInfo.innerHTML = "Contrôleur connecté avec l'index " + gp.index + ": " + gp.id + ". Il a " + gp.buttons.length + " boutons et " + gp.axes.length + " axes.";
-      gameloopInterval = setInterval(gameLoop, 35);
-      clearInterval(interval);
-    }
-  }
-}
-
-function gameLoop() {
-  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-  if (gamepads)
-    pubJoystick(gamepads[0]);
-};
-
-//#endregion
