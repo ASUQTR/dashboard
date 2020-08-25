@@ -1,6 +1,8 @@
 //#region ROS General
 
 // This function connects to the rosbridge server running on the local computer on port 9090
+var auv_canvas = new AUVCanvas()
+
 var rbServer = new ROSLIB.Ros({
     url : 'ws://' + location.hostname + ':9090'
  });
