@@ -6,6 +6,7 @@ var auv_canvas = new AUVCanvas()
 var rbServer = new ROSLIB.Ros({
     url : 'ws://' + location.hostname + ':9090'
  });
+ console.log(location.hostname)
 
  // This function is called upon the rosbridge connection event
  rbServer.on('connection', function() {
@@ -14,6 +15,7 @@ var rbServer = new ROSLIB.Ros({
      fbDiv.innerHTML = "Connexion au serveur ROS établie";
  });
 
+ 
 // This function is called when there is an error attempting to connect to rosbridge
 rbServer.on('error', function(error) {
     // Write appropriate message to #feedback div upon error when attempting to connect to rosbridge
@@ -42,6 +44,22 @@ window.addEventListener("gamepaddisconnected", function() {
   gamepadInfo.innerHTML = "Waiting for gamepad.";
   clearInterval(gameloopInterval);
 });
+
+// No gamepad events available, poll instead.
+if (!('GamepadEvent' in window))
+	var pollInterval = setInterval(pollGamepads, 500);
+
+function pollGamepads() {
+	var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+	for (var i = 0; i < gamepads.length; i++) {
+		var gp = gamepads[i];
+		if (gp) {
+			gamepadInfo.innerHTML = "Controller connected with index " + gp.index + ": " + gp.id + ". It has " + gp.buttons.length + " buttons and " + gp.axes.length + " axes.";
+			clearInterval(pollInterval);
+			gameLoopInterval = setInterval(gameLoop, 35);
+		}
+	}
+}
 
 function gameLoop() {
   var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);

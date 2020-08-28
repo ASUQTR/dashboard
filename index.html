@@ -16,20 +16,79 @@
 		</header>
 
 		<h3 id="feedback" style="background: #bdc3c7;"></h3>
-		<h3 id="gamepadinfo" style="background: #ecf0f1;"> En attente du joystick...</h3>	
+		<h3 id="gamepadinfo" style="background: #ecf0f1;"> En attente du joystick...</h3>
 
-		//<h3> Cameras </h3>
-		
 		<div class="webcam_pannel"> 
 			<div class="column">
               	<h3> Cameras POD1 </h3>
 				<img src="http://192.168.2.106:8080/stream?topic=/detectnet/overlay" height="400" width="400" align="middle"/>
 			</div>
+			<div class="column">
+				<h3> LQR Error Info </h3>
+				<TABLE>
+					<TR>
+					<TH>Component</TH>
+					<TH>Value</TH>
+					</TR>
+					<TR>
+					<TD>Position x</TD>
+					<TD id="lqr0">0</TD>
+					</TR>
+					<TR>
+					<TD>Position y</TD>
+					<TD id="lqr1">0</TD>
+					</TR>
+					<TR>
+					<TD>Depth</TD>
+					<TD id="lqr2">0</TD>
+					</TR>
+					<TR>
+					<TD>Roll angle</TD>
+					<TD id="lqr3">0</TD>
+					</TR>
+					<TR>
+					<TD>Pitch angle</TD>
+					<TD id="lqr4">0</TD>
+					</TR>
+					<TR>
+					<TD>Yaw angle</TD>
+					<TD id="lqr5">0</TD>
+					</TR>
+					<TR>
+					<TD>Linear velocity x</TD>
+					<TD id="lqr6">0</TD>
+					</TR>
+					<TR>
+					<TD>Linear velocity y</TD>
+					<TD id="lqr7">0</TD>
+					</TR>
+					<TR>
+					<TD>Linear velocity z</TD>
+					<TD id="lqr8">0</TD>
+					</TR>
+					<TR>
+					<TD>Angular velocity z</TD>
+					<TD id="lqr9">0</TD>
+					</TR>
+					<TR>
+					<TD>Angular velocity y</TD>
+					<TD id="lqr10">0</TD>
+					</TR>
+					<TR>
+					<TD>Angular velocity z</TD>
+					<TD id="lqr11">0</TD>
+					</TR>
+					</TABLE>
+		  </div>
+		  <div class="column">
+			<h3> Rosout Info </h3>
+			<p id="rosout"></p>
+		  </div>
 		</div>
 
 		<div id="container" style="width:100%;">                                   
 			<div class="motor_pannel"> 
-				<h3> Joy_Info </h3>
+				<h3> Joysticks Info </h3>
 				<table id="motorTable" cellpadding="10" cellspacing="5">
 					<tr>
 						<td>Stick left X</td>
@@ -49,29 +108,44 @@
 					</tr>						
 				</table>
 			</div>
+			<div class="motor_pannel"> 
+				<h3> Motor Throttles Info </h3>
+				<table id="motor_throttles" cellpadding="10" cellspacing="5">
+					<tr>
+						<td>1</td>
+						<td>2</td>	
+						<td>3</td>	
+						<td>4</td>
+						<td>5</td>
+						<td>6</td>
+						<td>7</td>
+						<td>8</td>
+					</tr>
+					<tr>
+						<td><progress id="m1" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m2" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m3" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m4" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m5" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m6" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m7" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m8" type="progress" value="0" min="0" max="70"></progress></td>
+					</tr>						
+				</table>
+			</div>
+			
+			<div> 
+				<h3> Control switch</h3>
+				<p id="control_switch"></p>
+			</div>
+			<div> 
+				<h3> Depth Info </h3>
+				<p id="depthDiv"></p>
+			</div>
 			
 		</div> 
 		
-		<div> 
-			<h3> LQR Error Info </h3>
-			<p id="lqr_error"></p>
-		</div> 
-		<div> 
-			<h3> Motor Throttles Info </h3>
-			<p id="motor_throttles"></p>
-		</div> 
-		<div> 
-			<h3> Rosout Info </h3>
-			<p id="rosout"></p>
-		</div>
-		<div> 
-			<h3> Control switch</h3>
-			<p id="control_switch"></p>
-		</div>
-		<div> 
-			<h3> Depth Info </h3>
-			<p id="depthDiv"></p>
-		</div>
+		
 		<canvas id="t1" width="520" height="520"></canvas>
 		<canvas id="t2" width="520" height="520"></canvas>
 		<canvas id="t3" width="440" height="439"></canvas>
