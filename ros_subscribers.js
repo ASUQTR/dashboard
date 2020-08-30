@@ -11,6 +11,38 @@ depth.subscribe(function(message) {
   depthDiv.innerHTML = message.data;
 });
 
+var lqr_state = new ROSLIB.Topic({
+  ros : rbServer,
+  name : '/control/state',
+  messageType : 'std_msgs/Float32MultiArray'
+});
+
+lqr_state.subscribe(function(message) {
+  for (var i = 0; i < message.data.length; i += 1) {
+    message.data[i] = message.data[i].toFixed(2);
+  }
+  state2.innerHTML = message.data[2];
+  state3.innerHTML = message.data[3];
+  state4.innerHTML = message.data[4];
+  state5.innerHTML = message.data[5];
+});
+
+var lqr_target_state = new ROSLIB.Topic({
+  ros : rbServer,
+  name : 'control/target_state',
+  messageType : 'std_msgs/Float32MultiArray'
+});
+
+lqr_target_state.subscribe(function(message) {
+  for (var i = 0; i < message.data.length; i += 1) {
+    message.data[i] = message.data[i].toFixed(2);
+  }
+  target2.innerHTML = message.data[2];
+  target3.innerHTML = message.data[3];
+  target4.innerHTML = message.data[4];
+  target5.innerHTML = message.data[5];
+});
+
 var lqr_error = new ROSLIB.Topic({
   ros : rbServer,
   name : '/lqr_error',

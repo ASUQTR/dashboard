@@ -49,6 +49,13 @@ h3 {
 
 .motor_pannel {
     float: left;
+    width: 50%;
+    height: 200px;
+    text-align: center;
+}
+
+.rosout_panel {
+    float: left;
     width: 100%;
     height: 300px;
     text-align: center;
@@ -63,13 +70,19 @@ h3 {
 
 .column {
     float: left;
-    width: 25%;
+    width: 50%;
+}
+
+.lqr_error_info {
+    float: left;
+    width: 50%;
+    height: 500x;
 }
 
 #videoElement {
     width: 320px;
     height: 240px;
-    background-color: #666;
+    //background-color: #666;
 }
 
 #servoElement{
@@ -84,8 +97,8 @@ h3 {
 
 #motorTable{
     width:100%;
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 #motor_throttles{
