@@ -2,119 +2,191 @@
 <html>
 	<head>
 		<meta charset="utf-8"/>
-		<style>
-			html, body {
-				margin: 0;
-				padding: 0;
-				max-width: 100%;
-				overflow-x: hidden;
-			}
-
-			body {
-				font-family: Arial, Verdana, sans-serif
-			}
-
-			h1, h3 {
-				text-align: center;
-				margin: 0;
-				padding-top: 10px;
-				padding-right: 10px;
-				padding-bottom: 10px;
-			}
-
-			
-
-			.motor_pannel {
-				float: left;
-				width: 50%;
-				height: 100%;
-				text-align: center;
-			}
-
-			
-
-			.column {
-				float: left;
-				width: 33%;
-			}
-
-			.slider {
-				-webkit-appearance: none;
-				width: 100%;
-				height: 15px;
-				border-radius: 5px;
-				background: #ecf0f1;
-			}
-
-			.slider::-webkit-slider-thumb {
-				-webkit-appearance: none;
-				appearance: none;
-				width: 15px;
-				height: 25px;
-				border-radius: 50%;
-				background: #1059ce;
-			}
-			.slider::-moz-range-thumb {
-				width: 15px;
-				height: 25px;
-				background: #1059ce;
-			}
-			body {
-				//background-image: url('Blitzcrank.jpg');
-				background-size: cover;
-				background-repeat: no-repeat;
-			}
-
-			img {
-				width: 320px;
-				height: 240px;
-				background-color: #666;
-			}
-
-			#motorTable{
-				width:100%;
-				padding-right: 0px;
-				padding-left: 0px;
-			}
-		</style>
-		<script type="text/javascript" src="roslib.js"></script>
-		<script type="text/javascript" src="ros_joy.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<link rel="stylesheet" href="style.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 	
+		
 	</head>
    	<body>
-		<h1 style="background: #1059ce;">ROS ROBOT</h1>		
+		<header>
+			<h1>ASUQTR</h1>				
+		</header>
+
 		<h3 id="feedback" style="background: #bdc3c7;"></h3>
-		<h3 id="gamepadinfo" style="background: #ecf0f1;">Waiting for joystick...</h3>
-		
-		<div id="container" style="width:100%;">
-			<div class="motor_pannel">
-				<h3> Commandes </h3>
-				<table id="motorTable" cellpadding="10" cellspacing="5">
+		<h3 id="gamepadinfo" style="background: #ecf0f1;"> En attente du joystick...</h3>
+
+		<div class="webcam_pannel"> 
+			<div class="column">
+              	<h3> Cameras POD1 </h3>
+				<img src="http://192.168.2.106:8080/stream?topic=/detectnet/overlay" height="400" width="400" align="middle"/>
+			</div>
+			<div class="lqr_error_info">
+				<h3 style="text-align:left"> LQR Error Info </h3>
+				<TABLE>
+					<TR>
+					<TH>Component</TH>
+					<TH>State</TH>
+					<TH>Target</TH>
+					<TH>Error</TH>
+					</TR>
+					<TR>
+					<TD>Position x</TD>
+					<TD id="state0">0</TD>
+					<TD id="target0">0</TD>
+					<TD id="lqr0">0</TD>
+					</TR>
+					<TR>
+					<TD>Position y</TD>
+					<TD id="state1">0</TD>
+					<TD id="target1">0</TD>
+					<TD id="lqr1">0</TD>
+					</TR>
+					<TR>
+					<TD>Depth</TD>
+					<TD id="state2">0</TD>
+					<TD id="target2">0</TD>
+					<TD id="lqr2">0</TD>
+					</TR>
+					<TR>
+					<TD>Roll angle</TD>
+					<TD id="state3">0</TD>
+					<TD id="target3">0</TD>
+					<TD id="lqr3">0</TD>
+					</TR>
+					<TR>
+					<TD>Pitch angle</TD>
+					<TD id="state4">0</TD>
+					<TD id="target4">0</TD>
+					<TD id="lqr4">0</TD>
+					</TR>
+					<TR>
+					<TD>Yaw angle</TD>
+					<TD id="state5">0</TD>
+					<TD id="target5">0</TD>
+					<TD id="lqr5">0</TD>
+					</TR>
+					<TR>
+					<TD>Linear velocity x</TD>
+					<TD id="state6">0</TD>
+					<TD id="target6">0</TD>
+					<TD id="lqr6">0</TD>
+					</TR>
+					<TR>
+					<TD>Linear velocity y</TD>
+					<TD id="state7">0</TD>
+					<TD id="target7">0</TD>
+					<TD id="lqr7">0</TD>
+					</TR>
+					<TR>
+					<TD>Linear velocity z</TD>
+					<TD id="state8">0</TD>
+					<TD id="target8">0</TD>
+					<TD id="lqr8">0</TD>
+					</TR>
+					<TR>
+					<TD>Angular velocity z</TD>
+					<TD id="state9">0</TD>
+					<TD id="target9">0</TD>
+					<TD id="lqr9">0</TD>
+					</TR>
+					<TR>
+					<TD>Angular velocity y</TD>
+					<TD id="state10">0</TD>
+					<TD id="target10">0</TD>
+					<TD id="lqr10">0</TD>
+					</TR>
+					<TR>
+					<TD>Angular velocity z</TD>
+					<TD id="state11">0</TD>
+					<TD id="target11">0</TD>
+					<TD id="lqr11">0</TD>
+					</TR>
+					</TABLE>
+		  </div>
+		  <div class="rosout_panel">
+			<h3  >  Rosout Info </h3>
+			<p id="rosout"></p>
+		  </div>
+		</div>
+
+		<div id="container">                                   
+			<div class="motor_pannel"> 
+				<h3> Joysticks Info </h3>
+				<table id="motorTable" cellpadding="5" cellspacing="5">
 					<tr>
-						<td>Joystick gauche X</td>
-						<td><input disabled="true" type="range" class="slider" id="axe0" value="0" min="-1023" max="1023"></input></td>
+						<td>Stick left X</td>
+						<td>Stick left Y</td>	
+						<td>Stick right X</td>	
 					</tr>
 					<tr>
-						<td>Joystick gauche Y</td>
-						<td><input disabled="true" type="range" class="slider" id="axe1" value="0" min="-1023" max="1023"></input></td>
+						<td><progress id="axis_stick_left_LR" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_stick_left_UD" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_stick_right_LR" type="progress" value="0" min="0" max="100"></progress></td>
 					</tr>
 					<tr>
-						<td>Joystick droit X</td>
-						<td><input disabled="true" type="range" class="slider" id="axe2" value="0" min="-1023" max="1023"></input></td>
+						<td>Stick right Y</td>
+						<td>Trigger left</td>
+						<td>Trigger right</td>
 					</tr>
 					<tr>
-						<td>Joystick droit Y</td>
-						<td><input disabled="true" type="range" class="slider" id="axe3" value="0" min="-1023" max="1023"></input></td>
-					</tr>
-					<tr>
-						<td>Gachette gauche</td>
-						<td><input disabled="true" type="range" class="slider" id="axe6" value="0" min="-1023" max="1023"></input></td>
-					</tr>
-					<tr>
-						<td>Gachette droite</td>
-						<td><input disabled="true" type="range" class="slider" id="axe7" value="0" min="-1023" max="1023"></input></td>
-					</tr>
+						<td><progress id="axis_stick_right_UD" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_trigger_left" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_trigger_right" type="progress" value="0" min="0" max="100"></progress></td>
+					</tr>						
 				</table>
 			</div>
-		</div>
+			<div class="motor_pannel"> 
+				<h3> Motor Throttles Info </h3>
+				<table id="motor_throttles" cellpadding="5" cellspacing="5">
+					<tr>
+						<td>1</td>
+						<td>2</td>	
+						<td>3</td>	
+						<td>4</td>
+					</tr>
+					<tr>
+						<td><progress id="m1" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m2" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m3" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m4" type="progress" value="0" min="0" max="70"></progress></td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td>6</td>
+						<td>7</td>
+						<td>8</td>
+					</tr>
+					<tr>
+						<td><progress id="m5" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m6" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m7" type="progress" value="0" min="0" max="70"></progress></td>
+						<td><progress id="m8" type="progress" value="0" min="0" max="70"></progress></td>
+					</tr>						
+				</table>
+			</div>
+			
+			<div> 
+				<h3> Control switch</h3>
+				<p id="control_switch"></p>
+			</div>
+			
+		</div> 
+		
+		
+		<canvas id="t1" width="520" height="520"></canvas>
+		<canvas id="t2" width="520" height="520"></canvas>
+		<canvas id="t3" width="440" height="439"></canvas>
+		<canvas id="t4" width="440" height="439"></canvas>
+		<canvas id="t5" width="440" height="439"></canvas>
+		<canvas id="t6" width="440" height="439"></canvas>
+		<canvas id="t7" width="520" height="520"></canvas>
+		<canvas id="t8" width="520" height="520"></canvas>
+		<script type="text/javascript" src="auv_canvas.js"></script>
+		<script type="text/javascript" src="roslib.js"></script>
+		<script type="text/javascript" src="ros_functions.js"></script>	
+		<script type="text/javascript" src="ros_subscribers.js"></script>
 	</body>
 </html>
