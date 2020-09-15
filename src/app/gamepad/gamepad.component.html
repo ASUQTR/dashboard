@@ -1,0 +1,6 @@
+<div *ngIf="connected" class="gamepad-status">
+    Gamepad mapping : {{ gp.mapping }}<br />Gamepad ID: {{ gp.id }}<br />Has
+    {{ gp.buttons.length }} boutons and {{ gp.axes.length }} axes.
+</div>
+
+<div *ngIf="!connected" class="gamepad-status">Waiting for gamepad...</div>

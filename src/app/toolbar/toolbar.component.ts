@@ -1,0 +1,61 @@
+import {
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+} from '@angular/core';
+import ROSBRIDGE from 'roslib';
+import { Subscription } from 'rxjs';
+import { GamepadService } from '../gamepad.service';
+import { RosService, RosState } from '../ros.service';
+
+@Component({
+    selector: 'app-toolbar',
+    templateUrl: './toolbar.component.html',
+    styleUrls: ['./toolbar.component.scss'],
+})
+export class ToolbarComponent implements OnInit, OnDestroy {
+    readonly successIcon = 'checkmark-circle-2';
+    readonly failureIcon = 'close-circle';
+    readonly successColor = 'success';
+    readonly failureColor = 'danger';
+    statusIcon = this.successIcon;
+    iconColor = this.successColor;
+    @Input() rosBridge: ROSBRIDGE.Ros;
+    @Input() gamepad: Gamepad;
+    rosbridgeConnected: RosState = RosState.Disconnected;
+    gamepadConnected = false;
+    loading = !(this.rosbridgeConnected && this.gamepadConnected);
+    gp: Gamepad;
+    rosStateSubscription: Subscription;
+    constructor(
+        private rs: RosService,
+        private gs: GamepadService,
+        private cdr: ChangeDetectorRef
+    ) {}
+
+    ngOnInit(): void {
+        this.gs.onGamepadConnected.subscribe((e: GamepadEvent) => {
+            this.gamepadConnected = true;
+            this.gp = e.gamepad;
+            this.cdr.detectChanges();
+        });
+        this.gs.onGamepadDisconnected.subscribe((e: GamepadEvent) => {
+            this.gamepadConnected = false;
+            this.gp = e.gamepad;
+            this.cdr.detectChanges();
+        });
+
+        this.rosStateSubscription = this.rs.rosStateItem$.subscribe(
+            (newState) => {
+                this.rosbridgeConnected = newState;
+                this.cdr.detectChanges();
+            }
+        );
+    }
+
+    ngOnDestroy() {
+        this.rosStateSubscription.unsubscribe();
+    }
+}

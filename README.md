@@ -1,24 +1,27 @@
-# ASUQTR  -  Joy Webpage
+# AsuqtrDashboard
 
-ASUQTR - Webpage for sending Xbox controller data to ROS network via rosbridge websocket. The data is sent to /joy topic in raw/unprocessed format.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.12.
 
-0. Make sure a webserver listens to port 80, usually apache or nginx.
+## Development server
 
-1. Put files **index.thml ros_joy.js roslib.js** from Webpage folder into /var/www/html/
-   and make sure they have execute permission
-   This can be done with the cmd lines :
-   <pre><code>sudo mv /home/asuqtr/catkin_ws/src/control-interface/*ros* /var/www/html/ </code></pre>
-   <pre><code>sudo mv /home/asuqtr/catkin_ws/src/control-interface/index.html /var/www/html/ </code></pre>
-   <pre><code>sudo chmod +x /var/www/html/*ros* </code></pre>
-   
-   
-2. Start rosbridge with : 
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-    <pre><code>roslaunch rosbridge_server rosbridge_websocket.launch</code></pre>
-	
-3. Alternatively, you can launch this node and the all the necessary ones for manual control with:
-	<pre><code>roslaunch ~/catkin_ws/src/asuqtr_mission_node/launch/manual_mode.launch</code></pre>
-	
-    This will allow controling the AUV with the Xbox controller when accessing the webpage.
-	Please check your current DHCP listing to find the AUV's address for the webpage.
+## Code scaffolding
 
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

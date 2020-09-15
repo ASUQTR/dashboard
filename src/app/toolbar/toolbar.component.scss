@@ -1,0 +1,24 @@
+#logo {
+    width: 2rem;
+    height: 2rem;
+}
+
+.button {
+    float: right;
+    width: 2rem;
+    height: 2rem;
+    padding: 0 !important;
+}
+
+.statusIcon {
+    height: 100% !important;
+    width: 100% !important;
+    align-self: center;
+}
+
+.toolbar-title {
+    font: 2rem "Segoe UI";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}

@@ -1,0 +1,18 @@
+<img id="logo" src="assets/asuqtr-logo.png" />
+<span class="toolbar-title"> ASUQTR Dashboard</span>
+<button
+    nbButton
+    ghost
+    class="button"
+    [nbSpinner]="!(rosbridgeConnected && gamepadConnected)"
+    nbSpinnerStatus="info"
+    nbPopover="Bottom Popover!"
+    nbPopoverPlacement="bottom"
+>
+    <nb-icon
+        class="statusIcon"
+        [icon]="statusIcon"
+        [status]="iconColor"
+        *ngIf="rosbridgeConnected && gamepadConnected"
+    ></nb-icon>
+</button>
