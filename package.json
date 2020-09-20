@@ -27,6 +27,7 @@
     "bootstrap": "^4.5.2",
     "eva-icons": "^1.1.2",
     "jquery": "^3.5.1",
+    "ngx-cookie-service": "^10.0.1",
     "popper.js": "^1.16.1",
     "roslib": "^1.1.0",
     "rxjs": "~6.5.4",

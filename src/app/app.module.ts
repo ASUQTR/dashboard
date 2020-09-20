@@ -23,6 +23,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
 import { PopoverComponent } from './popover/popover.component';
 import { ThemeChangerComponent } from './theme-changer/theme-changer.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
     declarations: [
@@ -50,7 +51,7 @@ import { ThemeChangerComponent } from './theme-changer/theme-changer.component';
         NbListModule,
         NbToggleModule,
     ],
-    providers: [],
+    providers: [CookieService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
