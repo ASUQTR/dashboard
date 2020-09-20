@@ -5,6 +5,7 @@ import {
     OnDestroy,
     OnInit,
 } from '@angular/core';
+import { NbSidebarService } from '@nebular/theme';
 import ROSBRIDGE from 'roslib';
 import { Subscription } from 'rxjs';
 import { GamepadService } from '../gamepad.service';
@@ -38,7 +39,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     constructor(
         private rs: RosService,
         private gs: GamepadService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private sidebarService: NbSidebarService
     ) {}
 
     ngOnInit(): void {
@@ -73,6 +75,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
                 this.cdr.detectChanges();
             }
         );
+    }
+
+    toggleSidebar(): boolean {
+        this.sidebarService.toggle(false);
+        return false;
     }
 
     ngOnDestroy() {

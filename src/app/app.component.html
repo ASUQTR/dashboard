@@ -3,8 +3,11 @@
         <app-toolbar></app-toolbar>
     </nb-layout-header>
 
+    <nb-sidebar state="collapsed">
+        <app-sidebar-settings></app-sidebar-settings>
+    </nb-sidebar>
+
     <nb-layout-column>
-        <app-theme-changer></app-theme-changer>
         <router-outlet></router-outlet>
     </nb-layout-column>
 

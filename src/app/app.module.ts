@@ -18,12 +18,14 @@ import {
     NbPopoverModule,
     NbListModule,
     NbToggleModule,
+    NbSidebarModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
 import { PopoverComponent } from './popover/popover.component';
 import { ThemeChangerComponent } from './theme-changer/theme-changer.component';
 import { CookieService } from 'ngx-cookie-service';
+import { SidebarSettingsComponent } from './sidebar-settings/sidebar-settings.component';
 
 @NgModule({
     declarations: [
@@ -35,6 +37,7 @@ import { CookieService } from 'ngx-cookie-service';
         StatusComponent,
         PopoverComponent,
         ThemeChangerComponent,
+        SidebarSettingsComponent,
     ],
     imports: [
         BrowserModule,
@@ -50,6 +53,7 @@ import { CookieService } from 'ngx-cookie-service';
         NbPopoverModule,
         NbListModule,
         NbToggleModule,
+        NbSidebarModule.forRoot(),
     ],
     providers: [CookieService],
     bootstrap: [AppComponent],
