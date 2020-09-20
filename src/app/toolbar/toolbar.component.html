@@ -3,16 +3,17 @@
 <button
     nbButton
     ghost
+    shape="round"
     class="button"
     [nbSpinner]="!(rosbridgeConnected && gamepadConnected)"
     nbSpinnerStatus="info"
-    nbPopover="Bottom Popover!"
+    [nbPopover]="popoverComponent"
     nbPopoverPlacement="bottom"
 >
     <nb-icon
         class="statusIcon"
-        [icon]="statusIcon"
-        [status]="iconColor"
+        [icon]="summaryStatusIcon"
+        [status]="summaryIconColor"
         *ngIf="rosbridgeConnected && gamepadConnected"
     ></nb-icon>
 </button>

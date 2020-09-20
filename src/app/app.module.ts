@@ -16,9 +16,13 @@ import {
     NbSpinnerModule,
     NbIconModule,
     NbPopoverModule,
+    NbListModule,
+    NbToggleModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
+import { PopoverComponent } from './popover/popover.component';
+import { ThemeChangerComponent } from './theme-changer/theme-changer.component';
 
 @NgModule({
     declarations: [
@@ -28,6 +32,8 @@ import { StatusComponent } from './status/status.component';
         GamepadComponent,
         RosbridgeComponent,
         StatusComponent,
+        PopoverComponent,
+        ThemeChangerComponent,
     ],
     imports: [
         BrowserModule,
@@ -41,6 +47,8 @@ import { StatusComponent } from './status/status.component';
         NbSpinnerModule,
         NbIconModule,
         NbPopoverModule,
+        NbListModule,
+        NbToggleModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

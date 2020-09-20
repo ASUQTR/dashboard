@@ -9,16 +9,16 @@ import { GamepadService } from '../gamepad.service';
 export class GamepadComponent implements OnInit {
     gp: Gamepad;
     connected = false;
-    constructor(public gs: GamepadService) {
-        gs.onGamepadConnected.subscribe((e: GamepadEvent) => {
+    constructor(public gs: GamepadService) {}
+
+    ngOnInit(): void {
+        this.gs.onGamepadConnected.subscribe((e: GamepadEvent) => {
             this.connected = true;
             this.gp = e.gamepad;
         });
-        gs.onGamepadDisconnected.subscribe((e: GamepadEvent) => {
+        this.gs.onGamepadDisconnected.subscribe((e: GamepadEvent) => {
             this.connected = false;
             this.gp = e.gamepad;
         });
     }
-
-    ngOnInit(): void {}
 }

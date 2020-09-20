@@ -1,0 +1,20 @@
+<nb-list>
+    <!-- <div class="statusElement"> -->
+    <nb-list-item class="statusElement">
+        {{ statusList[0].statusText }}
+        <nb-icon
+            [icon]="statusList[0].statusIcon"
+            [status]="statusList[0].statusIconColor"
+            class="statusIcon"
+        ></nb-icon>
+    </nb-list-item>
+    <nb-list-item class="statusElement">
+        {{ statusList[1].statusText }}
+        <nb-icon
+            [icon]="statusList[1].statusIcon"
+            [status]="statusList[1].statusIconColor"
+            class="statusIcon"
+        ></nb-icon>
+    </nb-list-item>
+    <!-- </div> -->
+</nb-list>
