@@ -11,6 +11,7 @@
 @include nb-install-component {
     .xbox-outline {
         stroke: nb-theme(text-basic-color);
+        fill: nb-theme(text-basic-color);
     }
 }
 
