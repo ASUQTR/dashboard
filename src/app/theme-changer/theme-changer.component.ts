@@ -9,7 +9,6 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class ThemeChangerComponent implements OnInit {
     readonly themeCookieName = 'nbDarkThemeValue';
-    toggleNgModel = true;
     checked = false;
     constructor(
         private themeService: NbThemeService,
@@ -28,7 +27,7 @@ export class ThemeChangerComponent implements OnInit {
     }
 
     onToggle(value: boolean) {
-        this.cookie.set(this.themeCookieName, value.toString());
+        this.cookie.set(this.themeCookieName, value.toString(), 30); // Keep cookie for 30 days
         this.themeService.changeTheme(value ? 'dark' : 'default');
     }
 }

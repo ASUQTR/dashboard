@@ -1,0 +1,8 @@
+@import "../../themes";
+
+polygon:host {
+    @include nb-install-component {
+        stroke: nb-theme(text-basic-color);
+        fill: nb-theme(background-basic-color-1);
+    }
+}

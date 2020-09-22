@@ -1,7 +1,20 @@
+@import "../../themes";
+
 .gamepad-status {
     font: 1.8rem "Segoe UI";
     text-align: center;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+}
+
+@include nb-install-component {
+    .xbox-outline {
+        stroke: nb-theme(text-basic-color);
+    }
+}
+
+.xbox-outline {
+    width: 50%;
+    float: right;
 }

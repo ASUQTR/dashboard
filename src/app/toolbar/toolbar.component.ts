@@ -36,6 +36,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     gp: Gamepad;
     rosStateSubscription: Subscription;
     popoverComponent = PopoverComponent;
+    gamepadConnectedSubscription: Subscription;
+    gamepadDisconnectedSubscription: Subscription;
     constructor(
         private rs: RosService,
         private gs: GamepadService,
@@ -44,16 +46,24 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.gs.onGamepadConnected.subscribe((e: GamepadEvent) => {
-            this.gamepadConnected = true;
-            this.gp = e.gamepad;
-            this.cdr.detectChanges();
-        });
-        this.gs.onGamepadDisconnected.subscribe((e: GamepadEvent) => {
-            this.gamepadConnected = false;
-            this.gp = e.gamepad;
-            this.cdr.detectChanges();
-        });
+        this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
+            (e: GamepadEvent) => {
+                if (e) {
+                    this.gamepadConnected = true;
+                    this.gp = e.gamepad;
+                    this.cdr.detectChanges();
+                }
+            }
+        );
+        this.gamepadDisconnectedSubscription = this.gs.onGamepadDisconnected.subscribe(
+            (e: GamepadEvent) => {
+                if (e) {
+                    this.gamepadConnected = false;
+                    this.gp = e.gamepad;
+                    this.cdr.detectChanges();
+                }
+            }
+        );
 
         this.rosStateSubscription = this.rs.rosStateItem$.subscribe(
             (newState) => {
@@ -84,5 +94,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.rosStateSubscription.unsubscribe();
+        this.gamepadConnectedSubscription.unsubscribe();
+        this.gamepadDisconnectedSubscription.unsubscribe();
     }
 }

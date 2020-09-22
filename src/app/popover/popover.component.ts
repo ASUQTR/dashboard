@@ -30,13 +30,13 @@ export class PopoverComponent implements OnInit {
         },
     ];
     rosStateSubscription: Subscription;
-    gamepadConnectedSubscription: Subscription;
-    gamepadDisconnectedSubscription: Subscription;
     gamepadConnected: boolean;
     gp: Gamepad;
     rosbridgeConnected: RosState;
     rosStatusIcon: any;
     rosIconColor: any;
+    gamepadConnectedSubscription: any;
+    gamepadDisconnectedSubscription: any;
     constructor(
         public gs: GamepadService,
         public rs: RosService,
@@ -46,20 +46,26 @@ export class PopoverComponent implements OnInit {
     ngOnInit(): void {
         this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
             (e: GamepadEvent) => {
-                this.statusList[1].connected = 1;
-                this.statusList[1].statusText = 'Gamepad connected';
-                this.statusList[1].statusIcon = this.successIcon;
-                this.statusList[1].statusIconColor = this.successColor;
-                this.gp = e.gamepad;
-                this.cdr.detectChanges();
+                if (e) {
+                    this.statusList[1].connected = 1;
+                    this.statusList[1].statusText = 'Gamepad connected';
+                    this.statusList[1].statusIcon = this.successIcon;
+                    this.statusList[1].statusIconColor = this.successColor;
+                    this.gp = e.gamepad;
+                    this.cdr.detectChanges();
+                }
             }
         );
         this.gamepadDisconnectedSubscription = this.gs.onGamepadDisconnected.subscribe(
             (e: GamepadEvent) => {
-                this.statusList[1].connected = 0;
-                this.statusList[1].statusText = 'Waiting for gamepad...';
-                this.gp = e.gamepad;
-                this.cdr.detectChanges();
+                if (e) {
+                    this.statusList[1].connected = 0;
+                    this.statusList[1].statusText = 'Waiting for gamepad...';
+                    this.statusList[1].statusIcon = this.failureIcon;
+                    this.statusList[1].statusIconColor = this.failureColor;
+                    this.gp = e.gamepad;
+                    this.cdr.detectChanges();
+                }
             }
         );
 

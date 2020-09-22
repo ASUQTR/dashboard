@@ -5,7 +5,7 @@ import {
     Renderer2,
 } from '@angular/core';
 import ROSLIB from 'roslib';
-import { Subject, Observable, fromEventPattern } from 'rxjs';
+import { Subject, Observable, fromEventPattern, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 export interface JoyMessage {
@@ -18,8 +18,10 @@ export interface JoyMessage {
 })
 export class GamepadService implements OnDestroy {
     private _destroy$ = new Subject();
-    public onGamepadConnected: Observable<GamepadEvent>;
-    public onGamepadDisconnected: Observable<GamepadEvent>;
+    private onGamepadConnected_: Observable<GamepadEvent>;
+    private onGamepadDisconnected_: Observable<GamepadEvent>;
+    public onGamepadConnected: BehaviorSubject<GamepadEvent>;
+    public onGamepadDisconnected: BehaviorSubject<GamepadEvent>;
     // private _gameloopInterval: NodeJS.Timeout;
 
     constructor(private rendererFactory2: RendererFactory2) {
@@ -42,12 +44,16 @@ export class GamepadService implements OnDestroy {
             );
         };
 
-        this.onGamepadConnected = fromEventPattern<GamepadEvent>(
+        this.onGamepadConnected_ = fromEventPattern<GamepadEvent>(
             createGamepadConnectedEventListener,
             () => {
                 removeGamepadConnectedEventListener();
             }
         ).pipe(takeUntil(this._destroy$));
+        this.onGamepadConnected = new BehaviorSubject(null);
+        this.onGamepadConnected_.subscribe((e: GamepadEvent) => {
+            this.onGamepadConnected.next(e);
+        });
     }
 
     private createOnGamepadDisconnectedObservable(renderer2: Renderer2) {
@@ -62,12 +68,16 @@ export class GamepadService implements OnDestroy {
             );
         };
 
-        this.onGamepadDisconnected = fromEventPattern<GamepadEvent>(
+        this.onGamepadDisconnected_ = fromEventPattern<GamepadEvent>(
             createGamepadDisconnectedEventListener,
             () => {
                 removeGamepadDisconnectedEventListener();
             }
         ).pipe(takeUntil(this._destroy$));
+        this.onGamepadDisconnected = new BehaviorSubject(null);
+        this.onGamepadDisconnected_.subscribe((e: GamepadEvent) => {
+            this.onGamepadDisconnected.next(e);
+        });
     }
 
     // @HostListener('window:gamepaddisconnected', ['$event'])

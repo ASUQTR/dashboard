@@ -19,6 +19,7 @@ import {
     NbListModule,
     NbToggleModule,
     NbSidebarModule,
+    NbCardModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
@@ -26,6 +27,8 @@ import { PopoverComponent } from './popover/popover.component';
 import { ThemeChangerComponent } from './theme-changer/theme-changer.component';
 import { CookieService } from 'ngx-cookie-service';
 import { SidebarSettingsComponent } from './sidebar-settings/sidebar-settings.component';
+import { AuvMotorDisplayComponent } from './auv-motor-display/auv-motor-display.component';
+import { ViewSettingsComponent } from './view-settings/view-settings.component';
 
 @NgModule({
     declarations: [
@@ -38,6 +41,8 @@ import { SidebarSettingsComponent } from './sidebar-settings/sidebar-settings.co
         PopoverComponent,
         ThemeChangerComponent,
         SidebarSettingsComponent,
+        AuvMotorDisplayComponent,
+        ViewSettingsComponent,
     ],
     imports: [
         BrowserModule,
@@ -54,6 +59,7 @@ import { SidebarSettingsComponent } from './sidebar-settings/sidebar-settings.co
         NbListModule,
         NbToggleModule,
         NbSidebarModule.forRoot(),
+        NbCardModule,
     ],
     providers: [CookieService],
     bootstrap: [AppComponent],
