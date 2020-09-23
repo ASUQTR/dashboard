@@ -23,6 +23,7 @@ export class GamepadService implements OnDestroy {
     public onGamepadConnected: BehaviorSubject<GamepadEvent>;
     public onGamepadDisconnected: BehaviorSubject<GamepadEvent>;
     // private _gameloopInterval: NodeJS.Timeout;
+    public gamepadConnected = false;
 
     constructor(private rendererFactory2: RendererFactory2) {
         const renderer = this.rendererFactory2.createRenderer(null, null);
@@ -53,6 +54,7 @@ export class GamepadService implements OnDestroy {
         this.onGamepadConnected = new BehaviorSubject(null);
         this.onGamepadConnected_.subscribe((e: GamepadEvent) => {
             this.onGamepadConnected.next(e);
+            this.gamepadConnected = true;
         });
     }
 
@@ -77,6 +79,7 @@ export class GamepadService implements OnDestroy {
         this.onGamepadDisconnected = new BehaviorSubject(null);
         this.onGamepadDisconnected_.subscribe((e: GamepadEvent) => {
             this.onGamepadDisconnected.next(e);
+            this.gamepadConnected = false;
         });
     }
 
@@ -95,6 +98,8 @@ export class GamepadService implements OnDestroy {
     ngOnDestroy() {
         this._destroy$.next();
         this._destroy$.complete();
+        this.onGamepadConnected.complete();
+        this.onGamepadDisconnected.complete();
     }
 
     gameLoop() {}
