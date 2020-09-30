@@ -1,0 +1,41 @@
+@import "../../themes";
+
+@include nb-install-component {
+    nb-chat-message.not-reply {
+        .text-info {
+            nb-chat-message-text {
+                .text {
+                    background: nb-theme(color-info-default) !important;
+                }
+            }
+        }
+        .text-debug {
+            nb-chat-message-text {
+                .text {
+                    background: nb-theme(color-success-default) !important;
+                }
+            }
+        }
+        .text-warning {
+            nb-chat-message-text {
+                .text {
+                    background: nb-theme(color-warning-default) !important;
+                }
+            }
+        }
+        .text-error {
+            nb-chat-message-text {
+                .text {
+                    background: nb-theme(color-danger-default) !important;
+                }
+            }
+        }
+        .text-fatal {
+            nb-chat-message-text {
+                .text {
+                    background: nb-theme(color-danger-default) !important;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+<nb-chat title="Rosout" size="medium">
+    <nb-chat-message
+        *ngFor="let msg of messages"
+        type="text"
+        [message]="msg.text"
+        reply="false"
+        [sender]="msg.nodeName"
+        [date]="msg.date"
+        dateFormat="longTime"
+        avatar="../../assets/ros_logo.png"
+        [ngClass]="{
+            'text-debug': msg.level === 1,
+            'text-info': msg.level === 2,
+            'text-warning': msg.level === 4,
+            'text-error': msg.level === 8,
+            'text-fatal': msg.level === 16
+        }"
+    >
+    </nb-chat-message>
+</nb-chat>
