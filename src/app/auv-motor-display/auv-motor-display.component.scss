@@ -1,8 +1,21 @@
 @import "../../themes";
 
-polygon:host {
-    @include nb-install-component {
+@include nb-install-component {
+    .auv-outline {
         stroke: nb-theme(text-basic-color);
-        fill: nb-theme(background-basic-color-1);
     }
+    .forwardArrow {
+        stroke: nb-theme(text-success-color);
+    }
+
+    .backwardArrow {
+        stroke: nb-theme(text-danger-color);
+    }
+}
+
+.auv-outline {
+    fill: none;
+    stroke-miterlimit: 10;
+    stroke-width: 5;
+    stroke-opacity: 0.4;
 }
