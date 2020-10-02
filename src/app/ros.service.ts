@@ -13,12 +13,12 @@ export class RosService {
     rbServer: ROSLIB.Ros;
     statusText = 'Connecting to ROS server...';
     connected = RosState.Disconnected;
-    private _rosStateItemSource = new BehaviorSubject<RosState>(
+    private rosStateItemSource = new BehaviorSubject<RosState>(
         RosState.Disconnected
     );
-    rosStateItem$ = this._rosStateItemSource.asObservable();
-    private _rosoutSource = new BehaviorSubject<any>(null);
-    rosoutData = this._rosoutSource.asObservable();
+    rosStateItem$ = this.rosStateItemSource.asObservable();
+    private rosoutSource = new BehaviorSubject<any>(null);
+    rosoutData = this.rosoutSource.asObservable();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -33,7 +33,9 @@ export class RosService {
     }
 
     onConnect() {
-        if (this.connectionTimer) clearInterval(this.connectionTimer);
+        if (this.connectionTimer) {
+            clearInterval(this.connectionTimer);
+        }
         this.connected = RosState.Connected;
         this.statusText = 'Connection to ROS server established';
         this.statusIcon = 'checkmark-circle-2';
@@ -72,7 +74,7 @@ export class RosService {
     }
 
     emitRosoutMessage(msg: any) {
-        this._rosoutSource.next(msg);
+        this.rosoutSource.next(msg);
     }
 
     retryConnection() {
@@ -83,7 +85,7 @@ export class RosService {
     }
 
     emitNewRosState(newState: RosState) {
-        this._rosStateItemSource.next(newState);
+        this.rosStateItemSource.next(newState);
     }
 }
 
@@ -120,11 +122,12 @@ export class RosoutMessage {
 export class RosMsgHeader {
     seq: number;
     stamp: Time;
-    frame_id: string;
+    frameId: string;
+    // tslint:disable-next-line:variable-name
     constructor(seq: number, stamp: Time, frame_id: string) {
         this.seq = seq;
         this.stamp = stamp;
-        this.frame_id = frame_id;
+        this.frameId = frame_id;
     }
 }
 

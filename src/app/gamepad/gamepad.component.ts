@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GamepadService } from '../gamepad.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-gamepad',
@@ -7,54 +8,53 @@ import { GamepadService } from '../gamepad.service';
     styleUrls: ['./gamepad.component.scss'],
 })
 export class GamepadComponent implements OnInit, OnDestroy {
-    gp: Gamepad;
     connected = false;
-    gamepadConnectedSubscription: any;
-    gamepadDisconnectedSubscription: any;
-    gamepads: Gamepad[];
+    private gamepadConnectedSubscription: Subscription;
+    private gamepadDisconnectedSubscription: Subscription;
     leftStickPosition: Coordinates = { x: 113, y: 160 };
     rightStickPosition: Coordinates = { x: 278, y: 238 };
-    leftStickOpacity: number = 0.2;
-    rightStickOpacity: number = 0.2;
-    rightStickOpacityRaw: number = 0;
-    leftStickOpacityRaw: number = 0;
-    leftTriggerOpacity: number = 0.2;
-    leftTriggerOpacityRaw: number = 0;
-    rightTriggerOpacity: number = 0.2;
-    rightTriggerOpacityRaw: number = 0;
-    l1Pressed: number = 0.2;
-    l1PressedRaw: number = 0;
-    r1Pressed: number = 0.2;
-    r1PressedRaw: number = 0;
-    leftOptionButtonRaw: number = 0;
-    leftOptionButton: number = 0.2;
-    rightOptionButtonRaw: number = 0;
-    rightOptionButton: number = 0.2;
-    bottomButtonRaw: number = 0;
-    bottomButton: number = 0.2;
-    rightButtonRaw: number = 0;
-    rightButton: number = 0.2;
-    leftButtonRaw: number = 0;
-    leftButton: number = 0.2;
-    topButtonRaw: number = 0;
-    topButton: number = 0.2;
-    downDPadButtonRaw: number = 0;
-    downDPadButton: number = 0.2;
-    rightDPadButtonRaw: number = 0;
-    rightDPadButton: number = 0.2;
-    leftDPadButtonRaw: number = 0;
-    leftDPadButton: number = 0.2;
-    upDPadButtonRaw: number = 0;
-    upDPadButton: number = 0.2;
+    leftStickOpacity = 0.2;
+    rightStickOpacity = 0.2;
+    rightStickOpacityRaw = 0;
+    leftStickOpacityRaw = 0;
+    leftTriggerOpacity = 0.2;
+    leftTriggerOpacityRaw = 0;
+    rightTriggerOpacity = 0.2;
+    rightTriggerOpacityRaw = 0;
+    l1Pressed = 0.2;
+    l1PressedRaw = 0;
+    r1Pressed = 0.2;
+    r1PressedRaw = 0;
+    leftOptionButtonRaw = 0;
+    leftOptionButton = 0.2;
+    rightOptionButtonRaw = 0;
+    rightOptionButton = 0.2;
+    bottomButtonRaw = 0;
+    bottomButton = 0.2;
+    rightButtonRaw = 0;
+    rightButton = 0.2;
+    leftButtonRaw = 0;
+    leftButton = 0.2;
+    topButtonRaw = 0;
+    topButton = 0.2;
+    downDPadButtonRaw = 0;
+    downDPadButton = 0.2;
+    rightDPadButtonRaw = 0;
+    rightDPadButton = 0.2;
+    leftDPadButtonRaw = 0;
+    leftDPadButton = 0.2;
+    upDPadButtonRaw = 0;
+    upDPadButton = 0.2;
+    private gamepadDataSubscription: Subscription;
+
     constructor(public gs: GamepadService) {}
 
+    // noinspection DuplicatedCode
     ngOnInit(): void {
         this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
             (e: GamepadEvent) => {
                 if (e) {
                     this.connected = true;
-                    this.gp = e.gamepad;
-                    this.componentDidMount();
                 }
             }
         );
@@ -62,20 +62,14 @@ export class GamepadComponent implements OnInit, OnDestroy {
             (e: GamepadEvent) => {
                 if (e) {
                     this.connected = false;
-                    this.gp = e.gamepad;
                 }
             }
         );
-    }
-
-    componentDidMount() {
-        this.tick();
-    }
-
-    tick() {
-        this.gamepads = this.pollGamepads();
-        this.extractGamepadData(this.gamepads);
-        window.requestAnimationFrame(() => this.tick());
+        this.gamepadDataSubscription = this.gs.gamepadData.subscribe((e) => {
+            if (e) {
+                this.extractGamepadData(e);
+            }
+        });
     }
 
     extractGamepadData(gamepads: Gamepad[]) {
@@ -167,13 +161,10 @@ export class GamepadComponent implements OnInit, OnDestroy {
         }
     }
 
-    pollGamepads() {
-        return navigator.getGamepads();
-    }
-
     ngOnDestroy(): void {
         this.gamepadConnectedSubscription.unsubscribe();
         this.gamepadDisconnectedSubscription.unsubscribe();
+        this.gamepadDataSubscription.unsubscribe();
     }
 }
 

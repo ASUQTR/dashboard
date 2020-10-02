@@ -4,7 +4,6 @@ import {
     RendererFactory2,
     Renderer2,
 } from '@angular/core';
-import ROSLIB from 'roslib';
 import { Subject, Observable, fromEventPattern, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -17,13 +16,16 @@ export interface JoyMessage {
     providedIn: 'root',
 })
 export class GamepadService implements OnDestroy {
-    private _destroy$ = new Subject();
-    private onGamepadConnected_: Observable<GamepadEvent>;
-    private onGamepadDisconnected_: Observable<GamepadEvent>;
+    private destroy$ = new Subject();
+    private onGamepadConnected$: Observable<GamepadEvent>;
+    private onGamepadDisconnected$: Observable<GamepadEvent>;
     public onGamepadConnected: BehaviorSubject<GamepadEvent>;
     public onGamepadDisconnected: BehaviorSubject<GamepadEvent>;
-    // private _gameloopInterval: NodeJS.Timeout;
     public gamepadConnected = false;
+    private gamepads: Gamepad[];
+    private gamepadSource = new BehaviorSubject<Array<Gamepad>>(null);
+    gamepadData = this.gamepadSource.asObservable();
+    private gamepadInterval: NodeJS.Timeout;
 
     constructor(private rendererFactory2: RendererFactory2) {
         const renderer = this.rendererFactory2.createRenderer(null, null);
@@ -45,16 +47,17 @@ export class GamepadService implements OnDestroy {
             );
         };
 
-        this.onGamepadConnected_ = fromEventPattern<GamepadEvent>(
+        this.onGamepadConnected$ = fromEventPattern<GamepadEvent>(
             createGamepadConnectedEventListener,
             () => {
                 removeGamepadConnectedEventListener();
             }
-        ).pipe(takeUntil(this._destroy$));
+        ).pipe(takeUntil(this.destroy$));
         this.onGamepadConnected = new BehaviorSubject(null);
-        this.onGamepadConnected_.subscribe((e: GamepadEvent) => {
+        this.onGamepadConnected$.subscribe((e: GamepadEvent) => {
             this.onGamepadConnected.next(e);
             this.gamepadConnected = true;
+            this.gameLoop();
         });
     }
 
@@ -70,37 +73,36 @@ export class GamepadService implements OnDestroy {
             );
         };
 
-        this.onGamepadDisconnected_ = fromEventPattern<GamepadEvent>(
+        this.onGamepadDisconnected$ = fromEventPattern<GamepadEvent>(
             createGamepadDisconnectedEventListener,
             () => {
                 removeGamepadDisconnectedEventListener();
             }
-        ).pipe(takeUntil(this._destroy$));
+        ).pipe(takeUntil(this.destroy$));
         this.onGamepadDisconnected = new BehaviorSubject(null);
-        this.onGamepadDisconnected_.subscribe((e: GamepadEvent) => {
+        this.onGamepadDisconnected$.subscribe((e: GamepadEvent) => {
             this.onGamepadDisconnected.next(e);
             this.gamepadConnected = false;
         });
     }
 
-    // @HostListener('window:gamepaddisconnected', ['$event'])
-    // handleGamepadDisconnected(event: GamepadEvent) {
-    //     this.connected = false;
-    //     this.gamepad = navigator.getGamepads()[0];
-    //     this._gameloopInterval = setInterval(this.gameLoop, 35);
-    // }
-
-    ngOnInit(): void {
-        //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-        //Add 'implements OnInit' to the class.
-    }
-
     ngOnDestroy() {
-        this._destroy$.next();
-        this._destroy$.complete();
+        this.destroy$.next();
+        this.destroy$.complete();
         this.onGamepadConnected.complete();
         this.onGamepadDisconnected.complete();
+        clearInterval(this.gamepadInterval);
     }
 
-    gameLoop() {}
+    gameLoop() {
+        this.gamepads = this.pollGamepads();
+        this.gamepadSource.next(this.gamepads);
+        if (this.gamepadConnected) {
+            requestAnimationFrame(() => this.gameLoop());
+        }
+    }
+
+    pollGamepads() {
+        return navigator.getGamepads();
+    }
 }

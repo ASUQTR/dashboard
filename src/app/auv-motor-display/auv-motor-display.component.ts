@@ -7,6 +7,7 @@ import {
     trigger,
 } from '@angular/animations';
 import { GamepadService } from '../gamepad.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-auv-motor-display',
@@ -34,24 +35,23 @@ import { GamepadService } from '../gamepad.service';
 })
 export class AuvMotorDisplayComponent implements OnInit, OnDestroy {
     isActive = false;
-    animationSpeed: number;
-    gamepadConnectedSubscription: any;
-    gamepadDisconnectedSubscription: any;
-    gamepads: Gamepad[];
+    private gamepadConnectedSubscription: Subscription;
+    private gamepadDisconnectedSubscription: Subscription;
     connected: boolean;
     startTime: number;
     offset: number;
     intensityForward = 0;
     intensityBackward = 0;
+    private gamepadDataSubscription: Subscription;
 
     constructor(public gs: GamepadService) {}
 
+    // noinspection DuplicatedCode
     ngOnInit(): void {
         this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
             (e: GamepadEvent) => {
                 if (e) {
                     this.connected = true;
-                    this.componentDidMount();
                 }
             }
         );
@@ -62,33 +62,22 @@ export class AuvMotorDisplayComponent implements OnInit, OnDestroy {
                 }
             }
         );
+        this.gamepadDataSubscription = this.gs.gamepadData.subscribe((e) => {
+            if (e) {
+                this.extractGamepadData(e);
+            }
+        });
     }
 
-    componentDidMount() {
-        this.startTime = performance.now();
-        this.tick();
-    }
-
-    tick() {
-        this.gamepads = this.pollGamepads();
-        const intensity = this.gamepads[0].axes[0];
+    extractGamepadData(gamepads: Gamepad[]) {
+        const intensity = gamepads[0].axes[0];
         this.intensityForward = intensity > 0 ? intensity : 0;
         this.intensityBackward = intensity < 0 ? intensity * -1 : 0;
-        // const timePassed = performance.now() - this.startTime;
-        // const progress = (timePassed % 2000) / 2000;
-        // this.offset = progress * 500 * intensity;
-        // console.log(this.offset);
-        if (this.connected) {
-            window.requestAnimationFrame(() => this.tick());
-        }
-    }
-
-    pollGamepads() {
-        return navigator.getGamepads();
     }
 
     ngOnDestroy(): void {
         this.gamepadConnectedSubscription.unsubscribe();
         this.gamepadDisconnectedSubscription.unsubscribe();
+        this.gamepadDataSubscription.unsubscribe();
     }
 }
