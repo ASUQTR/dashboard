@@ -3,23 +3,22 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuvMotorDisplayComponent } from './auv-motor-display.component';
 
 describe('AuvMotorDisplayComponent', () => {
-  let component: AuvMotorDisplayComponent;
-  let fixture: ComponentFixture<AuvMotorDisplayComponent>;
+    let component: AuvMotorDisplayComponent;
+    let fixture: ComponentFixture<AuvMotorDisplayComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AuvMotorDisplayComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [AuvMotorDisplayComponent],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AuvMotorDisplayComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AuvMotorDisplayComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

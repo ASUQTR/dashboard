@@ -21,6 +21,8 @@ import {
     NbSidebarModule,
     NbCardModule,
     NbChatModule,
+    NbSidebarService,
+    NbThemeService,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
@@ -65,7 +67,7 @@ import { RosoutComponent } from './rosout/rosout.component';
         NbCardModule,
         NbChatModule,
     ],
-    providers: [CookieService],
+    providers: [CookieService, NbSidebarService, NbThemeService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

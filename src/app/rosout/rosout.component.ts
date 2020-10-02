@@ -1,6 +1,4 @@
-import { Time } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { RosoutLevel, RosService } from '../ros.service';
 
 @Component({
@@ -14,7 +12,6 @@ export class RosoutComponent implements OnInit {
 
     ngOnInit(): void {
         this.rs.rosoutData.subscribe((msg) => {
-            console.log(msg);
             if (msg) {
                 const rosoutMessage = new RosoutMessageOutput(
                     msg.msg,
