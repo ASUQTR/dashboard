@@ -6,7 +6,8 @@ var auv_canvas = new AUVCanvas()
 var rbServer = new ROSLIB.Ros({
     url : 'ws://' + location.hostname + ':9090'
  });
- console.log(location.hostname)
+
+ document.getElementById("cam0").setAttribute("src", "http://"+ location.hostname +":8080/stream?topic=/detectnet/overlay")
 
  // This function is called upon the rosbridge connection event
  rbServer.on('connection', function() {
