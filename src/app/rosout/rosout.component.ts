@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosoutLevel, RosService } from '../ros.service';
+import { RosoutLevel, RosoutMessage, RosService } from '../ros.service';
 
 @Component({
     selector: 'app-rosout',
@@ -7,34 +7,16 @@ import { RosoutLevel, RosService } from '../ros.service';
     styleUrls: ['./rosout.component.scss'],
 })
 export class RosoutComponent implements OnInit {
-    messages = new Array<RosoutMessageOutput>();
+    messages = new Array<RosoutMessage>();
+    rosoutLevel = RosoutLevel;
+    date: Date;
     constructor(private rs: RosService) {}
 
     ngOnInit(): void {
         this.rs.rosoutData.subscribe((msg) => {
             if (msg) {
-                const rosoutMessage = new RosoutMessageOutput(
-                    msg.msg,
-                    msg.header.stamp,
-                    msg.name,
-                    msg.level
-                );
-                this.messages.push(rosoutMessage);
+                this.messages.push(msg);
             }
         });
-    }
-}
-
-class RosoutMessageOutput {
-    text: string;
-    date: Date;
-    nodeName: string;
-    level: string;
-    constructor(text: string, date: any, nodeName: string, level: RosoutLevel) {
-        this.text = text;
-        this.date = new Date();
-        this.date.setTime(date.secs * 1000);
-        this.nodeName = nodeName;
-        this.level = level.toString();
     }
 }
