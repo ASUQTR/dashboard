@@ -1,10 +1,9 @@
-import { Time } from '@angular/common';
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { RosState } from './ros-state.enum';
 
-const ROS_URL = 'ws://172.29.189.102:9090';
+const ROS_URL = 'ws://172.29.144.108:9090';
 
 @Injectable({
     providedIn: 'root',
@@ -17,8 +16,10 @@ export class RosService {
         RosState.Disconnected
     );
     rosStateItem$ = this.rosStateItemSource.asObservable();
-    private rosoutSource = new BehaviorSubject<any>(null);
+    private rosoutSource = new BehaviorSubject<RosoutMessage>(null);
     rosoutData = this.rosoutSource.asObservable();
+    joySource = new ReplaySubject<JoyMessage>(1);
+    joyData = this.joySource.asObservable();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -32,7 +33,7 @@ export class RosService {
         this.rbServer.on('close', () => this.connectionClosed());
     }
 
-    onConnect() {
+    private onConnect() {
         if (this.connectionTimer) {
             clearInterval(this.connectionTimer);
         }
@@ -42,9 +43,10 @@ export class RosService {
         this.statusIconColor = 'success';
         this.emitNewRosState(this.connected);
         this.subscribeAllTopics();
+        this.advertiseAllTopics();
     }
 
-    errorOnConnection() {
+    private errorOnConnection() {
         this.connected = RosState.Error;
         this.statusText = 'Error during connection to ROS server';
         this.statusIcon = 'close-circle';
@@ -53,7 +55,7 @@ export class RosService {
         this.retryConnection();
     }
 
-    connectionClosed() {
+    private connectionClosed() {
         this.connected = RosState.Disconnected;
         this.statusText = 'Connection to ROS server closed';
         this.statusIcon = 'close-circle';
@@ -73,62 +75,61 @@ export class RosService {
         });
     }
 
-    emitRosoutMessage(msg: any) {
+    advertiseAllTopics() {
+        const joy = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/joy',
+            messageType: 'sensor_msgs/Joy',
+        });
+        joy.advertise();
+        this.joyData.subscribe((joyData) => {
+            joy.publish(joyData);
+        });
+    }
+
+    private emitRosoutMessage(msg: any) {
         this.rosoutSource.next(msg);
     }
 
-    retryConnection() {
+    private retryConnection() {
         this.connectionTimer = setInterval(
             () => this.rbServer.connect(ROS_URL),
             1000
         );
     }
 
-    emitNewRosState(newState: RosState) {
+    private emitNewRosState(newState: RosState) {
         this.rosStateItemSource.next(newState);
     }
 }
 
-export class RosoutMessage {
+export interface JoyMessage {
     header: RosMsgHeader;
-    level: RosoutLevel;
-    name: string;
-    msg: string;
-    file: string;
-    func: string;
-    line: number;
-    topics: string[];
-    constructor(
-        header: RosMsgHeader,
-        level: RosoutLevel,
-        name: string,
-        msg: string,
-        file: string,
-        func: string,
-        line: number,
-        topics: Array<string>
-    ) {
-        this.header = header;
-        this.level = level;
-        this.name = name;
-        this.msg = msg;
-        this.file = file;
-        this.func = func;
-        this.line = line;
-        this.topics = topics;
-    }
+    axes?: number[] | null;
+    buttons?: number[] | null;
 }
 
-export class RosMsgHeader {
-    seq: number;
-    stamp: Time;
-    frameId: string;
+export interface RosoutMessage {
+    header: RosMsgHeader;
+    level?: RosoutLevel | null;
+    name?: string | null;
+    msg?: string | null;
+    file?: string | null;
+    func?: string | null;
+    line?: number | null;
+    topics?: string[] | null;
+}
+
+export interface RosMsgHeader {
+    seq?: number | null;
+    stamp?: RosTime | null;
     // tslint:disable-next-line:variable-name
-    constructor(seq: number, stamp: Time, frame_id: string) {
-        this.seq = seq;
-        this.stamp = stamp;
-        this.frameId = frame_id;
-    }
+    frame_id?: string | null;
+}
+
+export interface RosTime {
+    secs?: number | null;
+    nsecs?: number | null;
 }
 
 export enum RosoutLevel {

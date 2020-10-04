@@ -33,6 +33,7 @@ import { SidebarSettingsComponent } from './sidebar-settings/sidebar-settings.co
 import { AuvMotorDisplayComponent } from './auv-motor-display/auv-motor-display.component';
 import { ViewSettingsComponent } from './view-settings/view-settings.component';
 import { RosoutComponent } from './rosout/rosout.component';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @NgModule({
     declarations: [
@@ -67,7 +68,12 @@ import { RosoutComponent } from './rosout/rosout.component';
         NbCardModule,
         NbChatModule,
     ],
-    providers: [CookieService, NbSidebarService, NbThemeService],
+    providers: [
+        CookieService,
+        NbSidebarService,
+        NbThemeService,
+        DeviceDetectorService,
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

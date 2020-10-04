@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
+        "start": "ng serve --host 0.0.0.0",
         "build": "ng build",
         "test": "ng test",
         "lint": "ng lint",
@@ -28,6 +28,7 @@
         "eva-icons": "^1.1.2",
         "jquery": "^3.5.1",
         "ngx-cookie-service": "^10.0.1",
+        "ngx-device-detector": "^2.0.0",
         "popper.js": "^1.16.1",
         "roslib": "^1.1.0",
         "rxjs": "~6.5.4",
