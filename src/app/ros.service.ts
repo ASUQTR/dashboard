@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';

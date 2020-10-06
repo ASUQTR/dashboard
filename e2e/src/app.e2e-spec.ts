@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { AppPage } from './app.po';
 import { browser, logging } from 'protractor';
 

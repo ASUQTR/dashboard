@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { TestBed } from '@angular/core/testing';
 
 import { GamepadService } from './gamepad.service';

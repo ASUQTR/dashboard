@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { RosoutLevel, RosoutMessage, RosService } from '../ros.service';
 

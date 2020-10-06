@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 

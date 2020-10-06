@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { CookieService } from 'ngx-cookie-service';

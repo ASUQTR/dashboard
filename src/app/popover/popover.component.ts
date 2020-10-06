@@ -1,4 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectionStatus } from '../connection-status.model';
 import { GamepadService } from '../gamepad.service';

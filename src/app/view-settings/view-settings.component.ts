@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -13,9 +17,8 @@ export class ViewSettingsComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.cookie.check(this.themeCookieName)) {
-            const cookieStartingValue =
+            this.motorThrottlesCanvaschecked =
                 this.cookie.get(this.themeCookieName) === 'true';
-            this.motorThrottlesCanvaschecked = cookieStartingValue;
         }
     }
 

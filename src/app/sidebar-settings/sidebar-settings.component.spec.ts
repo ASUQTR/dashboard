@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarSettingsComponent } from './sidebar-settings.component';
