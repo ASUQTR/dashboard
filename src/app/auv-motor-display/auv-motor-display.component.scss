@@ -15,6 +15,20 @@
     .backwardArrow {
         stroke: nb-theme(text-danger-color);
     }
+
+    .upwardMotion {
+        fill: nb-theme(text-success-color);
+    }
+
+    .downwardMotion {
+        fill: nb-theme(text-danger-color);
+    }
+}
+
+.forwardArrow, .backwardArrow {
+    fill: none;
+    stroke-miterlimit: 10;
+    stroke-width: 5;
 }
 
 .auv-outline {
@@ -22,4 +36,36 @@
     stroke-miterlimit: 10;
     stroke-width: 5;
     stroke-opacity: 0.4;
+}
+
+#forwardArrow1 {
+    transform-origin: 81.667px 271.4445px;
+}
+
+#backwardArrow1 {
+    transform-origin: 259.143px 163.5125px;
+}
+
+#backwardArrow2 {
+    transform-origin: 239.509px 837.763px;
+}
+
+#forwardArrow2 {
+    transform-origin: 74.6685px 722.5255px;
+}
+
+#forwardArrow7 {
+    transform-origin: 1100.5695px 270.0475px;
+}
+
+#backwardArrow7 {
+    transform-origin: 926.6495px 155.305px;
+}
+
+#backwardArrow8 {
+    transform-origin: 926.65px 845.3405px;
+}
+
+#forwardArrow8 {
+    transform-origin: 1096.705px 729.8525px;
 }

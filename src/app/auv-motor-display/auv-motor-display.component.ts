@@ -3,85 +3,69 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-    animate,
-    state,
-    style,
-    transition,
-    trigger,
-} from '@angular/animations';
-import { GamepadService } from '../gamepad.service';
 import { Subscription } from 'rxjs';
+import { RosService } from '../ros.service';
+import { MotorThrottlesMessage } from '../ros-model.enum';
 
 @Component({
     selector: 'app-auv-motor-display',
     templateUrl: './auv-motor-display.component.html',
     styleUrls: ['./auv-motor-display.component.scss'],
-    animations: [
-        trigger('goFast', [
-            state(
-                'start',
-                style({
-                    'stroke-dashoffset': 0,
-                })
-            ),
-            state(
-                'end',
-                style({
-                    'stroke-dashoffset': '{{ animationSpeed }}',
-                }),
-                { params: { animationSpeed: '200' } }
-            ),
-            transition('start => end', [animate('2s')]),
-            transition('end => start', [animate('2s')]),
-        ]),
-    ],
 })
 export class AuvMotorDisplayComponent implements OnInit, OnDestroy {
-    isActive = false;
-    private gamepadConnectedSubscription: Subscription;
-    private gamepadDisconnectedSubscription: Subscription;
-    connected: boolean;
-    startTime: number;
-    offset: number;
-    intensityForward = 0;
-    intensityBackward = 0;
-    private gamepadDataSubscription: Subscription;
+    motors = new Array<MotorDisplay>();
+    private motorThrottlesDataSubscription: Subscription;
 
-    constructor(public gs: GamepadService) {}
+    constructor(public rs: RosService) {}
 
-    // noinspection DuplicatedCode
+    /**
+     * Init function to initialize the motors object array and to subscribe to the motorThrottle Subject coming from the RosService
+     * (/motors topic)
+     */
     ngOnInit(): void {
-        this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
-            (e: GamepadEvent) => {
-                if (e) {
-                    this.connected = true;
+        this.motors.push(
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 },
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 },
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 },
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 },
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 },
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 },
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 },
+            { fillOpacity: 0, forwardIntensity: 0, backwardIntensity: 0 }
+        );
+        this.motorThrottlesDataSubscription = this.rs.motorThrottlesData.subscribe(
+            (motorThrottles) => {
+                if (motorThrottles) {
+                    this.extractMotorThrottlesData(motorThrottles);
                 }
             }
         );
-        this.gamepadDisconnectedSubscription = this.gs.onGamepadDisconnected.subscribe(
-            (e: GamepadEvent) => {
-                if (e) {
-                    this.connected = false;
-                }
-            }
-        );
-        this.gamepadDataSubscription = this.gs.gamepadData.subscribe((e) => {
-            if (e) {
-                this.extractGamepadData(e);
-            }
+    }
+
+    /**
+     * Converts the motor throttle data into usable forward/backward values to correctly display the data from the Motors topic
+     * @param motorThrottles Motors topic data coming from the RosService
+     */
+    extractMotorThrottlesData(motorThrottles: MotorThrottlesMessage): void {
+        motorThrottles.ids.forEach((index) => {
+            const intensity = motorThrottles.throttles[index];
+            this.motors[index].forwardIntensity = intensity > 0 ? intensity : 0;
+            this.motors[index].backwardIntensity =
+                intensity < 0 ? intensity * -1 : 0;
+            this.motors[index].fillOpacity = Math.abs(intensity);
         });
     }
 
-    extractGamepadData(gamepads: Gamepad[]) {
-        const intensity = gamepads[0].axes[0];
-        this.intensityForward = intensity > 0 ? intensity : 0;
-        this.intensityBackward = intensity < 0 ? intensity * -1 : 0;
-    }
-
     ngOnDestroy(): void {
-        this.gamepadConnectedSubscription.unsubscribe();
-        this.gamepadDisconnectedSubscription.unsubscribe();
-        this.gamepadDataSubscription.unsubscribe();
+        this.motorThrottlesDataSubscription.unsubscribe();
     }
+}
+
+/**
+ * Private interface to help displaying the motor throttles
+ */
+interface MotorDisplay {
+    fillOpacity: number;
+    forwardIntensity: number;
+    backwardIntensity: number;
 }

@@ -14,7 +14,7 @@ import ROSBRIDGE from 'roslib';
 import { Subscription } from 'rxjs';
 import { GamepadService } from '../gamepad.service';
 import { PopoverComponent } from '../popover/popover.component';
-import { RosState } from '../ros-state.enum';
+import { RosState } from '../ros-model.enum';
 import { RosService } from '../ros.service';
 
 @Component({
@@ -31,11 +31,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     summaryIconColor = this.successColor;
     rosStatusIcon = this.successIcon;
     rosIconColor = this.successColor;
-    gamepadStatusIcon = this.successIcon;
-    gamepadIconColor = this.successColor;
-    @Input() rosBridge: ROSBRIDGE.Ros;
-    @Input() gamepad: Gamepad;
-    rosbridgeConnected: RosState = RosState.Disconnected;
+    rosbridgeConnected = RosState.Disconnected;
     gamepadConnected = false;
     gp: Gamepad;
     rosStateSubscription: Subscription;

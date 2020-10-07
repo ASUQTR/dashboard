@@ -5,7 +5,12 @@
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { RosState } from './ros-state.enum';
+import {
+    JoyMessage,
+    MotorThrottlesMessage,
+    RosoutMessage,
+    RosState,
+} from './ros-model.enum';
 
 const ROS_URL = 'ws://172.29.144.108:9090';
 
@@ -24,6 +29,10 @@ export class RosService {
     rosoutData = this.rosoutSource.asObservable();
     joySource = new ReplaySubject<JoyMessage>(1);
     joyData = this.joySource.asObservable();
+    private motorThrottlesSource = new BehaviorSubject<MotorThrottlesMessage>(
+        null
+    );
+    motorThrottlesData = this.motorThrottlesSource.asObservable();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -68,7 +77,7 @@ export class RosService {
         this.retryConnection();
     }
 
-    subscribeAllTopics() {
+    subscribeAllTopics(): void {
         const rosout = new ROSLIB.Topic({
             ros: this.rbServer,
             name: '/rosout',
@@ -77,9 +86,19 @@ export class RosService {
         rosout.subscribe((msg) => {
             this.emitRosoutMessage(msg);
         });
+
+        const motorThrottles = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/motors',
+            messageType: 'asuqtr_actuator_node/ActuatorThrottle',
+        });
+
+        motorThrottles.subscribe((msg) => {
+            this.emitMotorThrottlesMessage(msg);
+        });
     }
 
-    advertiseAllTopics() {
+    advertiseAllTopics(): void {
         const joy = new ROSLIB.Topic({
             ros: this.rbServer,
             name: '/joy',
@@ -105,41 +124,8 @@ export class RosService {
     private emitNewRosState(newState: RosState) {
         this.rosStateItemSource.next(newState);
     }
-}
 
-export interface JoyMessage {
-    header: RosMsgHeader;
-    axes?: number[] | null;
-    buttons?: number[] | null;
-}
-
-export interface RosoutMessage {
-    header: RosMsgHeader;
-    level?: RosoutLevel | null;
-    name?: string | null;
-    msg?: string | null;
-    file?: string | null;
-    func?: string | null;
-    line?: number | null;
-    topics?: string[] | null;
-}
-
-export interface RosMsgHeader {
-    seq?: number | null;
-    stamp?: RosTime | null;
-    // tslint:disable-next-line:variable-name
-    frame_id?: string | null;
-}
-
-export interface RosTime {
-    secs?: number | null;
-    nsecs?: number | null;
-}
-
-export enum RosoutLevel {
-    DEBUG = 1,
-    INFO = 2,
-    WARN = 4,
-    ERROR = 8,
-    FATAL = 16,
+    private emitMotorThrottlesMessage(msg: any) {
+        this.motorThrottlesSource.next(msg);
+    }
 }

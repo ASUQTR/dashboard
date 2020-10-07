@@ -3,7 +3,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { RosoutLevel, RosoutMessage, RosService } from '../ros.service';
+import { RosService } from '../ros.service';
+import { RosoutLevel, RosoutMessage } from '../ros-model.enum';
 
 @Component({
     selector: 'app-rosout',

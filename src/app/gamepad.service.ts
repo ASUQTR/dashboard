@@ -10,8 +10,9 @@ import {
 } from '@angular/core';
 import { Subject, Observable, fromEventPattern, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RosService, JoyMessage } from './ros.service';
+import { RosService } from './ros.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { JoyMessage } from './ros-model.enum';
 
 @Injectable({
     providedIn: 'root',

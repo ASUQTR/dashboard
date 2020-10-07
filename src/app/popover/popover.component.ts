@@ -6,7 +6,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectionStatus } from '../connection-status.model';
 import { GamepadService } from '../gamepad.service';
-import { RosState } from '../ros-state.enum';
+import { RosState } from '../ros-model.enum';
 import { RosService } from '../ros.service';
 
 @Component({
