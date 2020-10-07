@@ -14,7 +14,7 @@ import { RosService } from '../ros.service';
     templateUrl: './popover.component.html',
     styleUrls: ['./popover.component.scss'],
 })
-export class PopoverComponent implements OnInit {
+export class PopoverComponent implements OnInit, OnDestroy {
     readonly successIcon = 'checkmark-circle-2';
     readonly failureIcon = 'close-circle';
     readonly successColor = 'success';
@@ -36,7 +36,6 @@ export class PopoverComponent implements OnInit {
     rosStateSubscription: Subscription;
     gamepadConnected: boolean;
     gp: Gamepad;
-    rosbridgeConnected: RosState;
     rosStatusIcon: any;
     rosIconColor: any;
     gamepadConnectedSubscription: any;

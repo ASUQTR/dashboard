@@ -9,3 +9,8 @@
 @include nb-install() {
     @include nb-theme-global();
 }
+
+@font-face {
+    font-family: Noto;
+    src: url(assets/NotoSans-Regular.ttf) format("truetype");
+}

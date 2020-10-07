@@ -5,10 +5,10 @@
 import {
     Injectable,
     OnDestroy,
-    RendererFactory2,
     Renderer2,
+    RendererFactory2,
 } from '@angular/core';
-import { Subject, Observable, fromEventPattern, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, fromEventPattern, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RosService } from './ros.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -18,12 +18,12 @@ import { JoyMessage } from './ros-model.enum';
     providedIn: 'root',
 })
 export class GamepadService implements OnDestroy {
-    private destroy$ = new Subject();
-    private onGamepadConnected$: Observable<GamepadEvent>;
-    private onGamepadDisconnected$: Observable<GamepadEvent>;
     public onGamepadConnected: BehaviorSubject<GamepadEvent>;
     public onGamepadDisconnected: BehaviorSubject<GamepadEvent>;
     public gamepadConnected = false;
+    private destroy$ = new Subject();
+    private onGamepadConnected$: Observable<GamepadEvent>;
+    private onGamepadDisconnected$: Observable<GamepadEvent>;
     private gamepads: Gamepad[];
     private gamepadSource = new BehaviorSubject<Array<Gamepad>>(null);
     gamepadData = this.gamepadSource.asObservable();
@@ -41,6 +41,142 @@ export class GamepadService implements OnDestroy {
         this.createOnGamepadDisconnectedObservable(renderer2);
     }
 
+    /**
+     * Converts the Dpad buttons value to an axes format which combines the 'negative' and 'positive' dpad into a single value [-1..1]
+     *
+     * @param negativeSide Negative part of the dpad axes element
+     * @param positiveSide Positive part of the dpad axes element
+     * @static
+     */
+    static getDpadAxeValueFromButtons(
+        negativeSide: boolean,
+        positiveSide: boolean
+    ): number {
+        let value: number;
+        if (negativeSide) {
+            value = -1;
+        } else if (positiveSide) {
+            value = 1;
+        } else {
+            value = 0;
+        }
+        return value;
+    }
+
+    /**
+     * Disposes of the BehaviorSubject and intervals used in this service.
+     */
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.onGamepadConnected.complete();
+        this.onGamepadDisconnected.complete();
+        clearInterval(this.gamepadInterval);
+    }
+
+    /**
+     * Gets the data from the gamepad API and pushes it into the appropriate Subject. The function also sends the converted data to the Joy
+     * topic located in the RosService. When the Subject are updated, the function request a new animation frame with itself as the
+     * callback.
+     */
+    gameLoop(): void {
+        this.gamepads = this.pollGamepads();
+        this.gamepadSource.next(this.gamepads);
+        this.rs.joySource.next(this.toJoyMessage(this.gamepads[0]));
+        if (this.gamepadConnected) {
+            requestAnimationFrame(() => this.gameLoop());
+        }
+    }
+
+    /**
+     * Function to convert the gamepad data into Joy topic format depending on the OS. The gamepad mapping is different from
+     * Windows to Linux. The mapping to send to the Joy topic is the Linux mapping.
+     *
+     * @param gamepad Gamepad raw data
+     */
+    toJoyMessage(gamepad: Gamepad): JoyMessage {
+        const os = this.platformDetector.os;
+        let joyData: JoyMessage;
+        switch (os) {
+            case 'Windows':
+                joyData = {
+                    header: {},
+                    axes: [
+                        gamepad?.axes[0], // Left Stick X
+                        gamepad?.axes[1] * -1, // Left Stick Y
+                        gamepad?.buttons[6].value, // Left Trigger
+                        gamepad?.axes[2], // Right Stick X
+                        gamepad?.axes[3] * -1, // Right Stick Y
+                        gamepad?.buttons[7].value, // Right Trigger
+                        GamepadService.getDpadAxeValueFromButtons(
+                            gamepad?.buttons[14].pressed,
+                            gamepad?.buttons[15].pressed
+                        ), // DPAD Left/Right
+                        GamepadService.getDpadAxeValueFromButtons(
+                            gamepad?.buttons[13].pressed,
+                            gamepad?.buttons[12].pressed
+                        ), // DPAD Up/Down
+                    ],
+                    buttons: [
+                        gamepad?.buttons[0].value, // Button A
+                        gamepad?.buttons[1].value, // Button B
+                        gamepad?.buttons[2].value, // Button X
+                        gamepad?.buttons[3].value, // Button Y
+                        gamepad?.buttons[4].value, // Button Left Trigger
+                        gamepad?.buttons[5].value, // Button Right Trigger
+                        gamepad?.buttons[8].value, // Button Back
+                        gamepad?.buttons[9].value, // Button Start
+                        gamepad?.buttons[16].value, // Button Xbox
+                        gamepad?.buttons[10].value, // Button Left Stick
+                        gamepad?.buttons[11].value, // Button Right Stick
+                    ],
+                };
+                break;
+            case 'Linux':
+                joyData = {
+                    header: {},
+                    axes: [
+                        gamepad?.axes[0], // Left Stick X
+                        gamepad?.axes[1] * -1, // Left Stick Y
+                        gamepad?.axes[2], // Left Trigger
+                        gamepad?.axes[3], // Right Stick X
+                        gamepad?.axes[4] * -1, // Right Stick Y
+                        gamepad?.axes[5], // Right Trigger
+                        gamepad?.axes[6], // DPAD Left/Right
+                        gamepad?.axes[7], // DPAD Up/Down
+                    ],
+                    buttons: [
+                        gamepad?.buttons[0].value, // Button A
+                        gamepad?.buttons[1].value, // Button B
+                        gamepad?.buttons[2].value, // Button X
+                        gamepad?.buttons[3].value, // Button Y
+                        gamepad?.buttons[4].value, // Button Left Trigger
+                        gamepad?.buttons[5].value, // Button Right Trigger
+                        gamepad?.buttons[6].value, // Button Back
+                        gamepad?.buttons[7].value, // Button Start
+                        gamepad?.buttons[8].value, // Button Xbox
+                        gamepad?.buttons[9].value, // Button Left Stick
+                        gamepad?.buttons[10].value, // Button Right Stick
+                    ],
+                };
+                break;
+        }
+        return joyData;
+    }
+
+    /**
+     * Helper function to get all connected gamepads from the Gamepad API
+     */
+    pollGamepads(): Gamepad[] {
+        return navigator.getGamepads();
+    }
+
+    /**
+     * Function to manage the event listener for window:gamepadconnected and push the event into the Subject
+     *
+     * @param renderer DOM object used to render stuff
+     * @private
+     */
     private createOnGamepadConnectedObservable(renderer: Renderer2) {
         let removeGamepadConnectedEventListener: () => void;
         const createGamepadConnectedEventListener = (
@@ -59,7 +195,7 @@ export class GamepadService implements OnDestroy {
                 removeGamepadConnectedEventListener();
             }
         ).pipe(takeUntil(this.destroy$));
-        this.onGamepadConnected = new BehaviorSubject(null);
+        this.onGamepadConnected = new BehaviorSubject<GamepadEvent>(null);
         this.onGamepadConnected$.subscribe((e: GamepadEvent) => {
             this.onGamepadConnected.next(e);
             this.gamepadConnected = true;
@@ -67,6 +203,12 @@ export class GamepadService implements OnDestroy {
         });
     }
 
+    /**
+     * Function to manage the event listener for window:gamepaddisconnected and push the event into the Subject
+     *
+     * @param renderer2 DOM object used to render stuff
+     * @private
+     */
     private createOnGamepadDisconnectedObservable(renderer2: Renderer2) {
         let removeGamepadDisconnectedEventListener: () => void;
         const createGamepadDisconnectedEventListener = (
@@ -85,103 +227,10 @@ export class GamepadService implements OnDestroy {
                 removeGamepadDisconnectedEventListener();
             }
         ).pipe(takeUntil(this.destroy$));
-        this.onGamepadDisconnected = new BehaviorSubject(null);
+        this.onGamepadDisconnected = new BehaviorSubject<GamepadEvent>(null);
         this.onGamepadDisconnected$.subscribe((e: GamepadEvent) => {
             this.onGamepadDisconnected.next(e);
             this.gamepadConnected = false;
         });
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
-        this.onGamepadConnected.complete();
-        this.onGamepadDisconnected.complete();
-        clearInterval(this.gamepadInterval);
-    }
-
-    gameLoop() {
-        this.gamepads = this.pollGamepads();
-        this.gamepadSource.next(this.gamepads);
-        this.rs.joySource.next(this.toJoyMessage(this.gamepads[0]));
-        if (this.gamepadConnected) {
-            requestAnimationFrame(() => this.gameLoop());
-        }
-    }
-
-    toJoyMessage(gamepad: Gamepad) {
-        const os = this.platformDetector.os;
-        let joyData: JoyMessage;
-        switch (os) {
-            case 'Windows':
-                joyData = {
-                    header: {},
-                    axes: [
-                        gamepad.axes[0], // Left Stick X
-                        gamepad.axes[1] * -1, // Left Stick Y
-                        gamepad.buttons[6].value, // Left Trigger
-                        gamepad.axes[2], // Right Stick X
-                        gamepad.axes[3] * -1, // Right Stick Y
-                        gamepad.buttons[7].value, // Right Trigger
-                        gamepad.buttons[14].pressed
-                            ? -1
-                            : gamepad.buttons[15].pressed
-                            ? 1
-                            : 0, // DPAD Left/Right
-                        gamepad.buttons[13].pressed
-                            ? -1
-                            : gamepad.buttons[12].pressed
-                            ? 1
-                            : 0, // DPAD Up/Down
-                    ],
-                    buttons: [
-                        gamepad.buttons[0].value, // Button A
-                        gamepad.buttons[1].value, // Button B
-                        gamepad.buttons[2].value, // Button X
-                        gamepad.buttons[3].value, // Button Y
-                        gamepad.buttons[4].value, // Button Left Trigger
-                        gamepad.buttons[5].value, // Button Right Trigger
-                        gamepad.buttons[8].value, // Button Back
-                        gamepad.buttons[9].value, // Button Start
-                        gamepad.buttons[16].value, // Button Xbox
-                        gamepad.buttons[10].value, // Button Left Stick
-                        gamepad.buttons[11].value, // Button Right Stick
-                    ],
-                };
-                break;
-            case 'Linux':
-                joyData = {
-                    header: {},
-                    axes: [
-                        gamepad.axes[0], // Left Stick X
-                        gamepad.axes[1] * -1, // Left Stick Y
-                        gamepad.axes[2], // Left Trigger
-                        gamepad.axes[3], // Right Stick X
-                        gamepad.axes[4] * -1, // Right Stick Y
-                        gamepad.axes[5], // Right Trigger
-                        gamepad.axes[6], // DPAD Left/Right
-                        gamepad.axes[7], // DPAD Up/Down
-                    ],
-                    buttons: [
-                        gamepad.buttons[0].value, // Button A
-                        gamepad.buttons[1].value, // Button B
-                        gamepad.buttons[2].value, // Button X
-                        gamepad.buttons[3].value, // Button Y
-                        gamepad.buttons[4].value, // Button Left Trigger
-                        gamepad.buttons[5].value, // Button Right Trigger
-                        gamepad.buttons[6].value, // Button Back
-                        gamepad.buttons[7].value, // Button Start
-                        gamepad.buttons[8].value, // Button Xbox
-                        gamepad.buttons[9].value, // Button Left Stick
-                        gamepad.buttons[10].value, // Button Right Stick
-                    ],
-                };
-                break;
-        }
-        return joyData;
-    }
-
-    pollGamepads() {
-        return navigator.getGamepads();
     }
 }
