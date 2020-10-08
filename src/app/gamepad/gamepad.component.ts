@@ -117,65 +117,70 @@ export class GamepadComponent implements OnInit, OnDestroy {
             this.rightDPadButton =
                 this.rightDPadButtonRaw < 0.2 ? 0.2 : this.rightDPadButtonRaw;
         } else if (os === 'Linux') {
-            // TBD
+            const dpadLeftRight = axes[6];
+            const dpadUpDown = axes[7];
+
+            this.rightDPadButtonRaw = dpadLeftRight > 0 ? dpadLeftRight : 0;
+            this.rightDPadButton =
+                this.rightDPadButtonRaw < 0.2 ? 0.2 : this.rightDPadButtonRaw;
+            this.leftDPadButtonRaw = dpadLeftRight < 0 ? dpadLeftRight : 0;
+            this.leftDPadButton =
+                this.leftDPadButtonRaw < 0.2 ? 0.2 : this.leftDPadButtonRaw;
+
+            this.upDPadButtonRaw = dpadUpDown > 0 ? dpadUpDown : 0;
+            this.upDPadButton =
+                this.upDPadButtonRaw < 0.2 ? 0.2 : this.upDPadButtonRaw;
+            this.downDPadButtonRaw = dpadUpDown < 0 ? dpadUpDown : 0;
+            this.downDPadButton =
+                this.downDPadButtonRaw < 0.2 ? 0.2 : this.downDPadButtonRaw;
         }
     }
 
     private extractMainButtonsData(buttons: ReadonlyArray<GamepadButton>) {
-        const os = this.platformDetector.os;
-        if (os === 'Windows') {
-            this.bottomButtonRaw = buttons[0].value;
-            this.bottomButton =
-                this.bottomButtonRaw < 0.2 ? 0.2 : this.bottomButtonRaw;
-            this.rightButtonRaw = buttons[1].value;
-            this.rightButton =
-                this.rightButtonRaw < 0.2 ? 0.2 : this.rightButtonRaw;
+        this.bottomButtonRaw = buttons[0].value;
+        this.bottomButton =
+            this.bottomButtonRaw < 0.2 ? 0.2 : this.bottomButtonRaw;
+        this.rightButtonRaw = buttons[1].value;
+        this.rightButton =
+            this.rightButtonRaw < 0.2 ? 0.2 : this.rightButtonRaw;
 
-            this.leftButtonRaw = buttons[2].value;
-            this.leftButton =
-                this.leftButtonRaw < 0.2 ? 0.2 : this.leftButtonRaw;
+        this.leftButtonRaw = buttons[2].value;
+        this.leftButton = this.leftButtonRaw < 0.2 ? 0.2 : this.leftButtonRaw;
 
-            this.topButtonRaw = buttons[3].value;
-            this.topButton = this.topButtonRaw < 0.2 ? 0.2 : this.topButtonRaw;
-        } else if (os === 'Linux') {
-            // TBD
-        }
+        this.topButtonRaw = buttons[3].value;
+        this.topButton = this.topButtonRaw < 0.2 ? 0.2 : this.topButtonRaw;
     }
 
     private extractOptionButtonData(buttons: ReadonlyArray<GamepadButton>) {
         const os = this.platformDetector.os;
+        let leftOptionButton: number;
+        let rightOptionButton: number;
         if (os === 'Windows') {
-            this.leftOptionButtonRaw = buttons[8].value;
-            this.leftOptionButton =
-                this.leftOptionButtonRaw < 0.2 ? 0.2 : this.leftOptionButtonRaw;
-            this.rightOptionButtonRaw = buttons[9].value;
-            this.rightOptionButton =
-                this.rightOptionButtonRaw < 0.2
-                    ? 0.2
-                    : this.rightOptionButtonRaw;
+            leftOptionButton = buttons[8].value;
+            rightOptionButton = buttons[9].value;
         } else if (os === 'Linux') {
-            // TBD
+            leftOptionButton = buttons[6].value;
+            rightOptionButton = buttons[7].value;
+        } else {
+            leftOptionButton = 0;
+            rightOptionButton = 0;
         }
+        this.leftOptionButtonRaw = leftOptionButton;
+        this.leftOptionButton =
+            this.leftOptionButtonRaw < 0.2 ? 0.2 : this.leftOptionButtonRaw;
+        this.rightOptionButtonRaw = rightOptionButton;
+        this.rightOptionButton =
+            this.rightOptionButtonRaw < 0.2 ? 0.2 : this.rightOptionButtonRaw;
     }
 
     private extractR1Data(buttons: ReadonlyArray<GamepadButton>) {
-        const os = this.platformDetector.os;
-        if (os === 'Windows') {
-            this.r1PressedRaw = buttons[5].value;
-            this.r1Pressed = this.r1PressedRaw < 0.2 ? 0.2 : this.r1PressedRaw;
-        } else if (os === 'Linux') {
-            // TBD
-        }
+        this.r1PressedRaw = buttons[5].value;
+        this.r1Pressed = this.r1PressedRaw < 0.2 ? 0.2 : this.r1PressedRaw;
     }
 
     private extractL1Data(buttons: ReadonlyArray<GamepadButton>) {
-        const os = this.platformDetector.os;
-        if (os === 'Windows') {
-            this.l1PressedRaw = buttons[4].value;
-            this.l1Pressed = this.l1PressedRaw < 0.2 ? 0.2 : this.l1PressedRaw;
-        } else if (os === 'Linux') {
-            // TBD
-        }
+        this.l1PressedRaw = buttons[4].value;
+        this.l1Pressed = this.l1PressedRaw < 0.2 ? 0.2 : this.l1PressedRaw;
     }
 
     private extractTriggerData(
@@ -183,44 +188,58 @@ export class GamepadComponent implements OnInit, OnDestroy {
         axes: ReadonlyArray<number>
     ) {
         const os = this.platformDetector.os;
+        let leftTrigger: number;
+        let rightTrigger: number;
         if (os === 'Windows') {
-            this.leftTriggerOpacityRaw = buttons[6].value;
-            this.leftTriggerOpacity =
-                this.leftTriggerOpacityRaw < 0.2
-                    ? 0.2
-                    : this.leftTriggerOpacityRaw;
-            this.rightTriggerOpacityRaw = buttons[7].value;
-            this.rightTriggerOpacity =
-                this.rightTriggerOpacityRaw < 0.2
-                    ? 0.2
-                    : this.rightTriggerOpacityRaw;
+            leftTrigger = buttons[6].value;
+            rightTrigger = buttons[7].value;
         } else if (os === 'Linux') {
-            // TBD
+            leftTrigger = axes[2];
+            rightTrigger = axes[5];
+        } else {
+            leftTrigger = 0;
+            rightTrigger = 0;
         }
+        this.leftTriggerOpacityRaw = leftTrigger;
+        this.leftTriggerOpacity =
+            this.leftTriggerOpacityRaw < 0.2 ? 0.2 : this.leftTriggerOpacityRaw;
+        this.rightTriggerOpacityRaw = rightTrigger;
+        this.rightTriggerOpacity =
+            this.rightTriggerOpacityRaw < 0.2
+                ? 0.2
+                : this.rightTriggerOpacityRaw;
     }
 
     private extractedStickData(axes: ReadonlyArray<number>) {
         const os = this.platformDetector.os;
+        let rightStickX: number;
+        let rightStickY: number;
+
+        this.leftStickPosition.x = axes[0] * 12 + 113;
+        this.leftStickPosition.y = axes[1] * 12 + 160;
+        this.leftStickOpacityRaw = Math.sqrt(
+            Math.pow(axes[0], 2) + Math.pow(axes[1], 2)
+        );
+        this.leftStickOpacity =
+            this.leftStickOpacityRaw < 0.2 ? 0.2 : this.leftStickOpacityRaw;
+
         if (os === 'Windows') {
-            this.leftStickPosition.x = axes[0] * 12 + 113;
-            this.leftStickPosition.y = axes[1] * 12 + 160;
-            this.leftStickOpacityRaw = Math.sqrt(
-                Math.pow(axes[0], 2) + Math.pow(axes[1], 2)
-            );
-            this.leftStickOpacity =
-                this.leftStickOpacityRaw < 0.2 ? 0.2 : this.leftStickOpacityRaw;
-            this.rightStickPosition.x = axes[2] * 12 + 278;
-            this.rightStickPosition.y = axes[3] * 12 + 238;
-            this.rightStickOpacityRaw = Math.sqrt(
-                Math.pow(axes[2], 2) + Math.pow(axes[3], 2)
-            );
-            this.rightStickOpacity =
-                this.rightStickOpacityRaw < 0.2
-                    ? 0.2
-                    : this.rightStickOpacityRaw;
+            rightStickX = axes[2];
+            rightStickY = axes[3];
         } else if (os === 'Linux') {
-            // TBD
+            rightStickX = axes[3];
+            rightStickY = axes[4];
+        } else {
+            rightStickX = 0;
+            rightStickY = 0;
         }
+        this.rightStickPosition.x = rightStickX * 12 + 278;
+        this.rightStickPosition.y = rightStickY * 12 + 238;
+        this.rightStickOpacityRaw = Math.sqrt(
+            Math.pow(axes[2], 2) + Math.pow(axes[3], 2)
+        );
+        this.rightStickOpacity =
+            this.rightStickOpacityRaw < 0.2 ? 0.2 : this.rightStickOpacityRaw;
     }
 
     ngOnDestroy(): void {
