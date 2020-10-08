@@ -63,6 +63,70 @@ export class GamepadService implements OnDestroy {
         return value;
     }
 
+    static mapToJoyButtonsLinux(gamepad: Gamepad): number[] {
+        return [
+            gamepad?.buttons[0].value, // Button A
+            gamepad?.buttons[1].value, // Button B
+            gamepad?.buttons[2].value, // Button X
+            gamepad?.buttons[3].value, // Button Y
+            gamepad?.buttons[4].value, // Button Left Trigger
+            gamepad?.buttons[5].value, // Button Right Trigger
+            gamepad?.buttons[6].value, // Button Back
+            gamepad?.buttons[7].value, // Button Start
+            gamepad?.buttons[8].value, // Button Xbox
+            gamepad?.buttons[9].value, // Button Left Stick
+            gamepad?.buttons[10].value, // Button Right Stick
+        ];
+    }
+
+    static mapToJoyAxesLinux(gamepad: Gamepad): number[] {
+        return [
+            gamepad?.axes[0], // Left Stick X
+            gamepad?.axes[1] * -1, // Left Stick Y
+            gamepad?.axes[2], // Left Trigger
+            gamepad?.axes[3], // Right Stick X
+            gamepad?.axes[4] * -1, // Right Stick Y
+            gamepad?.axes[5], // Right Trigger
+            gamepad?.axes[6], // DPAD Left/Right
+            gamepad?.axes[7], // DPAD Up/Down
+        ];
+    }
+
+    static mapToJoyButtonsWindows(gamepad: Gamepad): number[] {
+        return [
+            gamepad?.buttons[0].value, // Button A
+            gamepad?.buttons[1].value, // Button B
+            gamepad?.buttons[2].value, // Button X
+            gamepad?.buttons[3].value, // Button Y
+            gamepad?.buttons[4].value, // Button Left Trigger
+            gamepad?.buttons[5].value, // Button Right Trigger
+            gamepad?.buttons[8].value, // Button Back
+            gamepad?.buttons[9].value, // Button Start
+            gamepad?.buttons[16].value, // Button Xbox
+            gamepad?.buttons[10].value, // Button Left Stick
+            gamepad?.buttons[11].value, // Button Right Stick
+        ];
+    }
+
+    static mapToJoyAxesWindows(gamepad: Gamepad): number[] {
+        return [
+            gamepad?.axes[0], // Left Stick X
+            gamepad?.axes[1] * -1, // Left Stick Y
+            gamepad?.buttons[6].value, // Left Trigger
+            gamepad?.axes[2], // Right Stick X
+            gamepad?.axes[3] * -1, // Right Stick Y
+            gamepad?.buttons[7].value, // Right Trigger
+            GamepadService.getDpadAxeValueFromButtons(
+                gamepad?.buttons[14].pressed,
+                gamepad?.buttons[15].pressed
+            ), // DPAD Left/Right
+            GamepadService.getDpadAxeValueFromButtons(
+                gamepad?.buttons[13].pressed,
+                gamepad?.buttons[12].pressed
+            ), // DPAD Up/Down
+        ];
+    }
+
     /**
      * Disposes of the BehaviorSubject and intervals used in this service.
      */
@@ -101,63 +165,15 @@ export class GamepadService implements OnDestroy {
             case 'Windows':
                 joyData = {
                     header: {},
-                    axes: [
-                        gamepad?.axes[0], // Left Stick X
-                        gamepad?.axes[1] * -1, // Left Stick Y
-                        gamepad?.buttons[6].value, // Left Trigger
-                        gamepad?.axes[2], // Right Stick X
-                        gamepad?.axes[3] * -1, // Right Stick Y
-                        gamepad?.buttons[7].value, // Right Trigger
-                        GamepadService.getDpadAxeValueFromButtons(
-                            gamepad?.buttons[14].pressed,
-                            gamepad?.buttons[15].pressed
-                        ), // DPAD Left/Right
-                        GamepadService.getDpadAxeValueFromButtons(
-                            gamepad?.buttons[13].pressed,
-                            gamepad?.buttons[12].pressed
-                        ), // DPAD Up/Down
-                    ],
-                    buttons: [
-                        gamepad?.buttons[0].value, // Button A
-                        gamepad?.buttons[1].value, // Button B
-                        gamepad?.buttons[2].value, // Button X
-                        gamepad?.buttons[3].value, // Button Y
-                        gamepad?.buttons[4].value, // Button Left Trigger
-                        gamepad?.buttons[5].value, // Button Right Trigger
-                        gamepad?.buttons[8].value, // Button Back
-                        gamepad?.buttons[9].value, // Button Start
-                        gamepad?.buttons[16].value, // Button Xbox
-                        gamepad?.buttons[10].value, // Button Left Stick
-                        gamepad?.buttons[11].value, // Button Right Stick
-                    ],
+                    axes: GamepadService.mapToJoyAxesWindows(gamepad),
+                    buttons: GamepadService.mapToJoyButtonsWindows(gamepad),
                 };
                 break;
             case 'Linux':
                 joyData = {
                     header: {},
-                    axes: [
-                        gamepad?.axes[0], // Left Stick X
-                        gamepad?.axes[1] * -1, // Left Stick Y
-                        gamepad?.axes[2], // Left Trigger
-                        gamepad?.axes[3], // Right Stick X
-                        gamepad?.axes[4] * -1, // Right Stick Y
-                        gamepad?.axes[5], // Right Trigger
-                        gamepad?.axes[6], // DPAD Left/Right
-                        gamepad?.axes[7], // DPAD Up/Down
-                    ],
-                    buttons: [
-                        gamepad?.buttons[0].value, // Button A
-                        gamepad?.buttons[1].value, // Button B
-                        gamepad?.buttons[2].value, // Button X
-                        gamepad?.buttons[3].value, // Button Y
-                        gamepad?.buttons[4].value, // Button Left Trigger
-                        gamepad?.buttons[5].value, // Button Right Trigger
-                        gamepad?.buttons[6].value, // Button Back
-                        gamepad?.buttons[7].value, // Button Start
-                        gamepad?.buttons[8].value, // Button Xbox
-                        gamepad?.buttons[9].value, // Button Left Stick
-                        gamepad?.buttons[10].value, // Button Right Stick
-                    ],
+                    axes: GamepadService.mapToJoyAxesLinux(gamepad),
+                    buttons: GamepadService.mapToJoyButtonsLinux(gamepad),
                 };
                 break;
         }
