@@ -11,6 +11,7 @@ import {
     RosoutMessage,
     RosState,
 } from './ros-model.enum';
+import { environment } from '../environments/environment';
 
 const ROS_URL = 'ws://172.29.144.108:9090';
 
@@ -39,7 +40,7 @@ export class RosService {
 
     constructor() {
         this.rbServer = new ROSLIB.Ros({
-            url: ROS_URL,
+            url: environment.rosUrl,
         });
         this.rbServer.on('connection', () => this.onConnect());
         this.rbServer.on('error', () => this.errorOnConnection());

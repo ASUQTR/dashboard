@@ -8,6 +8,7 @@
 
 export const environment = {
     production: false,
+    rosUrl: 'ws://172.29.144.108:9090'
 };
 
 /*
