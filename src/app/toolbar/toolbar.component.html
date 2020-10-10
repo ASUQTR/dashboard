@@ -3,14 +3,14 @@
   -->
 
 <a (click)="toggleSidebar()" href="#">
-    <img id="logo" src="assets/asuqtr-logo.png" />
+    <nb-icon class="menu" icon="menu"></nb-icon>
 </a>
-<span class="toolbar-title"> ASUQTR Dashboard</span>
+<img src="assets/asuqtr-logo.png"  alt=""/>
+<span>ASUQTR Dashboard</span>
 <button
     nbButton
     ghost
     shape="round"
-    class="button"
     [nbSpinner]="!(rosbridgeConnected && gamepadConnected)"
     nbSpinnerStatus="info"
     [nbPopover]="popoverComponent"
