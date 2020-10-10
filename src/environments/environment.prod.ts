@@ -4,5 +4,5 @@
 
 export const environment = {
     production: true,
-    rosUrl: location.hostname
+    rosUrl: 'ws://'+ location.hostname + ':9090'
 };
