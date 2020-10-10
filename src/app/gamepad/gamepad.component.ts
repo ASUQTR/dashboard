@@ -236,7 +236,7 @@ export class GamepadComponent implements OnInit, OnDestroy {
         this.rightStickPosition.x = rightStickX * 12 + 278;
         this.rightStickPosition.y = rightStickY * 12 + 238;
         this.rightStickOpacityRaw = Math.sqrt(
-            Math.pow(axes[2], 2) + Math.pow(axes[3], 2)
+            Math.pow(rightStickX, 2) + Math.pow(rightStickY, 2)
         );
         this.rightStickOpacity =
             this.rightStickOpacityRaw < 0.2 ? 0.2 : this.rightStickOpacityRaw;
