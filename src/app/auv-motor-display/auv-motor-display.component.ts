@@ -47,13 +47,13 @@ export class AuvMotorDisplayComponent implements OnInit, OnDestroy {
      * @param motorThrottles Motors topic data coming from the RosService
      */
     extractMotorThrottlesData(motorThrottles: MotorThrottlesMessage): void {
-        motorThrottles.ids.forEach((index) => {
+        for (let index = 0; index < motorThrottles.throttles.length; index ++) {
             const intensity = motorThrottles.throttles[index];
             this.motors[index].forwardIntensity = intensity > 0 ? intensity : 0;
             this.motors[index].backwardIntensity =
                 intensity < 0 ? intensity * -1 : 0;
             this.motors[index].fillOpacity = Math.abs(intensity);
-        });
+        }
     }
 
     ngOnDestroy(): void {
