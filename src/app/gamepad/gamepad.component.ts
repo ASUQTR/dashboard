@@ -123,14 +123,14 @@ export class GamepadComponent implements OnInit, OnDestroy {
             this.rightDPadButtonRaw = dpadLeftRight > 0 ? dpadLeftRight : 0;
             this.rightDPadButton =
                 this.rightDPadButtonRaw < 0.2 ? 0.2 : this.rightDPadButtonRaw;
-            this.leftDPadButtonRaw = dpadLeftRight < 0 ? dpadLeftRight : 0;
+            this.leftDPadButtonRaw = dpadLeftRight < 0 ? dpadLeftRight * -1 : 0;
             this.leftDPadButton =
                 this.leftDPadButtonRaw < 0.2 ? 0.2 : this.leftDPadButtonRaw;
 
-            this.upDPadButtonRaw = dpadUpDown > 0 ? dpadUpDown : 0;
+            this.upDPadButtonRaw = dpadUpDown < 0 ? dpadUpDown * -1 : 0;
             this.upDPadButton =
                 this.upDPadButtonRaw < 0.2 ? 0.2 : this.upDPadButtonRaw;
-            this.downDPadButtonRaw = dpadUpDown < 0 ? dpadUpDown : 0;
+            this.downDPadButtonRaw = dpadUpDown > 0 ? dpadUpDown : 0;
             this.downDPadButton =
                 this.downDPadButtonRaw < 0.2 ? 0.2 : this.downDPadButtonRaw;
         }
