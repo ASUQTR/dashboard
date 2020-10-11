@@ -194,8 +194,8 @@ export class GamepadComponent implements OnInit, OnDestroy {
             leftTrigger = buttons[6].value;
             rightTrigger = buttons[7].value;
         } else if (os === 'Linux') {
-            leftTrigger = axes[2];
-            rightTrigger = axes[5];
+            leftTrigger = (axes[2] + 1) / 2.0;
+            rightTrigger = (axes[5] + 1) / 2.0;
         } else {
             leftTrigger = 0;
             rightTrigger = 0;
