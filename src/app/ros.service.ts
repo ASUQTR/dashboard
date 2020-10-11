@@ -13,8 +13,6 @@ import {
 } from './ros-model.enum';
 import { environment } from '../environments/environment';
 
-const ROS_URL = 'ws://172.29.144.108:9090';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -117,7 +115,7 @@ export class RosService {
 
     private retryConnection() {
         this.connectionTimer = setInterval(
-            () => this.rbServer.connect(ROS_URL),
+            () => this.rbServer.connect(environment.rosUrl),
             1000
         );
     }
