@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./sidebar-settings.component.scss'],
 })
 export class SidebarSettingsComponent implements OnInit {
+    animationState: 'void' | 'enter' = 'enter';
     constructor() {}
 
     ngOnInit(): void {}

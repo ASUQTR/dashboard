@@ -8,17 +8,38 @@ import { ConnectionStatus } from '../connection-status.model';
 import { GamepadService } from '../gamepad.service';
 import { RosState } from '../ros-model.enum';
 import { RosService } from '../ros.service';
+import {
+    trigger,
+    state,
+    style,
+    animate,
+    transition,
+} from '@angular/animations';
 
 @Component({
     selector: 'app-popover',
     templateUrl: './popover.component.html',
     styleUrls: ['./popover.component.scss'],
+    animations: [
+        trigger('slideContent', [
+            state(
+                'void',
+                style({
+                    transform: 'translate3d(0, -10%, 0)',
+                    opacity: 0,
+                })
+            ),
+            state('enter', style({ transform: 'none', opacity: 1 })),
+            transition('* => *', animate('200ms ease-out')),
+        ]),
+    ],
 })
 export class PopoverComponent implements OnInit, OnDestroy {
     readonly successIcon = 'checkmark-circle-2';
     readonly failureIcon = 'close-circle';
     readonly successColor = 'success';
     readonly failureColor = 'danger';
+    animationState: 'void' | 'enter' = 'enter';
     statusList: Array<ConnectionStatus> = [
         {
             statusIcon: this.failureIcon,

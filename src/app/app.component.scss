@@ -10,3 +10,9 @@ app-gamepad {
     margin-left: auto;
     order: 2;
 }
+
+nb-sidebar,
+nb-sidebar > div.main-container {
+    transition: all 400ms ease-in-out;
+    transition-property: width, opacity;
+}
