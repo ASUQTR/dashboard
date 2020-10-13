@@ -8,6 +8,16 @@ export enum RosState {
     Error,
 }
 
+export interface ControlStateMessage {
+    header: RosMsgHeader;
+    data?: boolean | null;
+}
+
+export interface ControlStateFeedbackMessage {
+    header: RosMsgHeader;
+    data?: boolean | null;
+}
+
 export interface MotorThrottlesMessage {
     header: RosMsgHeader;
     ids?: number[] | null;

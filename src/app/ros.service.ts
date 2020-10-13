@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import {
+    ControlStateFeedbackMessage,
     JoyMessage,
     MotorThrottlesMessage,
     RosoutMessage,
@@ -32,6 +33,10 @@ export class RosService {
         null
     );
     motorThrottlesData = this.motorThrottlesSource.asObservable();
+    private controlModeFeedbackSource = new BehaviorSubject<
+        ControlStateFeedbackMessage
+    >(null);
+    controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -95,6 +100,16 @@ export class RosService {
         motorThrottles.subscribe((msg) => {
             this.emitMotorThrottlesMessage(msg);
         });
+
+        const controlModeFeedback = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: 'control/mode_feedback',
+            messageType: 'std_msgs/Bool',
+        });
+
+        controlModeFeedback.subscribe((msg) => {
+            this.emitControlModeFeedbackMessage(msg);
+        });
     }
 
     advertiseAllTopics(): void {
@@ -126,5 +141,9 @@ export class RosService {
 
     private emitMotorThrottlesMessage(msg: any) {
         this.motorThrottlesSource.next(msg);
+    }
+
+    private emitControlModeFeedbackMessage(msg: any) {
+        this.controlModeFeedbackSource.next(msg);
     }
 }

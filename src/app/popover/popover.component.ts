@@ -61,11 +61,7 @@ export class PopoverComponent implements OnInit, OnDestroy {
     rosIconColor: any;
     gamepadConnectedSubscription: any;
     gamepadDisconnectedSubscription: any;
-    constructor(
-        public gs: GamepadService,
-        public rs: RosService,
-        private cdr: ChangeDetectorRef
-    ) {}
+    constructor(public gs: GamepadService, public rs: RosService) {}
 
     ngOnInit(): void {
         this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
@@ -76,7 +72,6 @@ export class PopoverComponent implements OnInit, OnDestroy {
                     this.statusList[1].statusIcon = this.successIcon;
                     this.statusList[1].statusIconColor = this.successColor;
                     this.gp = e.gamepad;
-                    this.cdr.detectChanges();
                 }
             }
         );
@@ -88,7 +83,6 @@ export class PopoverComponent implements OnInit, OnDestroy {
                     this.statusList[1].statusIcon = this.failureIcon;
                     this.statusList[1].statusIconColor = this.failureColor;
                     this.gp = e.gamepad;
-                    this.cdr.detectChanges();
                 }
             }
         );
@@ -113,7 +107,6 @@ export class PopoverComponent implements OnInit, OnDestroy {
                         this.statusList[0].statusIconColor = this.failureColor;
                         break;
                 }
-                this.cdr.detectChanges();
             }
         );
     }

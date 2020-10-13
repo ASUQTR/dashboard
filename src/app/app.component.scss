@@ -14,5 +14,5 @@ app-gamepad {
 nb-sidebar,
 nb-sidebar > div.main-container {
     transition: all 400ms ease-in-out;
-    transition-property: width, opacity;
+    transition-property: width;
 }

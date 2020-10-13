@@ -38,6 +38,7 @@ import { AuvMotorDisplayComponent } from './auv-motor-display/auv-motor-display.
 import { ViewSettingsComponent } from './view-settings/view-settings.component';
 import { RosoutComponent } from './rosout/rosout.component';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { ControlStateDisplayComponent } from './control-state-display/control-state-display.component';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
         AuvMotorDisplayComponent,
         ViewSettingsComponent,
         RosoutComponent,
+        ControlStateDisplayComponent,
     ],
     imports: [
         BrowserModule,
