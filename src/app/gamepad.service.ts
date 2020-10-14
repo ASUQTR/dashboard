@@ -31,8 +31,7 @@ export class GamepadService implements OnDestroy {
 
     constructor(
         private rendererFactory2: RendererFactory2,
-        private rs: RosService,
-        private platformDetector: DeviceDetectorService
+        private rs: RosService
     ) {
         const renderer = this.rendererFactory2.createRenderer(null, null);
         const renderer2 = this.rendererFactory2.createRenderer(null, null);
@@ -63,7 +62,7 @@ export class GamepadService implements OnDestroy {
         return value;
     }
 
-    static mapToJoyButtonsLinux(gamepad: Gamepad): number[] {
+    static mapToJoyButtonsNotStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.buttons[0].value, // Button A
             gamepad?.buttons[1].value, // Button B
@@ -79,7 +78,7 @@ export class GamepadService implements OnDestroy {
         ];
     }
 
-    static mapToJoyAxesLinux(gamepad: Gamepad): number[] {
+    static mapToJoyAxesNotStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.axes[0], // Left Stick X
             gamepad?.axes[1] * -1, // Left Stick Y
@@ -92,7 +91,7 @@ export class GamepadService implements OnDestroy {
         ];
     }
 
-    static mapToJoyButtonsWindows(gamepad: Gamepad): number[] {
+    static mapToJoyButtonsStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.buttons[0].value, // Button A
             gamepad?.buttons[1].value, // Button B
@@ -108,7 +107,7 @@ export class GamepadService implements OnDestroy {
         ];
     }
 
-    static mapToJoyAxesWindows(gamepad: Gamepad): number[] {
+    static mapToJoyAxesStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.axes[0], // Left Stick X
             gamepad?.axes[1] * -1, // Left Stick Y
@@ -159,21 +158,20 @@ export class GamepadService implements OnDestroy {
      * @param gamepad Gamepad raw data
      */
     toJoyMessage(gamepad: Gamepad): JoyMessage {
-        const os = this.platformDetector.os;
         let joyData: JoyMessage;
-        switch (os) {
-            case 'Windows':
+        switch (gamepad.mapping) {
+            case 'standard':
                 joyData = {
                     header: {},
-                    axes: GamepadService.mapToJoyAxesWindows(gamepad),
-                    buttons: GamepadService.mapToJoyButtonsWindows(gamepad),
+                    axes: GamepadService.mapToJoyAxesStandard(gamepad),
+                    buttons: GamepadService.mapToJoyButtonsStandard(gamepad),
                 };
                 break;
-            case 'Linux':
+            case '':
                 joyData = {
                     header: {},
-                    axes: GamepadService.mapToJoyAxesLinux(gamepad),
-                    buttons: GamepadService.mapToJoyButtonsLinux(gamepad),
+                    axes: GamepadService.mapToJoyAxesNotStandard(gamepad),
+                    buttons: GamepadService.mapToJoyButtonsNotStandard(gamepad),
                 };
                 break;
         }
