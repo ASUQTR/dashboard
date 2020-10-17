@@ -39,6 +39,8 @@ import { ViewSettingsComponent } from './view-settings/view-settings.component';
 import { RosoutComponent } from './rosout/rosout.component';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ControlStateDisplayComponent } from './control-state-display/control-state-display.component';
+import { ControlLQRComponent } from './control-lqr/control-lqr.component';
+import { ControlToggleComponent } from './control-toggle/control-toggle.component';
 
 @NgModule({
     declarations: [
@@ -55,6 +57,8 @@ import { ControlStateDisplayComponent } from './control-state-display/control-st
         ViewSettingsComponent,
         RosoutComponent,
         ControlStateDisplayComponent,
+        ControlLQRComponent,
+        ControlToggleComponent,
     ],
     imports: [
         BrowserModule,

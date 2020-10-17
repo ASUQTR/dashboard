@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import {
+    ControlEnableMessage,
     ControlStateFeedbackMessage,
     JoyMessage,
     MotorThrottlesMessage,
@@ -37,6 +38,9 @@ export class RosService {
         ControlStateFeedbackMessage
     >(null);
     controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
+    lqrControlSource = new ReplaySubject<boolean>(1);
+    lqrControlData = this.lqrControlSource.asObservable();
+    lqrEnabled: boolean;
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -121,6 +125,22 @@ export class RosService {
         joy.advertise();
         this.joyData.subscribe((joyData) => {
             joy.publish(joyData);
+        });
+
+        const enableLQR = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: 'control/switch',
+            messageType: 'std_msgs/Bool',
+        });
+        enableLQR.advertise();
+        this.lqrControlData.subscribe((enableLQRData) => {
+            if (this.lqrEnabled !== enableLQRData) {
+                const newDataLQREnable: ControlEnableMessage = {
+                    data: enableLQRData,
+                };
+                enableLQR.publish(newDataLQREnable);
+                this.lqrEnabled = enableLQRData;
+            }
         });
     }
 

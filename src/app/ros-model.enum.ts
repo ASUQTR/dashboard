@@ -9,12 +9,14 @@ export enum RosState {
 }
 
 export interface ControlStateMessage {
-    header: RosMsgHeader;
     data?: boolean | null;
 }
 
 export interface ControlStateFeedbackMessage {
-    header: RosMsgHeader;
+    data?: boolean | null;
+}
+
+export interface ControlEnableMessage {
     data?: boolean | null;
 }
 
