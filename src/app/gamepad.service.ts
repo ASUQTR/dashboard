@@ -11,13 +11,14 @@ import {
 import { BehaviorSubject, fromEventPattern, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RosService } from './ros.service';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { JoyMessage } from './ros-model.enum';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GamepadService implements OnDestroy {
+    readonly enableLQRCookieName = 'enableLQRCookie';
     public onGamepadConnected: BehaviorSubject<GamepadEvent>;
     public onGamepadDisconnected: BehaviorSubject<GamepadEvent>;
     public gamepadConnected = false;
@@ -28,16 +29,27 @@ export class GamepadService implements OnDestroy {
     private gamepadSource = new BehaviorSubject<Array<Gamepad>>(null);
     gamepadData = this.gamepadSource.asObservable();
     private gamepadInterval: NodeJS.Timeout;
+    private lqrEnabled = false;
+    private menuButtonPressedOld = false;
 
     constructor(
         private rendererFactory2: RendererFactory2,
-        private rs: RosService
+        private rs: RosService,
+        private cookies: CookieService
     ) {
         const renderer = this.rendererFactory2.createRenderer(null, null);
         const renderer2 = this.rendererFactory2.createRenderer(null, null);
 
         this.createOnGamepadConnectedObservable(renderer);
         this.createOnGamepadDisconnectedObservable(renderer2);
+        this.rs.lqrControlSource.subscribe((newValue) => {
+            this.lqrEnabled = newValue;
+        });
+        if (this.cookies.check(this.enableLQRCookieName)) {
+            const cookieStartingValue =
+                this.cookies.get(this.enableLQRCookieName) === 'true';
+            this.rs.lqrControlSource.next(cookieStartingValue);
+        }
     }
 
     /**
@@ -144,10 +156,26 @@ export class GamepadService implements OnDestroy {
      */
     gameLoop(): void {
         this.gamepads = this.pollGamepads();
+        const menuPressed = this.getMenuButton();
+        if (!this.menuButtonPressedOld && menuPressed) {
+            this.lqrEnabled = !this.lqrEnabled;
+            this.rs.lqrControlSource.next(this.lqrEnabled);
+        }
+        this.menuButtonPressedOld = menuPressed;
         this.gamepadSource.next(this.gamepads);
         this.rs.joySource.next(this.toJoyMessage(this.gamepads[0]));
         if (this.gamepadConnected) {
             requestAnimationFrame(() => this.gameLoop());
+        }
+    }
+
+    private getMenuButton(): boolean {
+        if (this.gamepads[0].mapping === 'standard') {
+            return this.gamepads[0].buttons[9].pressed;
+        } else if (this.gamepads[0].mapping === '') {
+            return this.gamepads[0].buttons[7].pressed;
+        } else {
+            return false;
         }
     }
 
