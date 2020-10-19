@@ -1,6 +1,11 @@
 nb-card-body {
     display: grid;
     grid-gap: 20px;
+    place-items: center;
+}
+
+nb-card {
+    width: 50%;
 }
 
 app-control-toggle {

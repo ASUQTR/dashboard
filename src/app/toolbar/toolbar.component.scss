@@ -11,8 +11,6 @@
 img {
     width: 2rem;
     height: 2rem;
-    grid-column-start: 2;
-    place-self: center;
 }
 
 button {
@@ -38,10 +36,17 @@ span {
     grid-column-start: 3;
 }
 
-a {
+a.menuToggle {
     grid-column-start: 1;
     display: grid;
     grid-template-columns: 1fr;
+}
+
+a.mainRouterLink {
+    width: 2rem;
+    height: 2rem;
+    grid-column-start: 2;
+    place-self: center;
 }
 
 .menu {
@@ -49,8 +54,4 @@ a {
     place-self: center;
     height: 30px;
     width: 30px;
-}
-
-nbPopover {
-    //max-width: 5vw;
 }

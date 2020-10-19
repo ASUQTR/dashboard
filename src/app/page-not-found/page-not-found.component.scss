@@ -1,0 +1,11 @@
+:host {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+}
+
+nb-card {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}

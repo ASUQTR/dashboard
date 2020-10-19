@@ -13,9 +13,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     styleUrls: ['./gamepad.component.scss'],
 })
 export class GamepadComponent implements OnInit, OnDestroy {
-    connected = false;
-    private gamepadConnectedSubscription: Subscription;
-    private gamepadDisconnectedSubscription: Subscription;
     leftStickPosition: Coordinates = { x: 113, y: 160 };
     rightStickPosition: Coordinates = { x: 278, y: 238 };
     leftStickOpacity = 0.2;
@@ -55,20 +52,6 @@ export class GamepadComponent implements OnInit, OnDestroy {
     constructor(public gs: GamepadService) {}
 
     ngOnInit(): void {
-        this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
-            (e: GamepadEvent) => {
-                if (e) {
-                    this.connected = true;
-                }
-            }
-        );
-        this.gamepadDisconnectedSubscription = this.gs.onGamepadDisconnected.subscribe(
-            (e: GamepadEvent) => {
-                if (e) {
-                    this.connected = false;
-                }
-            }
-        );
         this.gamepadDataSubscription = this.gs.gamepadData.subscribe((e) => {
             if (e) {
                 this.extractGamepadData(e);
@@ -244,8 +227,6 @@ export class GamepadComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.gamepadConnectedSubscription.unsubscribe();
-        this.gamepadDisconnectedSubscription.unsubscribe();
         this.gamepadDataSubscription.unsubscribe();
     }
 }

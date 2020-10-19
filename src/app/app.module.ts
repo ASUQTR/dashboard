@@ -27,6 +27,7 @@ import {
     NbChatModule,
     NbSidebarService,
     NbThemeService,
+    NbMenuModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
@@ -41,6 +42,10 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { ControlStateDisplayComponent } from './control-state-display/control-state-display.component';
 import { ControlLQRComponent } from './control-lqr/control-lqr.component';
 import { ControlToggleComponent } from './control-toggle/control-toggle.component';
+import { RosRemoteComponent } from './ros-remote/ros-remote.component';
+import { KeyboardShortcutsModule } from 'ng-keyboard-shortcuts';
+import { MainPageComponent } from './main-page/main-page.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
     declarations: [
@@ -59,6 +64,9 @@ import { ControlToggleComponent } from './control-toggle/control-toggle.componen
         ControlStateDisplayComponent,
         ControlLQRComponent,
         ControlToggleComponent,
+        RosRemoteComponent,
+        MainPageComponent,
+        PageNotFoundComponent,
     ],
     imports: [
         BrowserModule,
@@ -77,6 +85,8 @@ import { ControlToggleComponent } from './control-toggle/control-toggle.componen
         NbSidebarModule.forRoot(),
         NbCardModule,
         NbChatModule,
+        NbMenuModule,
+        KeyboardShortcutsModule.forRoot(),
     ],
     providers: [
         CookieService,

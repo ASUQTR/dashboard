@@ -2,10 +2,12 @@
   ~ Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
   -->
 
-<a (click)="toggleSidebar()" href="#">
+<a (click)="toggleSidebar()" href="#" class="menuToggle">
     <nb-icon class="menu" icon="menu"></nb-icon>
 </a>
-<img src="assets/asuqtr-logo.png"  alt=""/>
+<a [routerLink]="['/main']" class="mainRouterLink">
+    <img src="assets/asuqtr-logo.png" alt="" />
+</a>
 <span>ASUQTR Dashboard</span>
 <button
     nbButton
