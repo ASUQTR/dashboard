@@ -1,3 +1,8 @@
+:host {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 nb-card-body {
     display: grid;
     grid-gap: 20px;
@@ -5,7 +10,7 @@ nb-card-body {
 }
 
 nb-card {
-    width: 50%;
+    grid-column-start: 1;
 }
 
 app-control-toggle {

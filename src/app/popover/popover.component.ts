@@ -2,7 +2,7 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConnectionStatus } from '../connection-status.model';
 import { GamepadService } from '../gamepad.service';
@@ -55,12 +55,8 @@ export class PopoverComponent implements OnInit, OnDestroy {
         },
     ];
     rosStateSubscription: Subscription;
-    gamepadConnected: boolean;
-    gp: Gamepad;
-    rosStatusIcon: any;
-    rosIconColor: any;
-    gamepadConnectedSubscription: any;
-    gamepadDisconnectedSubscription: any;
+    gamepadConnectedSubscription: Subscription;
+    gamepadDisconnectedSubscription: Subscription;
     constructor(public gs: GamepadService, public rs: RosService) {}
 
     ngOnInit(): void {
@@ -71,7 +67,6 @@ export class PopoverComponent implements OnInit, OnDestroy {
                     this.statusList[1].statusText = 'Gamepad connected';
                     this.statusList[1].statusIcon = this.successIcon;
                     this.statusList[1].statusIconColor = this.successColor;
-                    this.gp = e.gamepad;
                 }
             }
         );
@@ -82,7 +77,6 @@ export class PopoverComponent implements OnInit, OnDestroy {
                     this.statusList[1].statusText = 'Waiting for gamepad...';
                     this.statusList[1].statusIcon = this.failureIcon;
                     this.statusList[1].statusIconColor = this.failureColor;
-                    this.gp = e.gamepad;
                 }
             }
         );

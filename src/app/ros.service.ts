@@ -26,7 +26,7 @@ export class RosService {
         RosState.Disconnected
     );
     rosStateItem$ = this.rosStateItemSource.asObservable();
-    private rosoutSource = new ReplaySubject<RosoutMessage>();
+    private rosoutSource = new ReplaySubject<RosoutMessage>(); // Will replay all rosout message at subscribe
     rosoutData = this.rosoutSource.asObservable();
     joySource = new ReplaySubject<JoyMessage>(1);
     joyData = this.joySource.asObservable();
