@@ -40,6 +40,8 @@ export class RosService {
     controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
     lqrControlSource = new ReplaySubject<boolean>(1);
     lqrControlData = this.lqrControlSource.asObservable();
+    private topicsListSource = new BehaviorSubject<string[]>(null);
+    topicsListData = this.topicsListSource.asObservable();
     lqrEnabled: boolean;
     statusIcon: string;
     statusIconColor: string;
@@ -65,6 +67,7 @@ export class RosService {
         this.emitNewRosState(this.connected);
         this.subscribeAllTopics();
         this.advertiseAllTopics();
+        this.getTopics();
     }
 
     private errorOnConnection() {
@@ -165,5 +168,16 @@ export class RosService {
 
     private emitControlModeFeedbackMessage(msg: any) {
         this.controlModeFeedbackSource.next(msg);
+    }
+
+    private getTopics() {
+        if (this.connected) {
+            this.rbServer.getTopics((allTopics) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                this.topicsListSource.next(allTopics.topics);
+            });
+            setTimeout(() => this.getTopics(), 2000);
+        }
     }
 }

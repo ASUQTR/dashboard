@@ -46,6 +46,7 @@ import { RosRemoteComponent } from './ros-remote/ros-remote.component';
 import { KeyboardShortcutsModule } from 'ng-keyboard-shortcuts';
 import { MainPageComponent } from './main-page/main-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { CameraFeedComponent } from './camera-feed/camera-feed.component';
 
 @NgModule({
     declarations: [
@@ -67,6 +68,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
         RosRemoteComponent,
         MainPageComponent,
         PageNotFoundComponent,
+        CameraFeedComponent,
     ],
     imports: [
         BrowserModule,
