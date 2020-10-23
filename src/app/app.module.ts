@@ -13,21 +13,24 @@ import { GamepadComponent } from './gamepad/gamepad.component';
 import { RosbridgeComponent } from './rosbridge/rosbridge.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-    NbThemeModule,
-    NbLayoutModule,
-    NbButtonModule,
     NbActionsModule,
-    NbSpinnerModule,
-    NbIconModule,
-    NbPopoverModule,
-    NbListModule,
-    NbToggleModule,
-    NbSidebarModule,
+    NbButtonModule,
     NbCardModule,
     NbChatModule,
-    NbSidebarService,
-    NbThemeService,
+    NbGlobalLogicalPosition,
+    NbIconModule,
+    NbLayoutModule,
+    NbListModule,
     NbMenuModule,
+    NbPopoverModule,
+    NbSidebarModule,
+    NbSidebarService,
+    NbSpinnerModule,
+    NbThemeModule,
+    NbThemeService,
+    NbToastrModule,
+    NbToastrService,
+    NbToggleModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
@@ -47,6 +50,7 @@ import { KeyboardShortcutsModule } from 'ng-keyboard-shortcuts';
 import { MainPageComponent } from './main-page/main-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CameraFeedComponent } from './camera-feed/camera-feed.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -89,12 +93,18 @@ import { CameraFeedComponent } from './camera-feed/camera-feed.component';
         NbChatModule,
         NbMenuModule,
         KeyboardShortcutsModule.forRoot(),
+        HttpClientModule,
+        NbToastrModule.forRoot({
+            limit: 3,
+            position: NbGlobalLogicalPosition.TOP_END,
+        }),
     ],
     providers: [
         CookieService,
         NbSidebarService,
         NbThemeService,
         DeviceDetectorService,
+        NbToastrService,
     ],
     bootstrap: [AppComponent],
 })

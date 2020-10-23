@@ -4,7 +4,7 @@
 
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import {
     ControlEnableMessage,
     ControlStateFeedbackMessage,
@@ -14,6 +14,7 @@ import {
     RosState,
 } from './ros-model.enum';
 import { environment } from '../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root',
@@ -47,7 +48,7 @@ export class RosService {
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
 
-    constructor() {
+    constructor(private http: HttpClient) {
         this.rbServer = new ROSLIB.Ros({
             url: environment.rosUrl,
         });
@@ -145,6 +146,15 @@ export class RosService {
                 this.lqrEnabled = enableLQRData;
             }
         });
+    }
+
+    restApiControlRosRemotely(start: number): Observable<any> {
+        const apiUrl =
+            'http://' +
+            location.hostname +
+            ':42069/api/remote?start=' +
+            start.toString();
+        return this.http.post(apiUrl, '', {});
     }
 
     private emitRosoutMessage(msg: any) {
