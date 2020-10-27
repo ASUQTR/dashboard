@@ -3,6 +3,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { NbMenuItem } from '@nebular/theme';
 
 @Component({
     selector: 'app-sidebar-settings',
@@ -11,6 +12,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidebarSettingsComponent implements OnInit {
     animationState: 'void' | 'enter' = 'enter';
+    items: NbMenuItem[] = [
+        {
+            title: 'Home',
+            link: '/main',
+            icon: 'home-outline',
+        },
+        {
+            title: 'More',
+            link: 'secondary',
+            icon: 'more-horizontal',
+        },
+    ];
     constructor() {}
 
     ngOnInit(): void {}

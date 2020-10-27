@@ -13,12 +13,14 @@ import { GamepadComponent } from './gamepad/gamepad.component';
 import { RosbridgeComponent } from './rosbridge/rosbridge.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
+    NbAccordionModule,
     NbActionsModule,
     NbButtonModule,
     NbCardModule,
     NbChatModule,
     NbGlobalLogicalPosition,
     NbIconModule,
+    NbInputModule,
     NbLayoutModule,
     NbListModule,
     NbMenuModule,
@@ -51,6 +53,9 @@ import { MainPageComponent } from './main-page/main-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CameraFeedComponent } from './camera-feed/camera-feed.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SecondaryPageComponent } from './secondary-page/secondary-page.component';
+import { ControlLqrParametersComponent } from './control-lqr-parameters/control-lqr-parameters.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -73,6 +78,8 @@ import { HttpClientModule } from '@angular/common/http';
         MainPageComponent,
         PageNotFoundComponent,
         CameraFeedComponent,
+        SecondaryPageComponent,
+        ControlLqrParametersComponent,
     ],
     imports: [
         BrowserModule,
@@ -91,13 +98,16 @@ import { HttpClientModule } from '@angular/common/http';
         NbSidebarModule.forRoot(),
         NbCardModule,
         NbChatModule,
-        NbMenuModule,
+        NbMenuModule.forRoot(),
         KeyboardShortcutsModule.forRoot(),
         HttpClientModule,
         NbToastrModule.forRoot({
             limit: 3,
             position: NbGlobalLogicalPosition.TOP_END,
         }),
+        NbAccordionModule,
+        NbInputModule,
+        ReactiveFormsModule,
     ],
     providers: [
         CookieService,
