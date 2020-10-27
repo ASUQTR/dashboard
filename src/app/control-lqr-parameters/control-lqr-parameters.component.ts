@@ -11,49 +11,49 @@ export class ControlLqrParametersComponent implements OnInit {
     matrixQ = new FormArray([
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
@@ -61,49 +61,49 @@ export class ControlLqrParametersComponent implements OnInit {
     matrixR = new FormArray([
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^[0-9]*$'),
+            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
@@ -176,10 +176,14 @@ export class ControlLqrParametersComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const matrixq = this.rs.getLqrParamsMatrixQ();
-        console.log('Matrix Q from ROS: ', matrixq);
-        const matrixr = this.rs.getLqrParamsMatrixR();
-        console.log('Matrix R from ROS: ', matrixr);
+        const matrixQParam = this.rs.getLqrParamsMatrixQ();
+        matrixQParam.get((param) => {
+            this.matrixQ.setValue(param);
+        })
+        const matrixRParam = this.rs.getLqrParamsMatrixR();
+        matrixRParam.get((param) => {
+            this.matrixR.setValue(param);
+        })
     }
 
     sendNewValues() {

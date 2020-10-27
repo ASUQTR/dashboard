@@ -130,21 +130,17 @@ export class RosService {
     }
 
     getLqrParamsMatrixQ(): any {
-        const lqrParamMatrixQ = new ROSLIB.Param({
+        return new ROSLIB.Param({
             ros: this.rbServer,
             name: 'control_node/state_cost_matrix',
         });
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        lqrParamMatrixQ.get((res) => res);
     }
 
     getLqrParamsMatrixR(): any {
-        const lqrParamMatrixR = new ROSLIB.Param({
+        return new ROSLIB.Param({
             ros: this.rbServer,
             name: 'control_node/motor_cost_matrix',
         });
-        lqrParamMatrixR.get((res) => res);
     }
 
     restApiControlRosRemotely(start: number): Observable<any> {
