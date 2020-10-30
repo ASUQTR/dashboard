@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NbColorHelper, NbThemeService } from '@nebular/theme';
-import { ChartComponent } from 'angular2-chartjs';
-import { RosService } from '../ros.service';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {NbColorHelper, NbThemeService} from '@nebular/theme';
+import {ChartComponent} from 'angular2-chartjs';
+import {RosService} from '../ros.service';
+import {interval, Subscription} from "rxjs";
+import {throttle} from "rxjs/operators";
 
 @Component({
     selector: 'app-motor-graph',
@@ -13,6 +15,8 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
     options: any;
     themeSubscription: any;
     @ViewChild(ChartComponent) chartComponent: ChartComponent;
+    private motorDataSubscription: Subscription;
+
     constructor(private theme: NbThemeService, private rs: RosService) {
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
             const colors: any = config.variables;
@@ -82,8 +86,8 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
                             },
                         ],
                         label: 'Motor 6',
-                        backgroundColor: NbColorHelper.hexToRgbA(colors.control, 0.3),
-                        borderColor: colors.control,
+                        backgroundColor: NbColorHelper.hexToRgbA(colors.successLight, 0.5),
+                        borderColor: colors.successLight,
                     },
                     {
                         data: [
@@ -93,8 +97,8 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
                             },
                         ],
                         label: 'Motor 7',
-                        backgroundColor: NbColorHelper.hexToRgbA(colors.primary, 0.5),
-                        borderColor: colors.primary,
+                        backgroundColor: NbColorHelper.hexToRgbA(colors.warningLight, 0.5),
+                        borderColor: colors.warningLight,
                     },
                     {
                         data: [
@@ -104,8 +108,8 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
                             },
                         ],
                         label: 'Motor 8',
-                        backgroundColor: NbColorHelper.hexToRgbA(colors.danger, 0.5),
-                        borderColor: colors.danger,
+                        backgroundColor: NbColorHelper.hexToRgbA(colors.dangerLight, 0.5),
+                        borderColor: colors.dangerLight,
                     },
                 ],
             };
@@ -127,18 +131,21 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
                             },
                             ticks: {
                                 fontColor: colors.fgText,
-                                sampleSize: 20,
+                                sampleSize: 500,
                             },
                         },
                     ],
                     yAxes: [
                         {
+
                             gridLines: {
                                 display: true,
                                 color: colors.separator,
                             },
                             ticks: {
                                 fontColor: colors.fgText,
+                                suggestedMin: -1,
+                                suggestedMax: 1
                             },
                         },
                     ],
@@ -153,8 +160,10 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.rs.motorThrottlesData.subscribe((throttles) => {
-            this.addChartData(throttles.throttles);
+         this.motorDataSubscription = this.rs.motorThrottlesData.pipe(throttle(ev => interval(500))).subscribe((throttles) => {
+            if(throttles) {
+                this.addChartData(throttles.throttles);
+            }
         });
     }
 
@@ -174,5 +183,6 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.themeSubscription.unsubscribe();
+        this.motorDataSubscription.unsubscribe();
     }
 }
