@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NbColorHelper, NbThemeService} from '@nebular/theme';
-import {ChartComponent} from 'angular2-chartjs';
-import {RosService} from '../ros.service';
-import {interval, Subscription} from "rxjs";
-import {throttle} from "rxjs/operators";
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { NbColorHelper, NbThemeService } from '@nebular/theme';
+import { ChartComponent } from 'angular2-chartjs';
+import { RosService } from '../ros.service';
+import { interval, Subscription } from "rxjs";
+import { throttle } from "rxjs/operators";
 
 @Component({
     selector: 'app-motor-graph',
     templateUrl: './motor-graph.component.html',
     styleUrls: ['./motor-graph.component.scss'],
 })
-export class MotorGraphComponent implements OnInit, OnDestroy {
+export class MotorGraphComponent implements AfterViewInit, OnDestroy {
     data: any;
     options: any;
     themeSubscription: any;
@@ -159,9 +159,9 @@ export class MotorGraphComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit(): void {
-         this.motorDataSubscription = this.rs.motorThrottlesData.pipe(throttle(ev => interval(500))).subscribe((throttles) => {
-            if(throttles) {
+    ngAfterViewInit(): void {
+        this.motorDataSubscription = this.rs.motorThrottlesData.pipe(throttle(ev => interval(500))).subscribe((throttles) => {
+            if (throttles) {
                 this.addChartData(throttles.throttles);
             }
         });

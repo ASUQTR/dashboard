@@ -8,6 +8,6 @@ app-toolbar {
 
 nb-sidebar,
 nb-sidebar > div.main-container {
-    transition: all 400ms ease-in-out;
+    transition: all 400ms cubic-bezier(0, 1, 0, 1);
     transition-property: width;
 }
