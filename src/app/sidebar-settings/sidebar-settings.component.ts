@@ -23,6 +23,11 @@ export class SidebarSettingsComponent implements OnInit {
             link: 'secondary',
             icon: 'more-horizontal',
         },
+        {
+            title: 'Debug',
+            link: 'debug',
+            icon: 'activity',
+        },
     ];
     constructor() {}
 
