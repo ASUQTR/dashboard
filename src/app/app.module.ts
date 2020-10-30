@@ -56,6 +56,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { SecondaryPageComponent } from './secondary-page/secondary-page.component';
 import { ControlLqrParametersComponent } from './control-lqr-parameters/control-lqr-parameters.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DebugPageComponent } from './debug-page/debug-page.component';
+import { MotorGraphComponent } from './motor-graph/motor-graph.component';
+import { ChartModule } from 'angular2-chartjs';
 
 @NgModule({
     declarations: [
@@ -80,6 +83,8 @@ import { ReactiveFormsModule } from '@angular/forms';
         CameraFeedComponent,
         SecondaryPageComponent,
         ControlLqrParametersComponent,
+        DebugPageComponent,
+        MotorGraphComponent,
     ],
     imports: [
         BrowserModule,
@@ -108,6 +113,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         NbAccordionModule,
         NbInputModule,
         ReactiveFormsModule,
+        ChartModule,
     ],
     providers: [
         CookieService,
