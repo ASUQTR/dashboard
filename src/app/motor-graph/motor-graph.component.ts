@@ -2,8 +2,8 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { NbColorHelper, NbThemeService } from '@nebular/theme';
 import { ChartComponent } from 'angular2-chartjs';
 import { RosService } from '../ros.service';
-import { interval, Subscription } from "rxjs";
-import { throttle } from "rxjs/operators";
+import { interval, Subscription } from 'rxjs';
+import { throttle } from 'rxjs/operators';
 
 @Component({
     selector: 'app-motor-graph',
@@ -137,7 +137,6 @@ export class MotorGraphComponent implements AfterViewInit, OnDestroy {
                     ],
                     yAxes: [
                         {
-
                             gridLines: {
                                 display: true,
                                 color: colors.separator,
@@ -145,7 +144,7 @@ export class MotorGraphComponent implements AfterViewInit, OnDestroy {
                             ticks: {
                                 fontColor: colors.fgText,
                                 suggestedMin: -1,
-                                suggestedMax: 1
+                                suggestedMax: 1,
                             },
                         },
                     ],
@@ -160,18 +159,20 @@ export class MotorGraphComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        this.motorDataSubscription = this.rs.motorThrottlesData.pipe(throttle(ev => interval(500))).subscribe((throttles) => {
-            if (throttles) {
-                this.addChartData(throttles.throttles);
-            }
-        });
+        this.motorDataSubscription = this.rs.motorThrottlesData
+            .pipe(throttle((ev) => interval(500)))
+            .subscribe((throttlesMsg) => {
+                if (throttlesMsg) {
+                    this.addChartData(throttlesMsg.throttles);
+                }
+            });
     }
 
     addChartData(motorThrottles: number[]) {
-        motorThrottles.forEach((throttle, index) => {
+        motorThrottles.forEach((value, index) => {
             this.data.datasets[index].data.push({
                 t: new Date(),
-                y: throttle,
+                y: value,
             });
             this.data.datasets[index].data = this.data.datasets[index].data.slice(
                 Math.max(this.data.datasets[index].data.length - 20, 0)

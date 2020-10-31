@@ -18,6 +18,7 @@ import {
     NbButtonModule,
     NbCardModule,
     NbChatModule,
+    NbContextMenuModule,
     NbGlobalLogicalPosition,
     NbIconModule,
     NbInputModule,
@@ -59,6 +60,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DebugPageComponent } from './debug-page/debug-page.component';
 import { MotorGraphComponent } from './motor-graph/motor-graph.component';
 import { ChartModule } from 'angular2-chartjs';
+import { MotorTableComponent } from './motor-table/motor-table.component';
+import { DebugMotorsComponent } from './debug-motors/debug-motors.component';
 
 @NgModule({
     declarations: [
@@ -85,6 +88,8 @@ import { ChartModule } from 'angular2-chartjs';
         ControlLqrParametersComponent,
         DebugPageComponent,
         MotorGraphComponent,
+        MotorTableComponent,
+        DebugMotorsComponent,
     ],
     imports: [
         BrowserModule,
@@ -114,6 +119,7 @@ import { ChartModule } from 'angular2-chartjs';
         NbInputModule,
         ReactiveFormsModule,
         ChartModule,
+        NbContextMenuModule,
     ],
     providers: [
         CookieService,
