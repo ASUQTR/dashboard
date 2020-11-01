@@ -24,6 +24,10 @@ export interface DepthMessage {
     data?: number | null;
 }
 
+export interface PcbTempMessage {
+    data?: number | null;
+}
+
 export interface MotorThrottlesMessage {
     header: RosMsgHeader;
     ids?: number[] | null;

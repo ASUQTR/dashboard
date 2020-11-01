@@ -63,6 +63,7 @@ import { ChartModule } from 'angular2-chartjs';
 import { MotorTableComponent } from './motor-table/motor-table.component';
 import { DebugMotorsComponent } from './debug-motors/debug-motors.component';
 import { DepthMeterComponent } from './depth-meter/depth-meter.component';
+import { PcbTempMeterComponent } from './pcb-temp-meter/pcb-temp-meter.component';
 
 @NgModule({
     declarations: [
@@ -92,6 +93,7 @@ import { DepthMeterComponent } from './depth-meter/depth-meter.component';
         MotorTableComponent,
         DebugMotorsComponent,
         DepthMeterComponent,
+        PcbTempMeterComponent,
     ],
     imports: [
         BrowserModule,

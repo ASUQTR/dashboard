@@ -5,13 +5,14 @@
 
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import {
     ControlEnableMessage,
     ControlStateFeedbackMessage,
     DepthMessage,
     JoyMessage,
     MotorThrottlesMessage,
+    PcbTempMessage,
     RosoutMessage,
     RosState,
 } from './ros-model.enum';
@@ -47,6 +48,10 @@ export class RosService {
         data: 0,
     });
     depthData = this.depthSource.asObservable();
+    private pcbTempSource = new BehaviorSubject<PcbTempMessage>({
+        data: 0,
+    });
+    pcbTempData = this.pcbTempSource.asObservable();
 
     constructor(private http: HttpClient) {
         this.rbServer = new ROSLIB.Ros({
@@ -94,6 +99,14 @@ export class RosService {
         });
 
         depth.subscribe((msg) => this.emitDepthMessage(msg));
+
+        const pcbTemp = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/pcb_temp',
+            messageType: 'std_msgs/Int32',
+        });
+
+        pcbTemp.subscribe((msg) => this.emitPcbTempMessage(msg));
     }
 
     advertiseAllTopics(): void {
@@ -227,5 +240,9 @@ export class RosService {
 
     private emitDepthMessage(msg: any) {
         this.depthSource.next(msg);
+    }
+
+    private emitPcbTempMessage(msg: any) {
+        this.pcbTempSource.next(msg);
     }
 }
