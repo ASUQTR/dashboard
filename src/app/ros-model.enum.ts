@@ -20,6 +20,10 @@ export interface ControlEnableMessage {
     data?: boolean | null;
 }
 
+export interface DepthMessage {
+    data?: number | null;
+}
+
 export interface MotorThrottlesMessage {
     header: RosMsgHeader;
     ids?: number[] | null;

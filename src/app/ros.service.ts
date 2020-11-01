@@ -5,10 +5,11 @@
 
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlEnableMessage,
     ControlStateFeedbackMessage,
+    DepthMessage,
     JoyMessage,
     MotorThrottlesMessage,
     RosoutMessage,
@@ -42,6 +43,10 @@ export class RosService {
     controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
     private topicsListSource = new BehaviorSubject<string[]>(null);
     topicsListData = this.topicsListSource.asObservable();
+    private depthSource = new BehaviorSubject<DepthMessage>({
+        data: 0,
+    });
+    depthData = this.depthSource.asObservable();
 
     constructor(private http: HttpClient) {
         this.rbServer = new ROSLIB.Ros({
@@ -81,6 +86,14 @@ export class RosService {
         controlModeFeedback.subscribe((msg) => {
             this.emitControlModeFeedbackMessage(msg);
         });
+
+        const depth = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/sensors/depth',
+            messageType: 'std_msgs/Float32',
+        });
+
+        depth.subscribe((msg) => this.emitDepthMessage(msg));
     }
 
     advertiseAllTopics(): void {
@@ -210,5 +223,9 @@ export class RosService {
             });
             setTimeout(() => this.getTopics(), 2000);
         }
+    }
+
+    private emitDepthMessage(msg: any) {
+        this.depthSource.next(msg);
     }
 }

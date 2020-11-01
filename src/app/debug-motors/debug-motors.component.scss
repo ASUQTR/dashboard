@@ -3,3 +3,7 @@ button {
     top: 10px;
     right: 10px;
 }
+
+:host {
+    min-width: 0;
+}
