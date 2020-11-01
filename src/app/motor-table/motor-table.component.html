@@ -1,8 +1,6 @@
 <nb-list>
-    <nb-list-item>
-        Test 1
-    </nb-list-item>
-    <nb-list-item>
-        Test 2
+    <nb-list-item *ngFor="let motorThrottle of motorThrottlesData$ | async; index as i;">
+        <span class="name subtitle">Motor {{ i + 1 }}</span>
+        <div [class.positive]="motorThrottle > 0" [class.negative]="motorThrottle < 0" class="value">{{ motorThrottle }}</div>
     </nb-list-item>
 </nb-list>

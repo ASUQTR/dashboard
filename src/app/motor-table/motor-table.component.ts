@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RosService } from '../ros.service';
+import { Observable, Subscription } from 'rxjs';
+import { pluck } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-motor-table',
-  templateUrl: './motor-table.component.html',
-  styleUrls: ['./motor-table.component.scss']
+    selector: 'app-motor-table',
+    templateUrl: './motor-table.component.html',
+    styleUrls: ['./motor-table.component.scss'],
 })
-export class MotorTableComponent implements OnInit {
+export class MotorTableComponent implements OnInit, OnDestroy {
+    motorThrottlesData$: Observable<number[]>;
 
-  constructor() { }
+    constructor(private rs: RosService) {}
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+        this.motorThrottlesData$ = this.rs.motorThrottlesData.pipe(pluck('throttles'));
+    }
 
+    ngOnDestroy(): void {}
 }
