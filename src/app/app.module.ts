@@ -64,6 +64,8 @@ import { MotorTableComponent } from './motor-table/motor-table.component';
 import { DebugMotorsComponent } from './debug-motors/debug-motors.component';
 import { DepthMeterComponent } from './depth-meter/depth-meter.component';
 import { PcbTempMeterComponent } from './pcb-temp-meter/pcb-temp-meter.component';
+import { LeakSensorComponent } from './leak-sensor/leak-sensor.component';
+import { TrueFalsePipe } from './true-false.pipe';
 
 @NgModule({
     declarations: [
@@ -94,6 +96,8 @@ import { PcbTempMeterComponent } from './pcb-temp-meter/pcb-temp-meter.component
         DebugMotorsComponent,
         DepthMeterComponent,
         PcbTempMeterComponent,
+        LeakSensorComponent,
+        TrueFalsePipe,
     ],
     imports: [
         BrowserModule,

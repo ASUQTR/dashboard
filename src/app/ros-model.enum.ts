@@ -20,6 +20,10 @@ export interface ControlEnableMessage {
     data?: boolean | null;
 }
 
+export interface LeakSensorMessage {
+    data?: boolean | null;
+}
+
 export interface DepthMessage {
     data?: number | null;
 }

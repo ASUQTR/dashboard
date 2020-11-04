@@ -1,0 +1,10 @@
+<nb-card>
+    <nb-card-body>
+        <div class="subtitle">
+            Leak
+        </div>
+        <div class="h3" [class.leak]="leak$ | async">
+            {{ leak$ | async | trueFalse }}
+        </div>
+    </nb-card-body>
+</nb-card>

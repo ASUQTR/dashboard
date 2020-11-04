@@ -1,12 +1,15 @@
 :host {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(10, 1fr);
     grid-gap: 1rem;
 }
 
 app-debug-motors {
     grid-column-start: 1;
     grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 6;
 }
 
 app-depth-meter {
@@ -15,4 +18,9 @@ app-depth-meter {
 
 app-pcb-temp-meter {
     grid-column-start: 6;
+}
+
+app-leak-sensor {
+    grid-column-start: 6;
+    grid-row-start: 2;
 }

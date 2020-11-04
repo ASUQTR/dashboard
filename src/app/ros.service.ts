@@ -11,6 +11,7 @@ import {
     ControlStateFeedbackMessage,
     DepthMessage,
     JoyMessage,
+    LeakSensorMessage,
     MotorThrottlesMessage,
     PcbTempMessage,
     RosoutMessage,
@@ -18,6 +19,7 @@ import {
 } from './ros-model.enum';
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { NbToastrService } from '@nebular/theme';
 
 @Injectable({
     providedIn: 'root',
@@ -38,7 +40,11 @@ export class RosService {
     rosStateItem$ = this.rosStateItemSource.asObservable();
     private rosoutSource = new ReplaySubject<RosoutMessage>(); // Will replay all rosout message at subscribe
     rosoutData = this.rosoutSource.asObservable();
-    private motorThrottlesSource = new BehaviorSubject<MotorThrottlesMessage>(null);
+    private motorThrottlesSource = new BehaviorSubject<MotorThrottlesMessage>({
+        header: {},
+        ids: [0, 0, 0, 0, 0, 0, 0, 0],
+        throttles: [0, 0, 0, 0, 0, 0, 0, 0],
+    });
     motorThrottlesData = this.motorThrottlesSource.asObservable();
     private controlModeFeedbackSource = new BehaviorSubject<ControlStateFeedbackMessage>(null);
     controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
@@ -52,8 +58,13 @@ export class RosService {
         data: 0,
     });
     pcbTempData = this.pcbTempSource.asObservable();
+    private leakSensorSource = new BehaviorSubject<LeakSensorMessage>({
+        data: false,
+    });
+    leakSensorData = this.leakSensorSource.asObservable();
+    private oldLeakState = false;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private toasterService: NbToastrService) {
         this.rbServer = new ROSLIB.Ros({
             url: environment.rosUrl,
         });
@@ -107,6 +118,14 @@ export class RosService {
         });
 
         pcbTemp.subscribe((msg) => this.emitPcbTempMessage(msg));
+
+        const leak = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/signal_leak',
+            messageType: 'std_msgs/Bool',
+        });
+
+        leak.subscribe((msg) => this.emitLeakMessage(msg));
     }
 
     advertiseAllTopics(): void {
@@ -244,5 +263,16 @@ export class RosService {
 
     private emitPcbTempMessage(msg: any) {
         this.pcbTempSource.next(msg);
+    }
+
+    private emitLeakMessage(msg: any) {
+        const newLeakState = msg?.data ?? false;
+        if (newLeakState && newLeakState !== this.oldLeakState) {
+            this.toasterService.danger('Leak detected', 'DANGER', {
+                duration: 0,
+            });
+        }
+        this.oldLeakState = newLeakState;
+        this.leakSensorSource.next(msg);
     }
 }
