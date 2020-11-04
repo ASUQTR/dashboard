@@ -58,11 +58,16 @@ export class RosService {
         data: 0,
     });
     pcbTempData = this.pcbTempSource.asObservable();
-    private leakSensorSource = new BehaviorSubject<LeakSensorMessage>({
+    private leakSensorDriverSource = new BehaviorSubject<LeakSensorMessage>({
         data: false,
     });
-    leakSensorData = this.leakSensorSource.asObservable();
-    private oldLeakState = false;
+    leakSensorDriverData = this.leakSensorDriverSource.asObservable();
+    private leakSensorHelperSource = new BehaviorSubject<LeakSensorMessage>({
+        data: false,
+    });
+    leakSensorHelperData = this.leakSensorHelperSource.asObservable();
+    private oldLeakStateDriver = false;
+    private oldLeakStateHelper = false;
 
     constructor(private http: HttpClient, private toasterService: NbToastrService) {
         this.rbServer = new ROSLIB.Ros({
@@ -119,13 +124,21 @@ export class RosService {
 
         pcbTemp.subscribe((msg) => this.emitPcbTempMessage(msg));
 
-        const leak = new ROSLIB.Topic({
+        const leakDriver = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/signal_leak',
+            name: 'power_node/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
 
-        leak.subscribe((msg) => this.emitLeakMessage(msg));
+        leakDriver.subscribe((msg) => this.emitLeakDriverMessage(msg));
+
+        const leakHelper = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: 'power_node/battery_leak_helper',
+            messageType: 'std_msgs/Bool',
+        });
+
+        leakHelper.subscribe((msg) => this.emitLeakHelperMessage(msg));
     }
 
     advertiseAllTopics(): void {
@@ -265,14 +278,25 @@ export class RosService {
         this.pcbTempSource.next(msg);
     }
 
-    private emitLeakMessage(msg: any) {
+    private emitLeakDriverMessage(msg: any) {
         const newLeakState = msg?.data ?? false;
-        if (newLeakState && newLeakState !== this.oldLeakState) {
-            this.toasterService.danger('Leak detected', 'DANGER', {
+        if (newLeakState && newLeakState !== this.oldLeakStateDriver) {
+            this.toasterService.danger('Leak detected in DRIVER pod', 'DANGER', {
                 duration: 0,
             });
         }
-        this.oldLeakState = newLeakState;
-        this.leakSensorSource.next(msg);
+        this.oldLeakStateDriver = newLeakState;
+        this.leakSensorDriverSource.next(msg);
+    }
+
+    private emitLeakHelperMessage(msg: any) {
+        const newLeakState = msg?.data ?? false;
+        if (newLeakState && newLeakState !== this.oldLeakStateHelper) {
+            this.toasterService.danger('Leak detected in HELPER pod', 'DANGER', {
+                duration: 0,
+            });
+        }
+        this.oldLeakStateHelper = newLeakState;
+        this.leakSensorHelperSource.next(msg);
     }
 }

@@ -66,6 +66,10 @@ import { DepthMeterComponent } from './depth-meter/depth-meter.component';
 import { PcbTempMeterComponent } from './pcb-temp-meter/pcb-temp-meter.component';
 import { LeakSensorComponent } from './leak-sensor/leak-sensor.component';
 import { TrueFalsePipe } from './true-false.pipe';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 @NgModule({
     declarations: [
@@ -128,6 +132,9 @@ import { TrueFalsePipe } from './true-false.pipe';
         ReactiveFormsModule,
         ChartModule,
         NbContextMenuModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireAnalyticsModule,
+        AngularFirePerformanceModule,
     ],
     providers: [
         CookieService,
@@ -135,6 +142,7 @@ import { TrueFalsePipe } from './true-false.pipe';
         NbThemeService,
         DeviceDetectorService,
         NbToastrService,
+        ScreenTrackingService,
     ],
     bootstrap: [AppComponent],
 })

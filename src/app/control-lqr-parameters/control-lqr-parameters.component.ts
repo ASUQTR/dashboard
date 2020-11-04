@@ -178,12 +178,16 @@ export class ControlLqrParametersComponent implements OnInit {
     ngOnInit(): void {
         const matrixQParam = this.rs.getLqrParamsMatrixQ();
         matrixQParam.get((param) => {
-            this.matrixQ.setValue(param);
-        })
+            if (param) {
+                this.matrixQ.setValue(param);
+            }
+        });
         const matrixRParam = this.rs.getLqrParamsMatrixR();
         matrixRParam.get((param) => {
-            this.matrixR.setValue(param);
-        })
+            if (param) {
+                this.matrixR.setValue(param);
+            }
+        });
     }
 
     sendNewValues() {

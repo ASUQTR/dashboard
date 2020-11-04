@@ -3,8 +3,8 @@
         <div class="subtitle">
             Leak
         </div>
-        <div class="h3" [class.leak]="leak$ | async">
-            {{ leak$ | async | trueFalse }}
+        <div class="h3" [class.leak]="leak">
+            {{ leakText }}
         </div>
     </nb-card-body>
 </nb-card>
