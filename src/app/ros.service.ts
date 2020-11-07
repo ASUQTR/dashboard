@@ -12,6 +12,7 @@ import {
     DepthMessage,
     JoyMessage,
     LeakSensorMessage,
+    MotorThrottlesFeedbackMessage,
     MotorThrottlesMessage,
     PcbTempMessage,
     RosoutMessage,
@@ -46,6 +47,11 @@ export class RosService {
         throttles: [0, 0, 0, 0, 0, 0, 0, 0],
     });
     motorThrottlesData = this.motorThrottlesSource.asObservable();
+    private motorThrottlesFeedbackSource = new BehaviorSubject<MotorThrottlesFeedbackMessage>({
+        header: {},
+        data: [0, 0, 0, 0, 0, 0, 0, 0],
+    });
+    motorThrottlesFeedbackData = this.motorThrottlesFeedbackSource.asObservable();
     private controlModeFeedbackSource = new BehaviorSubject<ControlStateFeedbackMessage>(null);
     controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
     private topicsListSource = new BehaviorSubject<string[]>(null);
@@ -96,6 +102,16 @@ export class RosService {
 
         motorThrottles.subscribe((msg) => {
             this.emitMotorThrottlesMessage(msg);
+        });
+
+        const motorThrottlesFeedback = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/motors/pulses',
+            messageType: 'std_msgs/Int16MultiArray',
+        });
+
+        motorThrottlesFeedback.subscribe((msg) => {
+            this.emitMotorThrottlesFeedbackMessage(msg);
         });
 
         const controlModeFeedback = new ROSLIB.Topic({
@@ -298,5 +314,11 @@ export class RosService {
         }
         this.oldLeakStateHelper = newLeakState;
         this.leakSensorHelperSource.next(msg);
+    }
+
+    private emitMotorThrottlesFeedbackMessage(msg: any) {
+        if (msg && msg.data.length === 8) {
+            this.motorThrottlesFeedbackSource.next(msg);
+        }
     }
 }

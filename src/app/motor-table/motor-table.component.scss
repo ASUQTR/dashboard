@@ -6,8 +6,9 @@ nb-list {
 
 nb-list-item {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 1rem;
+    place-items: center;
 }
 
 @include nb-install-component {
@@ -24,6 +25,14 @@ nb-list-item {
     }
 }
 
-.name {
-    justify-self: center;
+.throttleCol {
+    grid-column-start: 2;
+}
+
+.feedbackCol {
+    grid-column-start: 3;
+}
+
+.errorCol {
+    grid-column-start: 4;
 }

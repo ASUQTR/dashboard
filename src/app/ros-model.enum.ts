@@ -38,6 +38,11 @@ export interface MotorThrottlesMessage {
     throttles?: number[] | null;
 }
 
+export interface MotorThrottlesFeedbackMessage {
+    header: RosMsgHeader;
+    data?: number[] | null;
+}
+
 export interface JoyMessage {
     header: RosMsgHeader;
     axes?: number[] | null;
