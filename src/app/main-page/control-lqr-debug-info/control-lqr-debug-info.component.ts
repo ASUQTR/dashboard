@@ -11,31 +11,73 @@ import { pluck } from 'rxjs/operators';
 export class ControlLqrDebugInfoComponent implements OnInit, OnDestroy {
     lqrAxes: LqrInfo[] = [
         {
+            paramName: 'x',
             state: 0,
             targetState: 0,
             error: 0,
         },
         {
+            paramName: 'y',
             state: 0,
             targetState: 0,
             error: 0,
         },
         {
+            paramName: 'z',
             state: 0,
             targetState: 0,
             error: 0,
         },
         {
+            paramName: 'roll',
             state: 0,
             targetState: 0,
             error: 0,
         },
         {
+            paramName: 'pitch',
             state: 0,
             targetState: 0,
             error: 0,
         },
         {
+            paramName: 'yaw',
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            paramName: 'u',
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            paramName: 'v',
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            paramName: 'w',
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            paramName: 'p',
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            paramName: 'q',
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            paramName: 'r',
             state: 0,
             targetState: 0,
             error: 0,
@@ -68,6 +110,7 @@ export class ControlLqrDebugInfoComponent implements OnInit, OnDestroy {
 }
 
 interface LqrInfo {
+    paramName: string;
     state: number;
     targetState: number;
     error: number;
