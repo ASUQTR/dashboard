@@ -11,49 +11,41 @@ export class ControlLqrParametersComponent implements OnInit {
     matrixQ = new FormArray([
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
@@ -61,49 +53,41 @@ export class ControlLqrParametersComponent implements OnInit {
     matrixR = new FormArray([
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
         new FormControl(0, [
             Validators.required,
-            Validators.pattern('^\\d*\\.?\\d*$'),
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
