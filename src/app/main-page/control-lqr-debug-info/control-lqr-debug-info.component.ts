@@ -51,9 +51,11 @@ export class ControlLqrDebugInfoComponent implements OnInit, OnDestroy {
             this.rs.controlLqrErrorData,
         ]).subscribe(([state, targetState, error]) => {
             state?.data.forEach((value, index) => {
-                this.lqrAxes[index].state = value;
-                this.lqrAxes[index].targetState = targetState?.data[index];
-                this.lqrAxes[index].error = error?.data[index];
+                if (index < 6) {
+                    this.lqrAxes[index].state = value;
+                    this.lqrAxes[index].targetState = targetState?.data[index];
+                    this.lqrAxes[index].error = error?.data[index];
+                }
             });
         });
     }
