@@ -5,6 +5,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RosoutComponent } from './rosout.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NbIconModule, NbLayoutModule, NbThemeModule, NbToastrModule } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 describe('RosoutComponent', () => {
     let component: RosoutComponent;
@@ -13,6 +16,14 @@ describe('RosoutComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [RosoutComponent],
+            imports: [
+                HttpClientModule,
+                NbToastrModule.forRoot(),
+                NbThemeModule.forRoot(),
+                NbLayoutModule,
+                NbEvaIconsModule,
+                NbIconModule,
+            ],
         }).compileComponents();
     }));
 

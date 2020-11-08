@@ -5,6 +5,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuvMotorDisplayComponent } from './auv-motor-display.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NbIconModule, NbLayoutModule, NbThemeModule, NbToastrModule } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 describe('AuvMotorDisplayComponent', () => {
     let component: AuvMotorDisplayComponent;
@@ -13,6 +16,14 @@ describe('AuvMotorDisplayComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [AuvMotorDisplayComponent],
+            imports: [
+                HttpClientModule,
+                NbToastrModule.forRoot(),
+                NbThemeModule.forRoot(),
+                NbLayoutModule,
+                NbEvaIconsModule,
+                NbIconModule,
+            ],
         }).compileComponents();
     }));
 
