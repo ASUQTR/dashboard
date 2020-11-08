@@ -70,6 +70,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { ControlLqrDebugInfoComponent } from './main-page/control-lqr-debug-info/control-lqr-debug-info.component';
 
 @NgModule({
     declarations: [
@@ -102,6 +103,7 @@ import { AngularFirePerformanceModule } from '@angular/fire/performance';
         PcbTempMeterComponent,
         LeakSensorComponent,
         TrueFalsePipe,
+        ControlLqrDebugInfoComponent,
     ],
     imports: [
         BrowserModule,

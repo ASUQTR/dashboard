@@ -1,0 +1,29 @@
+<nb-card>
+    <nb-card-body>
+        <nb-list>
+            <nb-list-item>
+                <div class="h6 lqrInfoTitle">LQR Info</div>
+                <div class="loopTime">
+                    Loop time: {{ loopTime | async }}s
+                </div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="subtitle col2">
+                    State
+                </div>
+                <div class="subtitle col3">
+                    Target State
+                </div>
+                <div class="subtitle col4">
+                    Error
+                </div>
+            </nb-list-item>
+            <nb-list-item *ngFor="let lqrAxe of lqrAxes; index as i;">
+                Axe {{ i + 1 }}
+                <div class="col2">{{ lqrAxe.state }}</div>
+                <div class="col3">{{ lqrAxe.targetState }}</div>
+                <div class="col4">{{ lqrAxe.error }}</div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+</nb-card>

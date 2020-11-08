@@ -28,6 +28,15 @@ export interface DepthMessage {
     data?: number | null;
 }
 
+export interface ControlLoopTimeMessage {
+    data?: number | null;
+}
+
+export interface ControlInfoMessage {
+    header: RosMsgHeader;
+    data?: number[] | null;
+}
+
 export interface PcbTempMessage {
     data?: number | null;
 }

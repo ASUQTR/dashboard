@@ -8,6 +8,8 @@ import ROSLIB from 'roslib';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import {
     ControlEnableMessage,
+    ControlInfoMessage,
+    ControlLoopTimeMessage,
     ControlStateFeedbackMessage,
     DepthMessage,
     JoyMessage,
@@ -54,6 +56,25 @@ export class RosService {
     motorThrottlesFeedbackData = this.motorThrottlesFeedbackSource.asObservable();
     private controlModeFeedbackSource = new BehaviorSubject<ControlStateFeedbackMessage>(null);
     controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
+    private controlLqrLoopTimeSource = new BehaviorSubject<ControlLoopTimeMessage>({
+        data: 0,
+    });
+    controlLqrLoopTimeData = this.controlLqrLoopTimeSource.asObservable();
+    private controlLqrStateSource = new BehaviorSubject<ControlInfoMessage>({
+        header: {},
+        data: [0, 0, 0, 0, 0, 0],
+    });
+    controlLqrStateData = this.controlLqrStateSource.asObservable();
+    private controlLqrTargetStateSource = new BehaviorSubject<ControlInfoMessage>({
+        header: {},
+        data: [0, 0, 0, 0, 0, 0],
+    });
+    controlLqrTargetStateData = this.controlLqrTargetStateSource.asObservable();
+    private controlLqrErrorSource = new BehaviorSubject<ControlInfoMessage>({
+        header: {},
+        data: [0, 0, 0, 0, 0, 0],
+    });
+    controlLqrErrorData = this.controlLqrErrorSource.asObservable();
     private topicsListSource = new BehaviorSubject<string[]>(null);
     topicsListData = this.topicsListSource.asObservable();
     private depthSource = new BehaviorSubject<DepthMessage>({
@@ -155,6 +176,38 @@ export class RosService {
         });
 
         leakHelper.subscribe((msg) => this.emitLeakHelperMessage(msg));
+
+        const lqrLoopTime = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/control/loop_time',
+            messageType: 'std_msgs/Float32',
+        });
+
+        lqrLoopTime.subscribe((msg) => this.emitLqrLoopTimeMessage(msg));
+
+        const lqrState = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/control/state',
+            messageType: 'std_msgs/Float32MultiArray',
+        });
+
+        lqrState.subscribe((msg) => this.emitLqrStateMessage(msg));
+
+        const lqrTargetState = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/control/target_state',
+            messageType: 'std_msgs/Float32MultiArray',
+        });
+
+        lqrTargetState.subscribe((msg) => this.emitLqrTargetStateMessage(msg));
+
+        const lqrError = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/control/lqr_error',
+            messageType: 'std_msgs/Float32MultiArray',
+        });
+
+        lqrError.subscribe((msg) => this.emitLqrErrorMessage(msg));
     }
 
     advertiseAllTopics(): void {
@@ -320,5 +373,21 @@ export class RosService {
         if (msg && msg.data.length === 8) {
             this.motorThrottlesFeedbackSource.next(msg);
         }
+    }
+
+    private emitLqrLoopTimeMessage(msg: any) {
+        this.controlLqrLoopTimeSource.next(msg);
+    }
+
+    private emitLqrStateMessage(msg: any) {
+        this.controlLqrStateSource.next(msg);
+    }
+
+    private emitLqrTargetStateMessage(msg: any) {
+        this.controlLqrTargetStateSource.next(msg);
+    }
+
+    private emitLqrErrorMessage(msg: any) {
+        this.controlLqrErrorSource.next(msg);
     }
 }

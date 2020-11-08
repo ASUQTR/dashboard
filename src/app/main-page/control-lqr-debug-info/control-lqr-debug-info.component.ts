@@ -1,0 +1,72 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RosService } from '../../ros.service';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { pluck } from 'rxjs/operators';
+
+@Component({
+    selector: 'app-control-lqr-debug-info',
+    templateUrl: './control-lqr-debug-info.component.html',
+    styleUrls: ['./control-lqr-debug-info.component.scss'],
+})
+export class ControlLqrDebugInfoComponent implements OnInit, OnDestroy {
+    lqrAxes: LqrInfo[] = [
+        {
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+        {
+            state: 0,
+            targetState: 0,
+            error: 0,
+        },
+    ];
+    loopTime: Observable<number>;
+    private sub: Subscription;
+    constructor(private rs: RosService) {
+        this.loopTime = this.rs.controlLqrLoopTimeData.pipe(pluck('data'));
+        this.sub = combineLatest([
+            this.rs.controlLqrStateData,
+            this.rs.controlLqrTargetStateData,
+            this.rs.controlLqrErrorData,
+        ]).subscribe(([state, targetState, error]) => {
+            state?.data.forEach((value, index) => {
+                this.lqrAxes[index].state = value;
+                this.lqrAxes[index].targetState = targetState?.data[index];
+                this.lqrAxes[index].error = error?.data[index];
+            });
+        });
+    }
+
+    ngOnInit(): void {}
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
+    }
+}
+
+interface LqrInfo {
+    state: number;
+    targetState: number;
+    error: number;
+}
