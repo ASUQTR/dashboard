@@ -5,7 +5,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
-import { NbSidebarModule } from '@nebular/theme';
+import {
+    NbIconModule,
+    NbLayoutModule,
+    NbSidebarModule,
+    NbThemeModule,
+    NbToastrModule,
+} from '@nebular/theme';
+import { HttpClientModule } from '@angular/common/http';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ToolbarComponent', () => {
     let component: ToolbarComponent;
@@ -15,7 +24,16 @@ describe('ToolbarComponent', () => {
         TestBed.configureTestingModule({
             declarations: [ToolbarComponent],
             providers: [],
-            imports: [NbSidebarModule.forRoot()],
+            imports: [
+                HttpClientModule,
+                NbToastrModule.forRoot(),
+                NbThemeModule.forRoot(),
+                NbLayoutModule,
+                NbEvaIconsModule,
+                NbIconModule,
+                NbSidebarModule.forRoot(),
+                RouterTestingModule.withRoutes([]),
+            ],
         }).compileComponents();
     }));
 

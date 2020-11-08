@@ -1,9 +1,8 @@
 <!--
   ~ Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
   -->
-
+<div [@slideContent]="animationState">
 <nb-list>
-    <!-- <div class="statusElement"> -->
     <nb-list-item class="statusElement">
         {{ statusList[0].statusText }}
         <nb-icon
@@ -20,5 +19,5 @@
             class="statusIcon"
         ></nb-icon>
     </nb-list-item>
-    <!-- </div> -->
 </nb-list>
+</div>

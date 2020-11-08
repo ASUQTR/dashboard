@@ -8,10 +8,48 @@ export enum RosState {
     Error,
 }
 
+export interface ControlStateMessage {
+    data?: boolean | null;
+}
+
+export interface ControlStateFeedbackMessage {
+    data?: boolean | null;
+}
+
+export interface ControlEnableMessage {
+    data?: boolean | null;
+}
+
+export interface LeakSensorMessage {
+    data?: boolean | null;
+}
+
+export interface DepthMessage {
+    data?: number | null;
+}
+
+export interface ControlLoopTimeMessage {
+    data?: number | null;
+}
+
+export interface ControlInfoMessage {
+    header: RosMsgHeader;
+    data?: number[] | null;
+}
+
+export interface PcbTempMessage {
+    data?: number | null;
+}
+
 export interface MotorThrottlesMessage {
     header: RosMsgHeader;
     ids?: number[] | null;
     throttles?: number[] | null;
+}
+
+export interface MotorThrottlesFeedbackMessage {
+    header: RosMsgHeader;
+    data?: number[] | null;
 }
 
 export interface JoyMessage {

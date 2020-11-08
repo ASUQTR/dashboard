@@ -2,22 +2,19 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
-import {
-    Injectable,
-    OnDestroy,
-    Renderer2,
-    RendererFactory2,
-} from '@angular/core';
+import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, fromEventPattern, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RosService } from './ros.service';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { JoyMessage } from './ros-model.enum';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GamepadService implements OnDestroy {
+    readonly enableLQRCookieName = 'enableLQRCookie';
     public onGamepadConnected: BehaviorSubject<GamepadEvent>;
     public onGamepadDisconnected: BehaviorSubject<GamepadEvent>;
     public gamepadConnected = false;
@@ -28,17 +25,28 @@ export class GamepadService implements OnDestroy {
     private gamepadSource = new BehaviorSubject<Array<Gamepad>>(null);
     gamepadData = this.gamepadSource.asObservable();
     private gamepadInterval: NodeJS.Timeout;
+    private lqrEnabled = false;
+    private menuButtonPressedOld = false;
+    private homeButtonPressedOld = false;
 
     constructor(
         private rendererFactory2: RendererFactory2,
         private rs: RosService,
-        private platformDetector: DeviceDetectorService
+        private cookies: CookieService,
+        private router: Router
     ) {
         const renderer = this.rendererFactory2.createRenderer(null, null);
         const renderer2 = this.rendererFactory2.createRenderer(null, null);
 
         this.createOnGamepadConnectedObservable(renderer);
         this.createOnGamepadDisconnectedObservable(renderer2);
+        this.rs.lqrControlSource.subscribe((newValue) => {
+            this.lqrEnabled = newValue;
+        });
+        if (this.cookies.check(this.enableLQRCookieName)) {
+            const cookieStartingValue = this.cookies.get(this.enableLQRCookieName) === 'true';
+            this.rs.lqrControlSource.next(cookieStartingValue);
+        }
     }
 
     /**
@@ -48,10 +56,7 @@ export class GamepadService implements OnDestroy {
      * @param positiveSide Positive part of the dpad axes element
      * @static
      */
-    static getDpadAxeValueFromButtons(
-        negativeSide: boolean,
-        positiveSide: boolean
-    ): number {
+    static getDpadAxeValueFromButtons(negativeSide: boolean, positiveSide: boolean): number {
         let value: number;
         if (negativeSide) {
             value = -1;
@@ -63,7 +68,7 @@ export class GamepadService implements OnDestroy {
         return value;
     }
 
-    static mapToJoyButtonsLinux(gamepad: Gamepad): number[] {
+    static mapToJoyButtonsNotStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.buttons[0].value, // Button A
             gamepad?.buttons[1].value, // Button B
@@ -79,7 +84,7 @@ export class GamepadService implements OnDestroy {
         ];
     }
 
-    static mapToJoyAxesLinux(gamepad: Gamepad): number[] {
+    static mapToJoyAxesNotStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.axes[0], // Left Stick X
             gamepad?.axes[1] * -1, // Left Stick Y
@@ -92,7 +97,7 @@ export class GamepadService implements OnDestroy {
         ];
     }
 
-    static mapToJoyButtonsWindows(gamepad: Gamepad): number[] {
+    static mapToJoyButtonsStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.buttons[0].value, // Button A
             gamepad?.buttons[1].value, // Button B
@@ -108,7 +113,7 @@ export class GamepadService implements OnDestroy {
         ];
     }
 
-    static mapToJoyAxesWindows(gamepad: Gamepad): number[] {
+    static mapToJoyAxesStandard(gamepad: Gamepad): number[] {
         return [
             gamepad?.axes[0], // Left Stick X
             gamepad?.axes[1] * -1, // Left Stick Y
@@ -145,10 +150,46 @@ export class GamepadService implements OnDestroy {
      */
     gameLoop(): void {
         this.gamepads = this.pollGamepads();
+
+        /* Action on menu button press */
+        const menuPressed = this.getMenuButton();
+        if (!this.menuButtonPressedOld && menuPressed) {
+            this.lqrEnabled = !this.lqrEnabled;
+            this.rs.lqrControlSource.next(this.lqrEnabled);
+        }
+        this.menuButtonPressedOld = menuPressed;
+
+        /* Action on home button press (Xbox button) */
+        const homePressed = this.getHomeButton();
+        if (!this.homeButtonPressedOld && homePressed) {
+            this.router.navigate(['main']);
+        }
+        this.homeButtonPressedOld = homePressed;
+
         this.gamepadSource.next(this.gamepads);
         this.rs.joySource.next(this.toJoyMessage(this.gamepads[0]));
         if (this.gamepadConnected) {
             requestAnimationFrame(() => this.gameLoop());
+        }
+    }
+
+    private getMenuButton(): boolean {
+        if (this.gamepads[0].mapping === 'standard') {
+            return this.gamepads[0].buttons[9].pressed;
+        } else if (this.gamepads[0].mapping === '') {
+            return this.gamepads[0].buttons[7].pressed;
+        } else {
+            return false;
+        }
+    }
+
+    private getHomeButton(): boolean {
+        if (this.gamepads[0].mapping === 'standard') {
+            return this.gamepads[0].buttons[16].pressed;
+        } else if (this.gamepads[0].mapping === '') {
+            return this.gamepads[0].buttons[8].pressed;
+        } else {
+            return false;
         }
     }
 
@@ -159,21 +200,20 @@ export class GamepadService implements OnDestroy {
      * @param gamepad Gamepad raw data
      */
     toJoyMessage(gamepad: Gamepad): JoyMessage {
-        const os = this.platformDetector.os;
         let joyData: JoyMessage;
-        switch (os) {
-            case 'Windows':
+        switch (gamepad.mapping) {
+            case 'standard':
                 joyData = {
                     header: {},
-                    axes: GamepadService.mapToJoyAxesWindows(gamepad),
-                    buttons: GamepadService.mapToJoyButtonsWindows(gamepad),
+                    axes: GamepadService.mapToJoyAxesStandard(gamepad),
+                    buttons: GamepadService.mapToJoyButtonsStandard(gamepad),
                 };
                 break;
-            case 'Linux':
+            case '':
                 joyData = {
                     header: {},
-                    axes: GamepadService.mapToJoyAxesLinux(gamepad),
-                    buttons: GamepadService.mapToJoyButtonsLinux(gamepad),
+                    axes: GamepadService.mapToJoyAxesNotStandard(gamepad),
+                    buttons: GamepadService.mapToJoyButtonsNotStandard(gamepad),
                 };
                 break;
         }
@@ -195,9 +235,7 @@ export class GamepadService implements OnDestroy {
      */
     private createOnGamepadConnectedObservable(renderer: Renderer2) {
         let removeGamepadConnectedEventListener: () => void;
-        const createGamepadConnectedEventListener = (
-            handler: (e: Event) => boolean | void
-        ) => {
+        const createGamepadConnectedEventListener = (handler: (e: Event) => boolean | void) => {
             removeGamepadConnectedEventListener = renderer.listen(
                 'window',
                 'gamepadconnected',
@@ -227,9 +265,7 @@ export class GamepadService implements OnDestroy {
      */
     private createOnGamepadDisconnectedObservable(renderer2: Renderer2) {
         let removeGamepadDisconnectedEventListener: () => void;
-        const createGamepadDisconnectedEventListener = (
-            handler2: (e: Event) => boolean | void
-        ) => {
+        const createGamepadDisconnectedEventListener = (handler2: (e: Event) => boolean | void) => {
             removeGamepadDisconnectedEventListener = renderer2.listen(
                 'window',
                 'gamepaddisconnected',

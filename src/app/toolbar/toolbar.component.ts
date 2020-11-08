@@ -9,7 +9,7 @@ import {
     OnDestroy,
     OnInit,
 } from '@angular/core';
-import { NbSidebarService } from '@nebular/theme';
+import { NbComponentStatus, NbSidebarService } from '@nebular/theme';
 import ROSBRIDGE from 'roslib';
 import { Subscription } from 'rxjs';
 import { GamepadService } from '../gamepad.service';
@@ -28,7 +28,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     readonly successColor = 'success';
     readonly failureColor = 'danger';
     summaryStatusIcon = this.successIcon;
-    summaryIconColor = this.successColor;
+    summaryIconColor: NbComponentStatus = this.successColor;
     rosStatusIcon = this.successIcon;
     rosIconColor = this.successColor;
     rosbridgeConnected = RosState.Disconnected;

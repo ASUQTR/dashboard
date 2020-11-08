@@ -8,7 +8,7 @@
     .auv-outline {
         stroke: nb-theme(text-basic-color);
     }
-    .forwardArrow {
+    .forwardArrow, .directionIndicator {
         stroke: nb-theme(text-success-color);
     }
 
@@ -23,6 +23,11 @@
     .downwardMotion {
         fill: nb-theme(text-danger-color);
     }
+}
+
+.directionIndicator {
+    stroke-width: 10;
+    stroke-opacity: 1;
 }
 
 .forwardArrow, .backwardArrow {

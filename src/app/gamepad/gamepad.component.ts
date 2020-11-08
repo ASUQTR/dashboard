@@ -13,9 +13,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     styleUrls: ['./gamepad.component.scss'],
 })
 export class GamepadComponent implements OnInit, OnDestroy {
-    connected = false;
-    private gamepadConnectedSubscription: Subscription;
-    private gamepadDisconnectedSubscription: Subscription;
     leftStickPosition: Coordinates = { x: 113, y: 160 };
     rightStickPosition: Coordinates = { x: 278, y: 238 };
     leftStickOpacity = 0.2;
@@ -52,26 +49,9 @@ export class GamepadComponent implements OnInit, OnDestroy {
     upDPadButton = 0.2;
     private gamepadDataSubscription: Subscription;
 
-    constructor(
-        public gs: GamepadService,
-        private platformDetector: DeviceDetectorService
-    ) {}
+    constructor(public gs: GamepadService) {}
 
     ngOnInit(): void {
-        this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
-            (e: GamepadEvent) => {
-                if (e) {
-                    this.connected = true;
-                }
-            }
-        );
-        this.gamepadDisconnectedSubscription = this.gs.onGamepadDisconnected.subscribe(
-            (e: GamepadEvent) => {
-                if (e) {
-                    this.connected = false;
-                }
-            }
-        );
         this.gamepadDataSubscription = this.gs.gamepadData.subscribe((e) => {
             if (e) {
                 this.extractGamepadData(e);
@@ -84,23 +64,23 @@ export class GamepadComponent implements OnInit, OnDestroy {
             if (gamepad) {
                 const axes = gamepad.axes;
                 const buttons = gamepad.buttons;
-                this.extractedStickData(axes);
-                this.extractTriggerData(buttons, axes);
+                this.extractedStickData(axes, gamepad.mapping);
+                this.extractTriggerData(buttons, axes, gamepad.mapping);
                 this.extractL1Data(buttons);
                 this.extractR1Data(buttons);
-                this.extractOptionButtonData(buttons);
+                this.extractOptionButtonData(buttons, gamepad.mapping);
                 this.extractMainButtonsData(buttons);
-                this.extractDpadData(buttons, axes);
+                this.extractDpadData(buttons, axes, gamepad.mapping);
             }
         }
     }
 
     private extractDpadData(
         buttons: ReadonlyArray<GamepadButton>,
-        axes: ReadonlyArray<number>
+        axes: ReadonlyArray<number>,
+        mapping: GamepadMappingType
     ) {
-        const os = this.platformDetector.os;
-        if (os === 'Windows') {
+        if (mapping === 'standard') {
             this.upDPadButtonRaw = buttons[12].value;
             this.upDPadButton =
                 this.upDPadButtonRaw < 0.2 ? 0.2 : this.upDPadButtonRaw;
@@ -116,7 +96,7 @@ export class GamepadComponent implements OnInit, OnDestroy {
             this.rightDPadButtonRaw = buttons[15].value;
             this.rightDPadButton =
                 this.rightDPadButtonRaw < 0.2 ? 0.2 : this.rightDPadButtonRaw;
-        } else if (os === 'Linux') {
+        } else if (mapping === '') {
             const dpadLeftRight = axes[6];
             const dpadUpDown = axes[7];
 
@@ -151,14 +131,16 @@ export class GamepadComponent implements OnInit, OnDestroy {
         this.topButton = this.topButtonRaw < 0.2 ? 0.2 : this.topButtonRaw;
     }
 
-    private extractOptionButtonData(buttons: ReadonlyArray<GamepadButton>) {
-        const os = this.platformDetector.os;
+    private extractOptionButtonData(
+        buttons: ReadonlyArray<GamepadButton>,
+        mapping: GamepadMappingType
+    ) {
         let leftOptionButton: number;
         let rightOptionButton: number;
-        if (os === 'Windows') {
+        if (mapping === 'standard') {
             leftOptionButton = buttons[8].value;
             rightOptionButton = buttons[9].value;
-        } else if (os === 'Linux') {
+        } else if (mapping === '') {
             leftOptionButton = buttons[6].value;
             rightOptionButton = buttons[7].value;
         } else {
@@ -185,15 +167,15 @@ export class GamepadComponent implements OnInit, OnDestroy {
 
     private extractTriggerData(
         buttons: ReadonlyArray<GamepadButton>,
-        axes: ReadonlyArray<number>
+        axes: ReadonlyArray<number>,
+        mapping: GamepadMappingType
     ) {
-        const os = this.platformDetector.os;
         let leftTrigger: number;
         let rightTrigger: number;
-        if (os === 'Windows') {
+        if (mapping === 'standard') {
             leftTrigger = buttons[6].value;
             rightTrigger = buttons[7].value;
-        } else if (os === 'Linux') {
+        } else if (mapping === '') {
             leftTrigger = (axes[2] + 1) / 2.0;
             rightTrigger = (axes[5] + 1) / 2.0;
         } else {
@@ -210,8 +192,10 @@ export class GamepadComponent implements OnInit, OnDestroy {
                 : this.rightTriggerOpacityRaw;
     }
 
-    private extractedStickData(axes: ReadonlyArray<number>) {
-        const os = this.platformDetector.os;
+    private extractedStickData(
+        axes: ReadonlyArray<number>,
+        mapping: GamepadMappingType
+    ) {
         let rightStickX: number;
         let rightStickY: number;
 
@@ -223,10 +207,10 @@ export class GamepadComponent implements OnInit, OnDestroy {
         this.leftStickOpacity =
             this.leftStickOpacityRaw < 0.2 ? 0.2 : this.leftStickOpacityRaw;
 
-        if (os === 'Windows') {
+        if (mapping === 'standard') {
             rightStickX = axes[2];
             rightStickY = axes[3];
-        } else if (os === 'Linux') {
+        } else if (mapping === '') {
             rightStickX = axes[3];
             rightStickY = axes[4];
         } else {
@@ -243,8 +227,6 @@ export class GamepadComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.gamepadConnectedSubscription.unsubscribe();
-        this.gamepadDisconnectedSubscription.unsubscribe();
         this.gamepadDataSubscription.unsubscribe();
     }
 }

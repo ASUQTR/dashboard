@@ -25,7 +25,11 @@
                         "aot": true,
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": ["src/styles.scss"],
-                        "scripts": []
+                        "scripts": [],
+                        "allowedCommonJsDependencies": [
+                            "roslib",
+                            "angular2-chartjs"
+                        ]
                     },
                     "configurations": {
                         "production": {
@@ -108,15 +112,6 @@
                         "production": {
                             "devServerTarget": "asuqtr-dashboard:serve:production"
                         }
-                    }
-                },
-                "eslint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "src/**/*.ts",
-                            "src/**/*.component.html"
-                        ]
                     }
                 }
             }

@@ -6,7 +6,8 @@ app-toolbar {
     flex: 1;
 }
 
-app-gamepad {
-    margin-left: auto;
-    order: 2;
+nb-sidebar,
+nb-sidebar > div.main-container {
+    transition: all 400ms cubic-bezier(0, 1, 0, 1);
+    transition-property: width;
 }
