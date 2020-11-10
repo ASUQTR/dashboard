@@ -137,7 +137,7 @@ export class RosService {
 
         const controlModeFeedback = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'control/mode_feedback',
+            name: '/control/mode_feedback',
             messageType: 'std_msgs/Bool',
         });
 
@@ -163,7 +163,7 @@ export class RosService {
 
         const leakDriver = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'power_node/battery_leak_driver',
+            name: '/power_node/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
 
@@ -171,7 +171,7 @@ export class RosService {
 
         const leakHelper = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'power_node/battery_leak_helper',
+            name: '/power_node/battery_leak_helper',
             messageType: 'std_msgs/Bool',
         });
 
@@ -223,7 +223,7 @@ export class RosService {
 
         const enableLQR = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'control/switch',
+            name: '/control/switch',
             messageType: 'std_msgs/Bool',
         });
         enableLQR.advertise();
