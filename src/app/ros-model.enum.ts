@@ -16,7 +16,7 @@ export interface ControlStateFeedbackMessage {
     data?: boolean | null;
 }
 
-export interface ControlEnableMessage {
+export interface ControlSwitchMessage {
     data?: boolean | null;
 }
 

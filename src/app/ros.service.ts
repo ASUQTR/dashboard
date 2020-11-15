@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlInfoMessage,
     ControlLoopTimeMessage,
-    ControlStateFeedbackMessage,
+    ControlStateFeedbackMessage, ControlSwitchMessage,
     DepthMessage,
     JoyMessage,
     LeakSensorMessage,
@@ -224,6 +224,13 @@ export class RosService {
             messageType: 'std_msgs/Bool',
         });
         killSwitchLQR.advertise();
+
+        this.lqrKillSwitchSource.subscribe((data) => {
+            const msg: ControlSwitchMessage = {
+                data: data
+            };
+            killSwitchLQR.publish(msg);
+        });
     }
 
     sendLqrParams(matrixQ: number[], matrixR: number[]): void {
