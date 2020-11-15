@@ -270,12 +270,6 @@ export class RosService {
         });
     }
 
-    restApiControlRosRemotely(start: number): Observable<any> {
-        const apiUrl =
-            'http://' + location.hostname + ':42069/api/remote?start=' + start.toString();
-        return this.http.post(apiUrl, '', {});
-    }
-
     private onConnect() {
         if (this.connectionTimer) {
             clearInterval(this.connectionTimer);

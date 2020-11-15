@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../ros.service';
-import { NbComponentStatus, NbToastrService } from '@nebular/theme';
+import { RestApiService } from "../rest-api.service";
 
 @Component({
     selector: 'app-ros-remote',
@@ -9,35 +8,16 @@ import { NbComponentStatus, NbToastrService } from '@nebular/theme';
 })
 export class RosRemoteComponent implements OnInit {
     constructor(
-        public rs: RosService,
-        private toastrService: NbToastrService
-    ) {}
+        public restService: RestApiService
+    ) {
+    }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+    }
 
     controlRosRemotely(start: boolean) {
-        let status: NbComponentStatus;
-
         // +!! transform the boolean value into a number value 0 or 1
-        this.rs.restApiControlRosRemotely(+!!start).subscribe(
-            (res) => {
-                status = 'success';
-                this.toastrService.show(
-                    '420 blaze it',
-                    `Successfully ${
-                        start ? 'started' : 'stopped'
-                    } ROS remotely`,
-                    { status }
-                );
-            },
-            (err) => {
-                status = 'danger';
-                this.toastrService.show(
-                    'Error ' + err.status + ': ' + err.statusText,
-                    `Failed to ${start ? 'start' : 'stop'} ROS remotely`,
-                    { status }
-                );
-            }
-        );
+        this.restService.controlRosRemotely$.next(+!!start);
+        console.log('Pressed on button for ', start);
     }
 }
