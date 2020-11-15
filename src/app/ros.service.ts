@@ -5,9 +5,8 @@
 
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import {
-    ControlEnableMessage,
     ControlInfoMessage,
     ControlLoopTimeMessage,
     ControlStateFeedbackMessage,
@@ -33,9 +32,7 @@ export class RosService {
     connected = RosState.Disconnected;
     joySource = new ReplaySubject<JoyMessage>(1);
     joyData = this.joySource.asObservable();
-    lqrControlSource = new ReplaySubject<boolean>(1);
-    lqrControlData = this.lqrControlSource.asObservable();
-    lqrEnabled: boolean;
+    lqrKillSwitchSource = new Subject<boolean>();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -221,21 +218,12 @@ export class RosService {
             joy.publish(joyData);
         });
 
-        const enableLQR = new ROSLIB.Topic({
+        const killSwitchLQR = new ROSLIB.Topic({
             ros: this.rbServer,
             name: '/control/switch',
             messageType: 'std_msgs/Bool',
         });
-        enableLQR.advertise();
-        this.lqrControlData.subscribe((enableLQRData) => {
-            if (this.lqrEnabled !== enableLQRData) {
-                const newDataLQREnable: ControlEnableMessage = {
-                    data: enableLQRData,
-                };
-                enableLQR.publish(newDataLQREnable);
-                this.lqrEnabled = enableLQRData;
-            }
-        });
+        killSwitchLQR.advertise();
     }
 
     sendLqrParams(matrixQ: number[], matrixR: number[]): void {
