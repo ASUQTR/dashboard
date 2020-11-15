@@ -25,8 +25,6 @@ export class GamepadService implements OnDestroy {
     private gamepadSource = new BehaviorSubject<Array<Gamepad>>(null);
     gamepadData = this.gamepadSource.asObservable();
     private gamepadInterval: NodeJS.Timeout;
-    private lqrEnabled = false;
-    private menuButtonPressedOld = false;
     private homeButtonPressedOld = false;
 
     constructor(
@@ -40,13 +38,6 @@ export class GamepadService implements OnDestroy {
 
         this.createOnGamepadConnectedObservable(renderer);
         this.createOnGamepadDisconnectedObservable(renderer2);
-        this.rs.lqrControlSource.subscribe((newValue) => {
-            this.lqrEnabled = newValue;
-        });
-        if (this.cookies.check(this.enableLQRCookieName)) {
-            const cookieStartingValue = this.cookies.get(this.enableLQRCookieName) === 'true';
-            this.rs.lqrControlSource.next(cookieStartingValue);
-        }
     }
 
     /**
@@ -151,14 +142,6 @@ export class GamepadService implements OnDestroy {
     gameLoop(): void {
         this.gamepads = this.pollGamepads();
 
-        /* Action on menu button press */
-        const menuPressed = this.getMenuButton();
-        if (!this.menuButtonPressedOld && menuPressed) {
-            this.lqrEnabled = !this.lqrEnabled;
-            this.rs.lqrControlSource.next(this.lqrEnabled);
-        }
-        this.menuButtonPressedOld = menuPressed;
-
         /* Action on home button press (Xbox button) */
         const homePressed = this.getHomeButton();
         if (!this.homeButtonPressedOld && homePressed) {
@@ -170,16 +153,6 @@ export class GamepadService implements OnDestroy {
         this.rs.joySource.next(this.toJoyMessage(this.gamepads[0]));
         if (this.gamepadConnected) {
             requestAnimationFrame(() => this.gameLoop());
-        }
-    }
-
-    private getMenuButton(): boolean {
-        if (this.gamepads[0].mapping === 'standard') {
-            return this.gamepads[0].buttons[9].pressed;
-        } else if (this.gamepads[0].mapping === '') {
-            return this.gamepads[0].buttons[7].pressed;
-        } else {
-            return false;
         }
     }
 

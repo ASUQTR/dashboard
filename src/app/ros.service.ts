@@ -5,12 +5,11 @@
 
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import {
-    ControlEnableMessage,
     ControlInfoMessage,
     ControlLoopTimeMessage,
-    ControlStateFeedbackMessage,
+    ControlStateFeedbackMessage, ControlSwitchMessage,
     DepthMessage,
     JoyMessage,
     LeakSensorMessage,
@@ -33,9 +32,7 @@ export class RosService {
     connected = RosState.Disconnected;
     joySource = new ReplaySubject<JoyMessage>(1);
     joyData = this.joySource.asObservable();
-    lqrControlSource = new ReplaySubject<boolean>(1);
-    lqrControlData = this.lqrControlSource.asObservable();
-    lqrEnabled: boolean;
+    lqrKillSwitchSource = new Subject<boolean>();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -137,7 +134,7 @@ export class RosService {
 
         const controlModeFeedback = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'control/mode_feedback',
+            name: '/control/mode_feedback',
             messageType: 'std_msgs/Bool',
         });
 
@@ -163,7 +160,7 @@ export class RosService {
 
         const leakDriver = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'power_node/battery_leak_driver',
+            name: '/power_node/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
 
@@ -171,7 +168,7 @@ export class RosService {
 
         const leakHelper = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'power_node/battery_leak_helper',
+            name: '/power_node/battery_leak_helper',
             messageType: 'std_msgs/Bool',
         });
 
@@ -221,20 +218,18 @@ export class RosService {
             joy.publish(joyData);
         });
 
-        const enableLQR = new ROSLIB.Topic({
+        const killSwitchLQR = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: 'control/switch',
+            name: '/control/switch',
             messageType: 'std_msgs/Bool',
         });
-        enableLQR.advertise();
-        this.lqrControlData.subscribe((enableLQRData) => {
-            if (this.lqrEnabled !== enableLQRData) {
-                const newDataLQREnable: ControlEnableMessage = {
-                    data: enableLQRData,
-                };
-                enableLQR.publish(newDataLQREnable);
-                this.lqrEnabled = enableLQRData;
-            }
+        killSwitchLQR.advertise();
+
+        this.lqrKillSwitchSource.subscribe((data) => {
+            const msg: ControlSwitchMessage = {
+                data: data
+            };
+            killSwitchLQR.publish(msg);
         });
     }
 
@@ -268,12 +263,6 @@ export class RosService {
             ros: this.rbServer,
             name: 'control_node/motor_cost_matrix',
         });
-    }
-
-    restApiControlRosRemotely(start: number): Observable<any> {
-        const apiUrl =
-            'http://' + location.hostname + ':42069/api/remote?start=' + start.toString();
-        return this.http.post(apiUrl, '', {});
     }
 
     private onConnect() {
