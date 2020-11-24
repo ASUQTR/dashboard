@@ -1,0 +1,30 @@
+/*!
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
+@import "../../themes";
+
+:host {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.gamepad-status {
+    font: 1.8rem "Segoe UI";
+    text-align: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+@include nb-install-component {
+    .xbox-outline {
+        stroke: nb-theme(text-basic-color);
+        fill: nb-theme(text-basic-color);
+    }
+}
+
+.xbox-outline {
+    grid-column-start: 2;
+    width: 100%;
+}

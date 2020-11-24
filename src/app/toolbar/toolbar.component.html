@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+  -->
+
+<a (click)="toggleSidebar()" href="#" class="menuToggle">
+    <nb-icon class="menu" icon="menu"></nb-icon>
+</a>
+<a [routerLink]="['/main']" class="mainRouterLink">
+    <img src="assets/asuqtr-logo.png" alt="" />
+</a>
+<span>ASUQTR Dashboard</span>
+<button
+    nbButton
+    ghost
+    shape="round"
+    [nbSpinner]="!(rosbridgeConnected && gamepadConnected)"
+    nbSpinnerStatus="info"
+    [nbPopover]="popoverComponent"
+>
+    <nb-icon
+        class="statusIcon"
+        [icon]="summaryStatusIcon"
+        [status]="summaryIconColor"
+        *ngIf="rosbridgeConnected && gamepadConnected"
+    ></nb-icon>
+</button>

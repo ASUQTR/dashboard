@@ -1,0 +1,13 @@
+<nb-list>
+    <nb-list-item>
+        <span class="name subtitle throttleCol">Throttle</span>
+        <span class="name subtitle feedbackCol">Feedback</span>
+        <span class="name subtitle errorCol">Error</span>
+    </nb-list-item>
+    <nb-list-item *ngFor="let motorThrottleInfo of motorData; index as i;">
+        <span class="name subtitle">Motor {{ i + 1 }}</span>
+        <div [class.positive]="motorThrottleInfo.throttle > 0" [class.negative]="motorThrottleInfo.throttle < 0" class="value throttleCol">{{ motorThrottleInfo.throttle }}</div>
+        <div class="value feedbackCol">{{ motorThrottleInfo.feedback }}</div>
+        <div [class.positive]="motorThrottleInfo.error <= 0.1" [class.negative]="motorThrottleInfo.error > 0.1" class="errorCol">{{ motorThrottleInfo.error }}</div>
+    </nb-list-item>
+</nb-list>

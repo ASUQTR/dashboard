@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+  -->
+<div [@slideContent]="animationState">
+<nb-list>
+    <nb-list-item class="statusElement">
+        {{ statusList[0].statusText }}
+        <nb-icon
+            [icon]="statusList[0].statusIcon"
+            [status]="statusList[0].statusIconColor"
+            class="statusIcon"
+        ></nb-icon>
+    </nb-list-item>
+    <nb-list-item class="statusElement">
+        {{ statusList[1].statusText }}
+        <nb-icon
+            [icon]="statusList[1].statusIcon"
+            [status]="statusList[1].statusIconColor"
+            class="statusIcon"
+        ></nb-icon>
+    </nb-list-item>
+</nb-list>
+</div>

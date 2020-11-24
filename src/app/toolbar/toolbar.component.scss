@@ -1,0 +1,57 @@
+/*!
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
+:host {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 40px 40px 1fr 40px;
+}
+
+img {
+    width: 2rem;
+    height: 2rem;
+}
+
+button {
+    float: right;
+    width: 2rem;
+    height: 2rem;
+    padding: 0 !important;
+    grid-column-start: 4;
+    place-self: center;
+}
+
+.statusIcon {
+    height: 100% !important;
+    width: 100% !important;
+    align-self: center;
+}
+
+span {
+    font: 2rem Noto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    grid-column-start: 3;
+}
+
+a.menuToggle {
+    grid-column-start: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+a.mainRouterLink {
+    width: 2rem;
+    height: 2rem;
+    grid-column-start: 2;
+    place-self: center;
+}
+
+.menu {
+    grid-column-start: 1;
+    place-self: center;
+    height: 30px;
+    width: 30px;
+}

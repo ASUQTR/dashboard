@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+  -->
+
+<nb-layout>
+    <nb-layout-header>
+        <app-toolbar></app-toolbar>
+    </nb-layout-header>
+
+    <nb-sidebar state="collapsed">
+        <app-sidebar-settings></app-sidebar-settings>
+    </nb-sidebar>
+
+    <nb-layout-column>
+        <router-outlet></router-outlet>
+    </nb-layout-column>
+    <nb-layout-footer>
+        <app-footer></app-footer>
+    </nb-layout-footer>
+</nb-layout>

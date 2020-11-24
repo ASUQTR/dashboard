@@ -1,0 +1,10 @@
+:host {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}

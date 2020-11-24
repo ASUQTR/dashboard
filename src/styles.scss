@@ -1,0 +1,20 @@
+/*!
+ * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+ */
+
+@import "themes";
+
+@import "~@nebular/theme/styles/globals";
+
+@include nb-install() {
+    @include nb-theme-global();
+}
+
+@font-face {
+    font-family: Noto;
+    src: url(assets/NotoSans-Regular.ttf) format("truetype");
+}
+
+nb-spinner {
+    z-index: 998 !important;
+}

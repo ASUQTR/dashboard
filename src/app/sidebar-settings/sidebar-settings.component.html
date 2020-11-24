@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
+  -->
+
+<nb-menu [items]="items"></nb-menu>
+<div class="settings">
+
+</div>
+<nb-accordion>
+    <nb-accordion-item>
+        <nb-accordion-item-header>
+            <nb-icon icon="settings"></nb-icon>
+            <span>Page Settings</span>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+            <app-theme-changer></app-theme-changer>
+            <app-view-settings></app-view-settings>
+        </nb-accordion-item-body>
+    </nb-accordion-item>
+</nb-accordion>
