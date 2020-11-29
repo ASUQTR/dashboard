@@ -70,7 +70,9 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
-import { ControlLqrDebugInfoComponent } from './main-page/control-lqr-debug-info/control-lqr-debug-info.component';
+import { ControlLqrDebugInfoComponent } from './control-lqr-debug-info/control-lqr-debug-info.component';
+import { FlexbeCardComponent } from './flexbe-card/flexbe-card.component';
+import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/flexbe-behavior-killswitch.component';
 
 @NgModule({
     declarations: [
@@ -104,6 +106,8 @@ import { ControlLqrDebugInfoComponent } from './main-page/control-lqr-debug-info
         LeakSensorComponent,
         TrueFalsePipe,
         ControlLqrDebugInfoComponent,
+        FlexbeCardComponent,
+        FlexbeBehaviorKillswitchComponent,
     ],
     imports: [
         BrowserModule,

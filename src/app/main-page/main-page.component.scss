@@ -8,3 +8,9 @@ app-gamepad {
     grid-gap: 10px;
     grid-template-columns: 1fr 1fr 1fr;
 }
+
+#towHalvesCol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+}

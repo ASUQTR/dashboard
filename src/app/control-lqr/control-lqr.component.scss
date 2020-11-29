@@ -1,16 +1,7 @@
-:host {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
 nb-card-body {
     display: grid;
     grid-gap: 20px;
     place-items: center;
-}
-
-nb-card {
-    grid-column-start: 1;
 }
 
 app-control-toggle {
