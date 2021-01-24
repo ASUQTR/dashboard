@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RosService } from '../../ros.service';
+import { RosService } from '../ros.service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 

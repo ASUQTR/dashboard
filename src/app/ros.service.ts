@@ -9,7 +9,8 @@ import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlInfoMessage,
     ControlLoopTimeMessage,
-    ControlStateFeedbackMessage, ControlSwitchMessage,
+    ControlStateFeedbackMessage,
+    ControlSwitchMessage,
     DepthMessage,
     JoyMessage,
     LeakSensorMessage,
@@ -33,6 +34,7 @@ export class RosService {
     joySource = new ReplaySubject<JoyMessage>(1);
     joyData = this.joySource.asObservable();
     lqrKillSwitchSource = new Subject<boolean>();
+    behaviorKillSwitchSource = new Subject<void>();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
@@ -227,9 +229,21 @@ export class RosService {
 
         this.lqrKillSwitchSource.subscribe((data) => {
             const msg: ControlSwitchMessage = {
-                data: data
+                data,
             };
             killSwitchLQR.publish(msg);
+        });
+
+        const killSwitchBehavior = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/flexbe/commands/preempt',
+            messageType: 'std_msgs/Empty',
+        });
+        killSwitchBehavior.advertise();
+
+        this.behaviorKillSwitchSource.subscribe(() => {
+            const msg = {};
+            killSwitchBehavior.publish(msg);
         });
     }
 
