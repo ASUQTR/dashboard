@@ -18,7 +18,7 @@
 }
 
 @include nb-install-component {
-    .xbox-outline {
+    .xbox-outline, #gamepadLegend {
         stroke: nb-theme(text-basic-color);
         fill: nb-theme(text-basic-color);
     }
@@ -27,4 +27,17 @@
 .xbox-outline {
     grid-column-start: 2;
     width: 100%;
+}
+
+#gamepadLegend {
+    font: 12px "Segoe UI";
+    display: none;
+}
+
+#gamepadLegend line {
+    stroke-width: 2;
+}
+
+#XBox:hover + #gamepadLegend {
+    display: block;
 }
