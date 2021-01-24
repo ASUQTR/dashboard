@@ -13,5 +13,6 @@ export class ControlToggleComponent implements OnInit {
 
     killLQR(): void {
         this.rs.lqrKillSwitchSource.next(false);
+        this.rs.behaviorKillSwitchSource.next();
     }
 }
