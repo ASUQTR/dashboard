@@ -7,6 +7,8 @@
     viewBox="0 0 441 383"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    (mouseover)="showLegend=true"
+    (mouseout)="showLegend=false"
 >
     <g id="XBox">
         <path
@@ -246,7 +248,7 @@
             stroke-width="5"
         ></path>
     </g>
-    <g id="gamepadLegend">
+    <g id="gamepadLegend" *ngIf="showLegend || forceShowLegend">
         <line x1="83.67" y1="123.86" x2="62.58" y2="102.78"/>
         <line y1="103.09" x2="63" y2="103.09"/>
         <text transform="translate(4 101.48)">Movement</text>
