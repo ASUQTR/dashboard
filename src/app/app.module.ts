@@ -19,6 +19,7 @@ import {
     NbCardModule,
     NbChatModule,
     NbContextMenuModule,
+    NbDialogModule,
     NbGlobalLogicalPosition,
     NbIconModule,
     NbInputModule,
@@ -34,6 +35,7 @@ import {
     NbToastrModule,
     NbToastrService,
     NbToggleModule,
+    NbTooltipModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StatusComponent } from './status/status.component';
@@ -73,6 +75,7 @@ import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { ControlLqrDebugInfoComponent } from './control-lqr-debug-info/control-lqr-debug-info.component';
 import { FlexbeCardComponent } from './flexbe-card/flexbe-card.component';
 import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/flexbe-behavior-killswitch.component';
+import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
 
 @NgModule({
     declarations: [
@@ -108,6 +111,7 @@ import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/
         ControlLqrDebugInfoComponent,
         FlexbeCardComponent,
         FlexbeBehaviorKillswitchComponent,
+        GamepadShellComponent,
     ],
     imports: [
         BrowserModule,
@@ -133,6 +137,12 @@ import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/
             limit: 3,
             position: NbGlobalLogicalPosition.TOP_END,
         }),
+        NbDialogModule.forRoot({
+            autoFocus: false,
+            closeOnBackdropClick: true,
+            closeOnEsc: true,
+            hasBackdrop: true,
+        }),
         NbAccordionModule,
         NbInputModule,
         ReactiveFormsModule,
@@ -141,6 +151,7 @@ import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAnalyticsModule,
         AngularFirePerformanceModule,
+        NbTooltipModule,
     ],
     providers: [
         CookieService,
