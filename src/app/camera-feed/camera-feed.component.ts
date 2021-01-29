@@ -10,19 +10,17 @@ import { distinctUntilChanged } from 'rxjs/operators';
 export class CameraFeedComponent implements OnInit {
     private readonly cameraTopic = '/detectnet/overlay';
     cam1Url =
-        'http://' + location.hostname + ':8080/stream?topic=/detectnet/overlay';
+        'http://' +
+        location.hostname +
+        ':8080/stream?topic=/detectnet/overlay&type=mjpeg&quality=20';
     cam2Url = this.cam1Url;
     camTopicExist = false;
     constructor(private rs: RosService) {
-        this.rs.topicsListData
-            .pipe(distinctUntilChanged())
-            .subscribe((allTopics) => {
-                if (allTopics) {
-                    this.camTopicExist = allTopics.includes(
-                        '/detectnet/overlay'
-                    );
-                }
-            });
+        this.rs.topicsListData.pipe(distinctUntilChanged()).subscribe((allTopics) => {
+            if (allTopics) {
+                this.camTopicExist = allTopics.includes('/detectnet/overlay');
+            }
+        });
     }
 
     ngOnInit(): void {}
