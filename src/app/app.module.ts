@@ -56,9 +56,7 @@ import { MainPageComponent } from './main-page/main-page.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CameraFeedComponent } from './camera-feed/camera-feed.component';
 import { HttpClientModule } from '@angular/common/http';
-import { SecondaryPageComponent } from './secondary-page/secondary-page.component';
-import { ControlLqrParametersComponent } from './control-lqr-parameters/control-lqr-parameters.component';
-import { ReactiveFormsModule } from '@angular/forms';
+
 import { TrueFalsePipe } from './true-false.pipe';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
@@ -89,8 +87,6 @@ import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
         MainPageComponent,
         PageNotFoundComponent,
         CameraFeedComponent,
-        SecondaryPageComponent,
-        ControlLqrParametersComponent,
         TrueFalsePipe,
         FlexbeCardComponent,
         FlexbeBehaviorKillswitchComponent,
@@ -128,8 +124,6 @@ import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
         }),
         NbAccordionModule,
         NbInputModule,
-        ReactiveFormsModule,
-
         NbContextMenuModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAnalyticsModule,

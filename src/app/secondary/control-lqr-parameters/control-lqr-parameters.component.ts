@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { RosService } from '../ros.service';
+import { FormArray, FormControl, Validators } from '@angular/forms';
+import { RosService } from '../../ros.service';
 
 @Component({
     selector: 'app-control-lqr-parameters',
