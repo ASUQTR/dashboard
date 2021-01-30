@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { NbColorHelper, NbThemeService } from '@nebular/theme';
 import { ChartComponent } from 'angular2-chartjs';
-import { RosService } from '../ros.service';
+import { RosService } from '../../ros.service';
 import { interval, Subscription } from 'rxjs';
 import { throttle } from 'rxjs/operators';
 
