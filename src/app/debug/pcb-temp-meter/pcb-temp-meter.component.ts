@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../ros.service';
+import { RosService } from '../../ros.service';
 import { pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

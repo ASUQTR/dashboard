@@ -59,20 +59,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { SecondaryPageComponent } from './secondary-page/secondary-page.component';
 import { ControlLqrParametersComponent } from './control-lqr-parameters/control-lqr-parameters.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DebugPageComponent } from './debug-page/debug-page.component';
-import { MotorGraphComponent } from './motor-graph/motor-graph.component';
-import { ChartModule } from 'angular2-chartjs';
-import { MotorTableComponent } from './motor-table/motor-table.component';
-import { DebugMotorsComponent } from './debug-motors/debug-motors.component';
-import { DepthMeterComponent } from './depth-meter/depth-meter.component';
-import { PcbTempMeterComponent } from './pcb-temp-meter/pcb-temp-meter.component';
-import { LeakSensorComponent } from './leak-sensor/leak-sensor.component';
 import { TrueFalsePipe } from './true-false.pipe';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
-import { ControlLqrDebugInfoComponent } from './control-lqr-debug-info/control-lqr-debug-info.component';
 import { FlexbeCardComponent } from './flexbe-card/flexbe-card.component';
 import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/flexbe-behavior-killswitch.component';
 import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
@@ -100,15 +91,7 @@ import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
         CameraFeedComponent,
         SecondaryPageComponent,
         ControlLqrParametersComponent,
-        DebugPageComponent,
-        MotorGraphComponent,
-        MotorTableComponent,
-        DebugMotorsComponent,
-        DepthMeterComponent,
-        PcbTempMeterComponent,
-        LeakSensorComponent,
         TrueFalsePipe,
-        ControlLqrDebugInfoComponent,
         FlexbeCardComponent,
         FlexbeBehaviorKillswitchComponent,
         GamepadShellComponent,
@@ -146,7 +129,7 @@ import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
         NbAccordionModule,
         NbInputModule,
         ReactiveFormsModule,
-        ChartModule,
+
         NbContextMenuModule,
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAnalyticsModule,
