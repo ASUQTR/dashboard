@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { RosService } from '../../ros.service';
+import { NbDialogService } from '@nebular/theme';
+import { LqrParametersSaveDialogComponent } from '../lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
+import { log } from 'util';
 
 @Component({
     selector: 'app-control-lqr-parameters',
@@ -93,7 +96,7 @@ export class ControlLqrParametersComponent implements OnInit {
         ]),
     ]);
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RosService, private dialogService: NbDialogService) {}
 
     get matrixQ1() {
         return this.matrixQ.at(0);
@@ -176,5 +179,17 @@ export class ControlLqrParametersComponent implements OnInit {
 
     sendNewValues() {
         this.rs.sendLqrParams(this.matrixQ.value, this.matrixR.value);
+    }
+
+    openSaveDialog() {
+        this.dialogService
+            .open(LqrParametersSaveDialogComponent)
+            .onClose.subscribe((name) => this.saveCurrentConfig(name));
+    }
+
+    saveCurrentConfig(name: string) {
+        if (name) {
+            this.rs.saveLqrParams(name, this.matrixQ.value, this.matrixR.value);
+        }
     }
 }

@@ -23,6 +23,7 @@ import {
 import { environment } from '../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { NbToastrService } from '@nebular/theme';
+import { getReasonPhrase } from 'http-status-codes';
 
 @Injectable({
     providedIn: 'root',
@@ -248,21 +249,26 @@ export class RosService {
     }
 
     sendLqrParams(matrixQ: number[], matrixR: number[]): void {
-        const lqrParamMatrixQ = new ROSLIB.Param({
+        const lqrService = new ROSLIB.Service({
             ros: this.rbServer,
-            name: 'control_node/state_cost_matrix',
-        });
-        const lqrParamMatrixR = new ROSLIB.Param({
-            ros: this.rbServer,
-            name: 'control_node/motor_cost_matrix',
+            name: '/tune_lqr_matrix',
+            serviceType: 'asuqtr_control_node/TuneMatrix',
         });
 
-        lqrParamMatrixQ.set(matrixQ, (res) => {
-            console.log('LQR parameters write for matrix Q response is: ', res);
+        const request = new ROSLIB.ServiceRequest({
+            Q: matrixQ,
+            R: matrixR,
         });
-        lqrParamMatrixR.set(matrixR, (res) => {
-            console.log('LQR parameters write for matrix R response is: ', res);
-        });
+
+        lqrService.callService(
+            request,
+            (res) => this.lqrParamServicePosResponse(res),
+            (err) => this.lqrParamServiceError(err)
+        );
+    }
+
+    saveLqrParams(fileName: string, matrixQ: number[], matrixR: number[]): void {
+        console.error('LQR param saving not implemented yet');
     }
 
     getLqrParamsMatrixQ(): any {
@@ -392,5 +398,21 @@ export class RosService {
 
     private emitLqrErrorMessage(msg: any) {
         this.controlLqrErrorSource.next(msg);
+    }
+
+    private lqrParamServicePosResponse(response: any) {
+        this.toasterService.success(
+            getReasonPhrase(response) ?? 'Nice',
+            'Successfully saved new LQR params config'
+        );
+        console.log(response);
+    }
+
+    private lqrParamServiceError(err: any) {
+        this.toasterService.danger(
+            'Error ' + err + ': ' + getReasonPhrase(err),
+            `Failed to save LQR params config`
+        );
+        console.error(err);
     }
 }
