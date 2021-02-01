@@ -52,6 +52,26 @@ export class ControlLqrParametersComponent implements OnInit {
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
     ]);
     matrixR = new FormArray([
         new FormControl(0, [
@@ -128,6 +148,22 @@ export class ControlLqrParametersComponent implements OnInit {
 
     get matrixQ8() {
         return this.matrixQ.at(7);
+    }
+
+    get matrixQ9() {
+        return this.matrixQ.at(8);
+    }
+
+    get matrixQ10() {
+        return this.matrixQ.at(9);
+    }
+
+    get matrixQ11() {
+        return this.matrixQ.at(10);
+    }
+
+    get matrixQ12() {
+        return this.matrixQ.at(11);
     }
 
     get matrixR1() {

@@ -262,7 +262,7 @@ export class RosService {
 
         lqrService.callService(
             request,
-            (res) => this.lqrParamServicePosResponse(res),
+            () => this.lqrParamServicePosResponse(),
             (err) => this.lqrParamServiceError(err)
         );
     }
@@ -400,19 +400,18 @@ export class RosService {
         this.controlLqrErrorSource.next(msg);
     }
 
-    private lqrParamServicePosResponse(response: any) {
+    private lqrParamServicePosResponse() {
         this.toasterService.success(
-            getReasonPhrase(response) ?? 'Nice',
-            'Successfully saved new LQR params config'
+            'Nice',
+            'Successfully updated new LQR params'
         );
-        console.log(response);
     }
 
     private lqrParamServiceError(err: any) {
+        console.error(err);
         this.toasterService.danger(
-            'Error ' + err + ': ' + getReasonPhrase(err),
+            'Error ' + err.status + ': ' + getReasonPhrase(err.status),
             `Failed to save LQR params config`
         );
-        console.error(err);
     }
 }
