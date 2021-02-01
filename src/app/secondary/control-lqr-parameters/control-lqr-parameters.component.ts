@@ -4,6 +4,7 @@ import { RosService } from '../../ros.service';
 import { NbDialogService } from '@nebular/theme';
 import { LqrParametersSaveDialogComponent } from '../lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
 import { log } from 'util';
+import { RestApiService } from "../../rest-api.service";
 
 @Component({
     selector: 'app-control-lqr-parameters',
@@ -116,7 +117,7 @@ export class ControlLqrParametersComponent implements OnInit {
         ]),
     ]);
 
-    constructor(private rs: RosService, private dialogService: NbDialogService) {}
+    constructor(private rs: RosService, private dialogService: NbDialogService, private restService: RestApiService) {}
 
     get matrixQ1() {
         return this.matrixQ.at(0);
@@ -225,7 +226,7 @@ export class ControlLqrParametersComponent implements OnInit {
 
     saveCurrentConfig(name: string) {
         if (name) {
-            this.rs.saveLqrParams(name, this.matrixQ.value, this.matrixR.value);
+            this.restService.saveLqrParams(name, this.matrixQ.value, this.matrixR.value);
         }
     }
 }

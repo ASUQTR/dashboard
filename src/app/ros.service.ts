@@ -267,10 +267,6 @@ export class RosService {
         );
     }
 
-    saveLqrParams(fileName: string, matrixQ: number[], matrixR: number[]): void {
-        console.error('LQR param saving not implemented yet');
-    }
-
     getLqrParamsMatrixQ(): any {
         return new ROSLIB.Param({
             ros: this.rbServer,
