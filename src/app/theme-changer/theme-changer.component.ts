@@ -16,7 +16,7 @@ export class ThemeChangerComponent implements OnInit {
     readonly themeCookieName = 'nbThemeValue';
     themes = ['syspref', 'dark', 'default'];
     selectedThemeFormControl = new FormControl();
-    selectedTheme = 'default';
+    selectedTheme = 'syspref';
 
     constructor(
         private themeService: NbThemeService,
@@ -32,10 +32,10 @@ export class ThemeChangerComponent implements OnInit {
                     this.themes.indexOf(this.selectedTheme).toString()
                 );
             } else {
-                this.selectedTheme = 'default';
+                this.selectedTheme = 'syspref';
             }
         } else {
-            this.selectedTheme = 'default';
+            this.selectedTheme = 'syspref';
             this.selectedThemeFormControl.setValue(
                 this.themes.indexOf(this.selectedTheme).toString()
             );
