@@ -27,6 +27,7 @@ import {
     NbListModule,
     NbMenuModule,
     NbPopoverModule,
+    NbSelectModule,
     NbSidebarModule,
     NbSidebarService,
     NbSpinnerModule,
@@ -65,6 +66,7 @@ import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { FlexbeCardComponent } from './flexbe-card/flexbe-card.component';
 import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/flexbe-behavior-killswitch.component';
 import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -129,6 +131,8 @@ import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
         AngularFireAnalyticsModule,
         AngularFirePerformanceModule,
         NbTooltipModule,
+        NbSelectModule,
+        ReactiveFormsModule,
     ],
     providers: [
         CookieService,
