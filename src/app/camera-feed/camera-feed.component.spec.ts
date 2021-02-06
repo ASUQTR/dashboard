@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CameraFeedComponent } from './camera-feed.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -9,19 +9,21 @@ describe('CameraFeedComponent', () => {
     let component: CameraFeedComponent;
     let fixture: ComponentFixture<CameraFeedComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [CameraFeedComponent],
-            imports: [
-                HttpClientModule,
-                NbToastrModule.forRoot(),
-                NbThemeModule.forRoot(),
-                NbLayoutModule,
-                NbEvaIconsModule,
-                NbIconModule,
-            ],
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [CameraFeedComponent],
+                imports: [
+                    HttpClientModule,
+                    NbToastrModule.forRoot(),
+                    NbThemeModule.forRoot(),
+                    NbLayoutModule,
+                    NbEvaIconsModule,
+                    NbIconModule,
+                ],
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(CameraFeedComponent);

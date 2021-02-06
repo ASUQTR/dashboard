@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RestApiService } from "../rest-api.service";
+import { RestApiService } from '../rest-api.service';
 
 @Component({
     selector: 'app-ros-remote',
@@ -7,13 +7,9 @@ import { RestApiService } from "../rest-api.service";
     styleUrls: ['./ros-remote.component.scss'],
 })
 export class RosRemoteComponent implements OnInit {
-    constructor(
-        public restService: RestApiService
-    ) {
-    }
+    constructor(public restService: RestApiService) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     controlRosRemotely(start: boolean) {
         // +!! transform the boolean value into a number value 0 or 1

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RosRemoteComponent } from './ros-remote.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -9,19 +9,21 @@ describe('RosRemoteComponent', () => {
     let component: RosRemoteComponent;
     let fixture: ComponentFixture<RosRemoteComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [RosRemoteComponent],
-            imports: [
-                HttpClientModule,
-                NbToastrModule.forRoot(),
-                NbThemeModule.forRoot(),
-                NbLayoutModule,
-                NbEvaIconsModule,
-                NbIconModule,
-            ],
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [RosRemoteComponent],
+                imports: [
+                    HttpClientModule,
+                    NbToastrModule.forRoot(),
+                    NbThemeModule.forRoot(),
+                    NbLayoutModule,
+                    NbEvaIconsModule,
+                    NbIconModule,
+                ],
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(RosRemoteComponent);

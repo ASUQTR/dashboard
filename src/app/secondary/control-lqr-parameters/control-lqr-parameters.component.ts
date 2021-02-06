@@ -3,8 +3,7 @@ import { FormArray, FormControl, Validators } from '@angular/forms';
 import { RosService } from '../../ros.service';
 import { NbDialogService } from '@nebular/theme';
 import { LqrParametersSaveDialogComponent } from '../lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
-import { log } from 'util';
-import { RestApiService } from "../../rest-api.service";
+import { RestApiService } from '../../rest-api.service';
 
 @Component({
     selector: 'app-control-lqr-parameters',
@@ -117,7 +116,11 @@ export class ControlLqrParametersComponent implements OnInit {
         ]),
     ]);
 
-    constructor(private rs: RosService, private dialogService: NbDialogService, private restService: RestApiService) {}
+    constructor(
+        private rs: RosService,
+        private dialogService: NbDialogService,
+        private restService: RestApiService
+    ) {}
 
     get matrixQ1() {
         return this.matrixQ.at(0);
