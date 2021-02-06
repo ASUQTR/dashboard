@@ -45,3 +45,7 @@ testem.log
 .DS_Store
 Thumbs.db
 **/debug.log
+
+# Test result ouput
+karmatestresult.xml
+tslintresult.json

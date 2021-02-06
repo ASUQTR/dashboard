@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, Optional, TemplateRef } from '@angular/core';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { RosService } from '../../ros.service';
 import { NbDialogService } from '@nebular/theme';
@@ -118,7 +118,7 @@ export class ControlLqrParametersComponent implements OnInit {
 
     constructor(
         private rs: RosService,
-        private dialogService: NbDialogService,
+        @Optional() private dialogService: NbDialogService,
         private restService: RestApiService
     ) {}
 

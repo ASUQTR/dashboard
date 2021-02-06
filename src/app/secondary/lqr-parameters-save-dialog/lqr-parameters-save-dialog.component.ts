@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
 import { FormControl } from '@angular/forms';
 
@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 export class LqrParametersSaveDialogComponent implements OnInit {
     name = new FormControl('');
 
-    constructor(protected dialogRef: NbDialogRef<any>) {}
+    constructor(@Optional() protected dialogRef: NbDialogRef<any>) {}
 
     ngOnInit(): void {}
 
