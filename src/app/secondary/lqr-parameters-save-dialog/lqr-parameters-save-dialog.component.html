@@ -1,0 +1,12 @@
+<nb-card>
+    <nb-card-body>
+        <label>Config Name
+            <input nbInput [formControl]="name">
+        </label>
+
+    </nb-card-body>
+    <nb-card-footer class="saveDialogCard">
+        <button nbButton status="success" (click)="save()">Save</button>
+        <button nbButton status="danger" (click)="close()">Close</button>
+    </nb-card-footer>
+</nb-card>

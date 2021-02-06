@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { RosService } from '../../ros.service';
+import { NbDialogService } from '@nebular/theme';
+import { LqrParametersSaveDialogComponent } from '../lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
+import { log } from 'util';
+import { RestApiService } from "../../rest-api.service";
 
 @Component({
     selector: 'app-control-lqr-parameters',
@@ -9,6 +13,26 @@ import { RosService } from '../../ros.service';
 })
 export class ControlLqrParametersComponent implements OnInit {
     matrixQ = new FormArray([
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
+        new FormControl(0, [
+            Validators.required,
+            Validators.min(0),
+            Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
+        ]),
         new FormControl(0, [
             Validators.required,
             Validators.min(0),
@@ -93,7 +117,7 @@ export class ControlLqrParametersComponent implements OnInit {
         ]),
     ]);
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RosService, private dialogService: NbDialogService, private restService: RestApiService) {}
 
     get matrixQ1() {
         return this.matrixQ.at(0);
@@ -125,6 +149,22 @@ export class ControlLqrParametersComponent implements OnInit {
 
     get matrixQ8() {
         return this.matrixQ.at(7);
+    }
+
+    get matrixQ9() {
+        return this.matrixQ.at(8);
+    }
+
+    get matrixQ10() {
+        return this.matrixQ.at(9);
+    }
+
+    get matrixQ11() {
+        return this.matrixQ.at(10);
+    }
+
+    get matrixQ12() {
+        return this.matrixQ.at(11);
     }
 
     get matrixR1() {
@@ -176,5 +216,17 @@ export class ControlLqrParametersComponent implements OnInit {
 
     sendNewValues() {
         this.rs.sendLqrParams(this.matrixQ.value, this.matrixR.value);
+    }
+
+    openSaveDialog() {
+        this.dialogService
+            .open(LqrParametersSaveDialogComponent)
+            .onClose.subscribe((name) => this.saveCurrentConfig(name));
+    }
+
+    saveCurrentConfig(name: string) {
+        if (name) {
+            this.restService.saveLqrParams(name, this.matrixQ.value, this.matrixR.value);
+        }
     }
 }

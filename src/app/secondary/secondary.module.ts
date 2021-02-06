@@ -6,9 +6,14 @@ import { SecondaryPageComponent } from './secondary-page/secondary-page.componen
 import { ControlLqrParametersComponent } from './control-lqr-parameters/control-lqr-parameters.component';
 import { NbButtonModule, NbCardModule, NbInputModule, NbThemeModule } from '@nebular/theme';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LqrParametersSaveDialogComponent } from './lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
 
 @NgModule({
-    declarations: [SecondaryPageComponent, ControlLqrParametersComponent],
+    declarations: [
+        SecondaryPageComponent,
+        ControlLqrParametersComponent,
+        LqrParametersSaveDialogComponent,
+    ],
     imports: [
         CommonModule,
         SecondaryRoutingModule,
