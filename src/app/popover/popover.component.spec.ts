@@ -2,7 +2,7 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PopoverComponent } from './popover.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,21 +15,23 @@ describe('PopoverComponent', () => {
     let component: PopoverComponent;
     let fixture: ComponentFixture<PopoverComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [PopoverComponent],
-            imports: [
-                HttpClientModule,
-                NbToastrModule.forRoot(),
-                NbThemeModule.forRoot(),
-                NbLayoutModule,
-                NbEvaIconsModule,
-                NbIconModule,
-                RouterTestingModule.withRoutes([]),
-                BrowserAnimationsModule,
-            ],
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [PopoverComponent],
+                imports: [
+                    HttpClientModule,
+                    NbToastrModule.forRoot(),
+                    NbThemeModule.forRoot(),
+                    NbLayoutModule,
+                    NbEvaIconsModule,
+                    NbIconModule,
+                    RouterTestingModule.withRoutes([]),
+                    BrowserAnimationsModule,
+                ],
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(PopoverComponent);

@@ -49,10 +49,10 @@ export class RestApiService {
 
         console.log(`Requested HTTP for saving LQR params to ${fileName}.yaml`);
         const reqData = {
-            fileName: fileName,
-            matrixQ: matrixQ,
-            matrixR: matrixR
-        }
+            fileName,
+            matrixQ,
+            matrixR
+        };
         this.sub = this.http.post(apiUrl, JSON.stringify(reqData), {}).subscribe(
             () => {
                 this.toastrService.success(
