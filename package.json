@@ -7,7 +7,7 @@
         "build": "ng build --prod",
         "test": "ng test",
         "test-headless": "ng test --watch=false --browsers=ChromeHeadless",
-        "lint": "ng lint --format=json > tslintresult.json",
+        "lint": "ng lint --format=junit > tslintresult.xml",
         "e2e": "ng e2e"
     },
     "private": true,
