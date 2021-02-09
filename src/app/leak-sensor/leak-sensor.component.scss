@@ -1,7 +1,0 @@
-@import "../../themes";
-
-@include nb-install-component {
-    .leak {
-        color: nb-theme(text-danger-color);
-    }
-}

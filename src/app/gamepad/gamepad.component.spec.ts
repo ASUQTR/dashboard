@@ -2,7 +2,7 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GamepadComponent } from './gamepad.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,20 +14,22 @@ describe('GamepadComponent', () => {
     let component: GamepadComponent;
     let fixture: ComponentFixture<GamepadComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [GamepadComponent],
-            imports: [
-                HttpClientModule,
-                NbToastrModule.forRoot(),
-                NbThemeModule.forRoot(),
-                NbLayoutModule,
-                NbEvaIconsModule,
-                NbIconModule,
-                RouterTestingModule.withRoutes([]),
-            ],
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [GamepadComponent],
+                imports: [
+                    HttpClientModule,
+                    NbToastrModule.forRoot(),
+                    NbThemeModule.forRoot(),
+                    NbLayoutModule,
+                    NbEvaIconsModule,
+                    NbIconModule,
+                    RouterTestingModule.withRoutes([]),
+                ],
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(GamepadComponent);

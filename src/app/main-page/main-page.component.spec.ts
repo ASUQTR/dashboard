@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MainPageComponent } from './main-page.component';
 import { AuvMotorDisplayComponent } from '../auv-motor-display/auv-motor-display.component';
@@ -16,28 +16,30 @@ describe('MainPageComponent', () => {
     let component: MainPageComponent;
     let fixture: ComponentFixture<MainPageComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                MainPageComponent,
-                AuvMotorDisplayComponent,
-                ControlLQRComponent,
-                CameraFeedComponent,
-                GamepadComponent,
-                RosoutComponent,
-                RosRemoteComponent,
-            ],
-            imports: [
-                HttpClientModule,
-                NbToastrModule.forRoot(),
-                NbThemeModule.forRoot(),
-                NbLayoutModule,
-                NbEvaIconsModule,
-                NbIconModule,
-                RouterTestingModule.withRoutes([]),
-            ],
-        }).compileComponents();
-    }));
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    MainPageComponent,
+                    AuvMotorDisplayComponent,
+                    ControlLQRComponent,
+                    CameraFeedComponent,
+                    GamepadComponent,
+                    RosoutComponent,
+                    RosRemoteComponent,
+                ],
+                imports: [
+                    HttpClientModule,
+                    NbToastrModule.forRoot(),
+                    NbThemeModule.forRoot(),
+                    NbLayoutModule,
+                    NbEvaIconsModule,
+                    NbIconModule,
+                    RouterTestingModule.withRoutes([]),
+                ],
+            }).compileComponents();
+        })
+    );
 
     beforeEach(() => {
         fixture = TestBed.createComponent(MainPageComponent);

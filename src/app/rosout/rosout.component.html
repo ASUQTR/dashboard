@@ -6,12 +6,19 @@
     <nb-chat-message
         *ngFor="let msg of messages"
         type="text"
-        [message]="'['+rosoutLevel[msg.level]+'] ' +msg.msg"
+        [message]="'[' + rosoutLevel[msg.level] + '] ' + msg.msg"
         reply="false"
         [sender]="msg.name"
         [date]="msg.header.stamp.secs * 1000"
         dateFormat="mediumTime"
         avatar="../../assets/ros_logo.png"
+        [ngClass]="{
+            info: msg.level === levelInfo,
+            debug: msg.level === levelDebug,
+            warn: msg.level === levelWarn,
+            fatal: msg.level === levelFatal,
+            error: msg.level === levelError
+        }"
     >
     </nb-chat-message>
 </nb-chat>

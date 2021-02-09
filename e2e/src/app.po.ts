@@ -11,7 +11,9 @@ export class AppPage {
 
     getTitleText(): Promise<string> {
         return element(
-            by.css('app-root app-toolbar span')
+            by.css(
+                'app-root nb-layout .scrollable-container .layout nb-layout-header nav app-toolbar span'
+            )
         ).getText() as Promise<string>;
     }
 }

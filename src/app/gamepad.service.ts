@@ -45,7 +45,6 @@ export class GamepadService implements OnDestroy {
      *
      * @param negativeSide Negative part of the dpad axes element
      * @param positiveSide Positive part of the dpad axes element
-     * @static
      */
     static getDpadAxeValueFromButtons(negativeSide: boolean, positiveSide: boolean): number {
         let value: number;
@@ -204,7 +203,6 @@ export class GamepadService implements OnDestroy {
      * Function to manage the event listener for window:gamepadconnected and push the event into the Subject
      *
      * @param renderer DOM object used to render stuff
-     * @private
      */
     private createOnGamepadConnectedObservable(renderer: Renderer2) {
         let removeGamepadConnectedEventListener: () => void;
@@ -234,7 +232,6 @@ export class GamepadService implements OnDestroy {
      * Function to manage the event listener for window:gamepaddisconnected and push the event into the Subject
      *
      * @param renderer2 DOM object used to render stuff
-     * @private
      */
     private createOnGamepadDisconnectedObservable(renderer2: Renderer2) {
         let removeGamepadDisconnectedEventListener: () => void;
