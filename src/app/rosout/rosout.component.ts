@@ -13,6 +13,11 @@ import { RosoutLevel, RosoutMessage } from '../ros-model.enum';
 })
 export class RosoutComponent implements OnInit {
     messages = new Array<RosoutMessage>();
+    readonly levelInfo = RosoutLevel.INFO;
+    readonly levelDebug = RosoutLevel.DEBUG;
+    readonly levelError = RosoutLevel.ERROR;
+    readonly levelFatal = RosoutLevel.FATAL;
+    readonly levelWarn = RosoutLevel.WARN;
     rosoutLevel = RosoutLevel;
     date: Date;
     constructor(private rs: RosService) {}
