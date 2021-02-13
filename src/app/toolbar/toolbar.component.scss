@@ -5,7 +5,7 @@
 :host {
     display: grid;
     grid-gap: 20px;
-    grid-template-columns: 40px 40px 1fr 40px;
+    grid-template-columns: 40px 40px 1fr 40px 40px;
 }
 
 img {
@@ -13,13 +13,78 @@ img {
     height: 2rem;
 }
 
-button {
+.status {
     float: right;
     width: 2rem;
     height: 2rem;
     padding: 0 !important;
+    grid-column-start: 5;
+    place-self: center;
+}
+
+.updateDiv {
+    position: relative;
     grid-column-start: 4;
     place-self: center;
+    padding: 0 !important;
+    animation: fadeIn ease-out 500ms;
+    -webkit-animation: fadeIn ease-out 500ms;
+    -moz-animation: fadeIn ease-out 500ms;
+    -o-animation: fadeIn ease-out 500ms;
+    -ms-animation: fadeIn ease-out 500ms;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-ms-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.updateButton {
+}
+
+.updateIcon {
+    width: 2rem !important;
+    height: 2rem !important;
 }
 
 .statusIcon {

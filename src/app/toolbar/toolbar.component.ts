@@ -2,20 +2,18 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
-import {
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
-import { NbComponentStatus, NbSidebarService } from '@nebular/theme';
-import ROSBRIDGE from 'roslib';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { NbComponentStatus, NbDialogService, NbSidebarService } from '@nebular/theme';
 import { Subscription } from 'rxjs';
 import { GamepadService } from '../gamepad.service';
 import { PopoverComponent } from '../popover/popover.component';
 import { RosState } from '../ros-model.enum';
 import { RosService } from '../ros.service';
+import { environment } from '../../environments/environment';
+import compareVersions from 'compare-versions';
+import { RestApiService } from '../rest-api.service';
+import { LqrParametersSaveDialogComponent } from '../secondary/lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
+import { UpdateAvailableDialogComponent } from '../update-available-dialog/update-available-dialog.component';
 
 @Component({
     selector: 'app-toolbar',
@@ -38,11 +36,14 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     popoverComponent = PopoverComponent;
     gamepadConnectedSubscription: Subscription;
     gamepadDisconnectedSubscription: Subscription;
+    updateAvailable = false;
     constructor(
         private rs: RosService,
         private gs: GamepadService,
         private cdr: ChangeDetectorRef,
-        private sidebarService: NbSidebarService
+        private sidebarService: NbSidebarService,
+        private restApi: RestApiService,
+        private dialogService: NbDialogService
     ) {}
 
     ngOnInit(): void {
@@ -65,31 +66,60 @@ export class ToolbarComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.rosStateSubscription = this.rs.rosStateItem$.subscribe(
-            (newState) => {
-                this.rosbridgeConnected = newState;
-                switch (newState) {
-                    case RosState.Connected:
-                        this.rosStatusIcon = this.successIcon;
-                        this.rosIconColor = this.successColor;
-                        break;
+        this.rosStateSubscription = this.rs.rosStateItem$.subscribe((newState) => {
+            this.rosbridgeConnected = newState;
+            switch (newState) {
+                case RosState.Connected:
+                    this.rosStatusIcon = this.successIcon;
+                    this.rosIconColor = this.successColor;
+                    break;
 
-                    case RosState.Disconnected:
-                        break;
+                case RosState.Disconnected:
+                    break;
 
-                    case RosState.Error:
-                        this.rosStatusIcon = this.failureIcon;
-                        this.rosIconColor = this.failureColor;
-                        break;
-                }
-                this.cdr.detectChanges();
+                case RosState.Error:
+                    this.rosStatusIcon = this.failureIcon;
+                    this.rosIconColor = this.failureColor;
+                    break;
             }
-        );
+            this.cdr.detectChanges();
+        });
+
+        setTimeout(() => this.verifyUpdate(this.cdr), 1000);
     }
 
     toggleSidebar(): boolean {
         this.sidebarService.toggle(false);
         return false;
+    }
+
+    async verifyUpdate(cdr: ChangeDetectorRef): Promise<void> {
+        try {
+            const responseStructure = await this.restApi
+                .bitbucketGetLatestCommitLatestRelease()
+                .toPromise();
+            const commitID = responseStructure.values[0].displayId;
+            const packageJsonContent = await this.restApi
+                .bitbucketGetVersionOfLatestReleaseBranch(commitID)
+                .toPromise();
+            const latestVersionOnBitbucket = packageJsonContent.version;
+            this.updateAvailable =
+                compareVersions(environment.version, latestVersionOnBitbucket) === -1;
+        } catch (e) {
+            console.log('Error: unable to reach Bitbucket', e);
+        }
+
+        cdr.detectChanges();
+        if (!this.updateAvailable) {
+            setInterval(() => this.verifyUpdate(cdr), 600000);
+        }
+    }
+
+    openUpdateAvailableDialog() {
+        this.dialogService.open(UpdateAvailableDialogComponent, {
+            closeOnEsc: false,
+            closeOnBackdropClick: false,
+        });
     }
 
     ngOnDestroy() {
