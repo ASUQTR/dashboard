@@ -28,7 +28,8 @@
                         "scripts": [],
                         "allowedCommonJsDependencies": [
                             "roslib",
-                            "angular2-chartjs"
+                            "angular2-chartjs",
+                            "compare-versions"
                         ]
                     },
                     "configurations": {
