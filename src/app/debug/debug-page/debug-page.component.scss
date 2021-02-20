@@ -9,7 +9,14 @@ app-debug-motors {
     grid-column-start: 1;
     grid-column-end: 5;
     grid-row-start: 1;
-    grid-row-end: 6;
+    grid-row-end: 5;
+}
+
+app-auv3d-model {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 5;
+    grid-row-end: 9;
 }
 
 app-depth-meter {

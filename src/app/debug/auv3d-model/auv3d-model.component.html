@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-body>
+        <model-viewer
+            #auv
+            src="assets/auv_model-12-feb-2021.glb"
+            alt="The 3D model for the AUV"
+            interaction-prompt="none"
+            camera-orbit="0deg 90deg 1m"
+        ></model-viewer>
+    </nb-card-body>
+    <nb-card-footer>
+        <label>
+            Roll:
+            <input type="number" nbInput [formControl]="roll" [status]="roll.valid ? 'basic' : 'danger'" (input)="updateOrientation()"> degrees
+        </label>
+        <label>
+            Pitch:
+            <input type="number" nbInput [formControl]="pitch" [status]="pitch.valid ? 'basic' : 'danger'" (input)="updateOrientation()"> degrees
+        </label>
+        <label>
+            Yaw:
+            <input type="number" nbInput [formControl]="yaw" [status]="yaw.valid ? 'basic' : 'danger'" (input)="updateOrientation()"> degrees
+        </label>
+    </nb-card-footer>
+</nb-card>
