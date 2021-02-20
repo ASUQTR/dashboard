@@ -11,15 +11,15 @@
     <nb-card-footer>
         <label>
             Roll:
-            <input type="number" nbInput [formControl]="roll" [status]="roll.valid ? 'basic' : 'danger'" (input)="updateOrientation()"> degrees
+            <input type="number" nbInput [formControl]="roll" [status]="roll.valid ? 'basic' : 'danger'" nbTooltip="Scroll to roll that dick" (input)="updateOrientationFormCallback()" (wheel)="scrollRoll($event)"> degrees
         </label>
         <label>
             Pitch:
-            <input type="number" nbInput [formControl]="pitch" [status]="pitch.valid ? 'basic' : 'danger'" (input)="updateOrientation()"> degrees
+            <input type="number" nbInput [formControl]="pitch" [status]="pitch.valid ? 'basic' : 'danger'" nbTooltip="Scroll weed everyday" (input)="updateOrientationFormCallback()" (wheel)="scrollPitch($event)"> degrees
         </label>
         <label>
             Yaw:
-            <input type="number" nbInput [formControl]="yaw" [status]="yaw.valid ? 'basic' : 'danger'" (input)="updateOrientation()"> degrees
+            <input type="number" nbInput [formControl]="yaw" [status]="yaw.valid ? 'basic' : 'danger'" nbTooltip="Scroll over yaw dick" (input)="updateOrientationFormCallback()" (wheel)="scrollYaw($event)"> degrees
         </label>
     </nb-card-footer>
 </nb-card>
