@@ -265,6 +265,8 @@ export class RosService {
             messageType: 'sensor_msgs/Imu',
         });
 
+        imu.advertise();
+
         this.imuMockSource.subscribe((msg: ImuMessage) => {
             imu.publish(msg);
         });
