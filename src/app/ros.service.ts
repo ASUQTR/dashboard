@@ -266,7 +266,6 @@ export class RosService {
         });
 
         this.imuMockSource.subscribe((msg: ImuMessage) => {
-            console.log('Sending mock IMU message: ', msg);
             imu.publish(msg);
         });
     }
