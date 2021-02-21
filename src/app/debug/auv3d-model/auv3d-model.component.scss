@@ -13,3 +13,10 @@ nb-card-footer {
     grid-template-columns: 1fr 1fr 1fr;
     place-items: center;
 }
+
+nb-toggle {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}

@@ -98,6 +98,7 @@ export class RosService {
     private oldLeakStateHelper = false;
     private imuSource = new Subject<ImuMessage>();
     imuData = this.imuSource.asObservable();
+    imuMockSource = new Subject<ImuMessage>();
 
     constructor(private http: HttpClient, private toasterService: NbToastrService) {
         this.rbServer = new ROSLIB.Ros({
@@ -257,6 +258,17 @@ export class RosService {
             const msg = {};
             killSwitchBehavior.publish(msg);
         });
+
+        const imu = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/vectornav/IMU',
+            messageType: 'sensor_msgs/Imu',
+        });
+
+        this.imuMockSource.subscribe((msg: ImuMessage) => {
+            console.log('Sending mock IMU message: ', msg);
+            imu.publish(msg);
+        });
     }
 
     sendLqrParams(matrixQ: number[], matrixR: number[]): void {
@@ -347,8 +359,6 @@ export class RosService {
     private getTopics() {
         if (this.connected) {
             this.rbServer.getTopics((allTopics) => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 this.topicsListSource.next(allTopics.topics);
             });
             setTimeout(() => this.getTopics(), 2000);
