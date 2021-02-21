@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DebugRoutingModule } from './debug-routing.module';
@@ -13,12 +13,16 @@ import {
     NbCardModule,
     NbContextMenuModule,
     NbIconModule,
+    NbInputModule,
     NbListModule,
     NbThemeModule,
+    NbTooltipModule,
 } from '@nebular/theme';
 import { MotorTableComponent } from './motor-table/motor-table.component';
 import { MotorGraphComponent } from './motor-graph/motor-graph.component';
 import { ChartModule } from 'angular2-chartjs';
+import { Auv3dModelComponent } from './auv3d-model/auv3d-model.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -30,6 +34,7 @@ import { ChartModule } from 'angular2-chartjs';
         ControlLqrDebugInfoComponent,
         MotorTableComponent,
         MotorGraphComponent,
+        Auv3dModelComponent,
     ],
     imports: [
         CommonModule,
@@ -41,6 +46,10 @@ import { ChartModule } from 'angular2-chartjs';
         NbContextMenuModule,
         ChartModule,
         NbThemeModule,
+        NbInputModule,
+        ReactiveFormsModule,
+        NbTooltipModule,
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DebugModule {}

@@ -12,6 +12,7 @@ import {
     ControlStateFeedbackMessage,
     ControlSwitchMessage,
     DepthMessage,
+    ImuMessage,
     JoyMessage,
     LeakSensorMessage,
     MotorThrottlesFeedbackMessage,
@@ -95,6 +96,8 @@ export class RosService {
     leakSensorHelperData = this.leakSensorHelperSource.asObservable();
     private oldLeakStateDriver = false;
     private oldLeakStateHelper = false;
+    private imuSource = new Subject<ImuMessage>();
+    imuData = this.imuSource.asObservable();
 
     constructor(private http: HttpClient, private toasterService: NbToastrService) {
         this.rbServer = new ROSLIB.Ros({
@@ -208,6 +211,14 @@ export class RosService {
         });
 
         lqrError.subscribe((msg) => this.emitLqrErrorMessage(msg));
+
+        const imuData = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/vectornav/IMU',
+            messageType: 'sensor_msgs/Imu',
+        });
+
+        imuData.subscribe((msg) => this.emitImuMessage(msg));
     }
 
     advertiseAllTopics(): void {
@@ -396,11 +407,12 @@ export class RosService {
         this.controlLqrErrorSource.next(msg);
     }
 
+    private emitImuMessage(msg: any) {
+        this.imuSource.next(msg);
+    }
+
     private lqrParamServicePosResponse() {
-        this.toasterService.success(
-            'Nice',
-            'Successfully updated new LQR params'
-        );
+        this.toasterService.success('Nice', 'Successfully updated new LQR params');
     }
 
     private lqrParamServiceError(err: any) {
