@@ -16,6 +16,7 @@ import {
     NbInputModule,
     NbListModule,
     NbThemeModule,
+    NbToggleModule,
     NbTooltipModule,
 } from '@nebular/theme';
 import { MotorTableComponent } from './motor-table/motor-table.component';
@@ -49,6 +50,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         NbInputModule,
         ReactiveFormsModule,
         NbTooltipModule,
+        NbToggleModule,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

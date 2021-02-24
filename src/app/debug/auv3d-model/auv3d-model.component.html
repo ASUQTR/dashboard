@@ -1,5 +1,8 @@
 <nb-card>
     <nb-card-body>
+        <nb-toggle (checkedChange)="manualModeChange($event)">
+            Manual mode
+        </nb-toggle>
         <model-viewer
             #auv
             src="assets/auv_model-12-feb-2021.glb"
