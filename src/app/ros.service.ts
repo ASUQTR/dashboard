@@ -78,6 +78,8 @@ export class RosService {
     controlLqrErrorData = this.controlLqrErrorSource.asObservable();
     private topicsListSource = new BehaviorSubject<string[]>(null);
     topicsListData = this.topicsListSource.asObservable();
+    private nodesListSource = new Subject<string[]>();
+    nodesListData = this.nodesListSource.asObservable();
     private depthSource = new BehaviorSubject<DepthMessage>({
         data: 0,
     });
@@ -317,6 +319,7 @@ export class RosService {
         this.subscribeAllTopics();
         this.advertiseAllTopics();
         this.getTopics();
+        this.getNodes();
     }
 
     private errorOnConnection() {
@@ -363,6 +366,13 @@ export class RosService {
                 this.topicsListSource.next(allTopics.topics);
             });
             setTimeout(() => this.getTopics(), 2000);
+        }
+    }
+
+    private getNodes() {
+        if (this.connected) {
+            this.rbServer.getNodes((allNodes) => this.nodesListSource.next(allNodes));
+            setTimeout(() => this.getNodes(), 2000);
         }
     }
 

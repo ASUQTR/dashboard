@@ -50,6 +50,10 @@ export class Auv3dModelComponent implements AfterViewInit {
                 this.yaw.setValue(newOrientation.z);
             }
         });
+
+        this.rs.nodesListData.subscribe((allNodes: string[]) => {
+            this.manualModeChange(!allNodes.includes('/vectornav'));
+        });
     }
 
     manualModeChange(newValue: boolean) {

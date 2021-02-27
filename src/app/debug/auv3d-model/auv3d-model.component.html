@@ -1,6 +1,6 @@
 <nb-card>
     <nb-card-body>
-        <nb-toggle (checkedChange)="manualModeChange($event)">
+        <nb-toggle (checkedChange)="manualModeChange($event)" [checked]="manualMode">
             Manual mode
         </nb-toggle>
         <model-viewer
