@@ -3,7 +3,7 @@
  */
 
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
     NbAccordionModule,
     NbActionsModule,
+    NbBadgeModule,
     NbButtonModule,
     NbCardModule,
     NbChatModule,
@@ -67,6 +68,7 @@ import { FlexbeCardComponent } from './flexbe-card/flexbe-card.component';
 import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/flexbe-behavior-killswitch.component';
 import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
 
 @NgModule({
     declarations: [
@@ -93,6 +95,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         FlexbeCardComponent,
         FlexbeBehaviorKillswitchComponent,
         GamepadShellComponent,
+        UpdateAvailableDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -133,6 +136,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         NbTooltipModule,
         NbSelectModule,
         ReactiveFormsModule,
+        NbBadgeModule,
     ],
     providers: [
         CookieService,

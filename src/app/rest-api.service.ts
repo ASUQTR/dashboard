@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { throttleTime } from 'rxjs/operators';
 import { NbComponentStatus, NbToastrService } from '@nebular/theme';
 
@@ -43,15 +43,47 @@ export class RestApiService {
         );
     }
 
-    saveLqrParams(fileName: string, matrixQ: number[], matrixR: number[]) {
+    bitbucketGetLatestCommitLatestRelease(): Observable<any> {
         const apiUrl =
-            'http://' + location.hostname + ':42069/api/saveLqrParams';
+            'https://bitbucket.asuqtr.com/rest/api/1.0/projects/SUBUQTR/repos/asuqtr_interface_web/commits?until=release%2Flatest&limit=1';
+
+        return this.http.get(apiUrl, {
+            headers: new HttpHeaders({
+                Authorization: 'Bearer NTI0MTE0MDg4NjExOk2JFFTgu+xAtH1vzOAP52Gg/TZp',
+                Accept: 'application/json',
+                'X-Atlassian-Token': 'no-check',
+            }),
+            withCredentials: true,
+            reportProgress: true,
+            responseType: 'json',
+        });
+    }
+
+    bitbucketGetVersionOfLatestReleaseBranch(commitID: string): Observable<any> {
+        const apiUrl =
+            'https://bitbucket.asuqtr.com/rest/api/1.0/projects/SUBUQTR/repos/asuqtr_interface_web/raw/package.json?' +
+            commitID;
+
+        return this.http.get(apiUrl, {
+            headers: new HttpHeaders({
+                Authorization: 'Bearer NTI0MTE0MDg4NjExOk2JFFTgu+xAtH1vzOAP52Gg/TZp',
+                Accept: 'application/json',
+                'X-Atlassian-Token': 'no-check',
+            }),
+            withCredentials: true,
+            reportProgress: true,
+            responseType: 'json',
+        });
+    }
+
+    saveLqrParams(fileName: string, matrixQ: number[], matrixR: number[]) {
+        const apiUrl = 'http://' + location.hostname + ':42069/api/saveLqrParams';
 
         console.log(`Requested HTTP for saving LQR params to ${fileName}.yaml`);
         const reqData = {
             fileName,
             matrixQ,
-            matrixR
+            matrixR,
         };
         this.sub = this.http.post(apiUrl, JSON.stringify(reqData), {}).subscribe(
             () => {
@@ -67,5 +99,11 @@ export class RestApiService {
                 );
             }
         );
+    }
+
+    triggerDashboardUpdate() {
+        const apiUrl = 'http://' + location.hostname + ':42069/api/updateDashboard';
+
+        return this.http.post(apiUrl, '', {});
     }
 }

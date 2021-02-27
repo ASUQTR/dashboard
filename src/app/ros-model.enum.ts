@@ -2,6 +2,8 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
+import ROSLIB from 'roslib';
+
 export enum RosState {
     Disconnected,
     Connected,
@@ -10,6 +12,16 @@ export enum RosState {
 
 export interface ControlStateMessage {
     data?: boolean | null;
+}
+
+export interface ImuMessage {
+    header: RosMsgHeader;
+    orientation: ROSLIB.QuaternionLike | null;
+    orientation_covariance: number[] | null;
+    angular_velocity: ROSLIB.Vector3Like | null;
+    angular_velocity_covariance: number[] | null;
+    linear_acceleration: ROSLIB.Vector3Like | null;
+    linear_acceleration_covariance: number[] | null;
 }
 
 export interface ControlStateFeedbackMessage {

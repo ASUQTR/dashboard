@@ -2,6 +2,8 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
+import { version } from '../../package.json';
+
 export const environment = {
     production: true,
     rosUrl: 'ws://' + location.hostname + ':9090',
@@ -15,4 +17,5 @@ export const environment = {
         appId: '1:413426909710:web:e8b12c0ba63aee5e70b25f',
         measurementId: 'G-FYMS7GQF1D',
     },
+    version,
 };

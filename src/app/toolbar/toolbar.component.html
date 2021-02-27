@@ -9,6 +9,22 @@
     <img src="assets/asuqtr-logo.png" alt="" />
 </a>
 <span>ASUQTR Dashboard</span>
+<div class="updateDiv" *ngIf="updateAvailable">
+    <nb-badge dotMode status="danger"></nb-badge>
+    <button
+        nbButton
+        ghost
+        shape="round"
+        class="updateButton"
+        nbTooltip="Update available"
+        (click)="openUpdateAvailableDialog()"
+    >
+        <nb-icon
+            class="updateIcon"
+            icon="refresh"
+        ></nb-icon>
+    </button>
+</div>
 <button
     nbButton
     ghost
@@ -16,6 +32,7 @@
     [nbSpinner]="!(rosbridgeConnected && gamepadConnected)"
     nbSpinnerStatus="info"
     [nbPopover]="popoverComponent"
+    class="status"
 >
     <nb-icon
         class="statusIcon"

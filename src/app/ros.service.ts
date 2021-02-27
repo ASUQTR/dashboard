@@ -12,6 +12,7 @@ import {
     ControlStateFeedbackMessage,
     ControlSwitchMessage,
     DepthMessage,
+    ImuMessage,
     JoyMessage,
     LeakSensorMessage,
     MotorThrottlesFeedbackMessage,
@@ -77,6 +78,8 @@ export class RosService {
     controlLqrErrorData = this.controlLqrErrorSource.asObservable();
     private topicsListSource = new BehaviorSubject<string[]>(null);
     topicsListData = this.topicsListSource.asObservable();
+    private nodesListSource = new Subject<string[]>();
+    nodesListData = this.nodesListSource.asObservable();
     private depthSource = new BehaviorSubject<DepthMessage>({
         data: 0,
     });
@@ -95,6 +98,9 @@ export class RosService {
     leakSensorHelperData = this.leakSensorHelperSource.asObservable();
     private oldLeakStateDriver = false;
     private oldLeakStateHelper = false;
+    private imuSource = new Subject<ImuMessage>();
+    imuData = this.imuSource.asObservable();
+    imuMockSource = new Subject<ImuMessage>();
 
     constructor(private http: HttpClient, private toasterService: NbToastrService) {
         this.rbServer = new ROSLIB.Ros({
@@ -208,6 +214,14 @@ export class RosService {
         });
 
         lqrError.subscribe((msg) => this.emitLqrErrorMessage(msg));
+
+        const imuData = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/vectornav/IMU',
+            messageType: 'sensor_msgs/Imu',
+        });
+
+        imuData.subscribe((msg) => this.emitImuMessage(msg));
     }
 
     advertiseAllTopics(): void {
@@ -245,6 +259,18 @@ export class RosService {
         this.behaviorKillSwitchSource.subscribe(() => {
             const msg = {};
             killSwitchBehavior.publish(msg);
+        });
+
+        const imu = new ROSLIB.Topic({
+            ros: this.rbServer,
+            name: '/vectornav/IMU',
+            messageType: 'sensor_msgs/Imu',
+        });
+
+        imu.advertise();
+
+        this.imuMockSource.subscribe((msg: ImuMessage) => {
+            imu.publish(msg);
         });
     }
 
@@ -293,6 +319,7 @@ export class RosService {
         this.subscribeAllTopics();
         this.advertiseAllTopics();
         this.getTopics();
+        this.getNodes();
     }
 
     private errorOnConnection() {
@@ -336,11 +363,16 @@ export class RosService {
     private getTopics() {
         if (this.connected) {
             this.rbServer.getTopics((allTopics) => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 this.topicsListSource.next(allTopics.topics);
             });
             setTimeout(() => this.getTopics(), 2000);
+        }
+    }
+
+    private getNodes() {
+        if (this.connected) {
+            this.rbServer.getNodes((allNodes) => this.nodesListSource.next(allNodes));
+            setTimeout(() => this.getNodes(), 2000);
         }
     }
 
@@ -396,11 +428,12 @@ export class RosService {
         this.controlLqrErrorSource.next(msg);
     }
 
+    private emitImuMessage(msg: any) {
+        this.imuSource.next(msg);
+    }
+
     private lqrParamServicePosResponse() {
-        this.toasterService.success(
-            'Nice',
-            'Successfully updated new LQR params'
-        );
+        this.toasterService.success('Nice', 'Successfully updated new LQR params');
     }
 
     private lqrParamServiceError(err: any) {

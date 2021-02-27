@@ -6,6 +6,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
 import {
+    NbDialogModule,
     NbIconModule,
     NbLayoutModule,
     NbSidebarModule,
@@ -34,6 +35,7 @@ describe('ToolbarComponent', () => {
                     NbIconModule,
                     NbSidebarModule.forRoot(),
                     RouterTestingModule.withRoutes([]),
+                    NbDialogModule.forRoot(),
                 ],
             }).compileComponents();
         })
