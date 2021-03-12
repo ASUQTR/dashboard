@@ -95,14 +95,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     async verifyUpdate(cdr: ChangeDetectorRef): Promise<void> {
         try {
-            const responseStructure = await this.restApi
-                .bitbucketGetLatestCommitLatestRelease()
-                .toPromise();
-            const commitID = responseStructure.values[0].displayId;
             const packageJsonContent = await this.restApi
-                .bitbucketGetVersionOfLatestReleaseBranch(commitID)
+                .bitbucketGetVersionOfLatestReleaseBranch()
                 .toPromise();
             const latestVersionOnBitbucket = packageJsonContent.version;
+            console.log('Latest version: ', latestVersionOnBitbucket);
             this.updateAvailable =
                 compareVersions(environment.version, latestVersionOnBitbucket) === -1;
         } catch (e) {
