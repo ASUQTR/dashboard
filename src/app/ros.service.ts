@@ -344,7 +344,20 @@ export class RosService {
     }
 
     private emitMotorThrottlesMessage(msg: any) {
-        this.motorThrottlesSource.next(msg);
+        const timeNow = new Date();
+        const newMsg: MotorThrottlesMessage = {
+            header: {
+                seq: 0,
+                frame_id: '',
+                stamp: {
+                    secs: Math.floor(timeNow.getTime() / 1000),
+                    nsecs: timeNow.getMilliseconds() * 1000000
+                }
+            },
+            ids: msg.ids,
+            throttles: msg.throttles
+        }
+        this.motorThrottlesSource.next(newMsg);
     }
 
     private emitLqrActiveFeedbackMessage(msg: any) {
