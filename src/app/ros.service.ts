@@ -56,10 +56,6 @@ export class RosService {
     motorThrottlesFeedbackData = this.motorThrottlesFeedbackSource.asObservable();
     private lqrActiveFeedbackSource = new BehaviorSubject<LqrActiveFeedbackMessage>(null);
     lqrActiveFeedbackData = this.lqrActiveFeedbackSource.asObservable();
-    private controlLqrLoopTimeSource = new BehaviorSubject<ControlLoopTimeMessage>({
-        data: 0,
-    });
-    controlLqrLoopTimeData = this.controlLqrLoopTimeSource.asObservable();
     private controlLqrStateSource = new BehaviorSubject<ControlInfoMessage>({
         header: {},
         data: [0, 0, 0, 0, 0, 0],
@@ -181,14 +177,6 @@ export class RosService {
         });
 
         leakHelper.subscribe((msg) => this.emitLeakHelperMessage(msg));
-
-        const lqrLoopTime = new ROSLIB.Topic({
-            ros: this.rbServer,
-            name: '/control/loop_time',
-            messageType: 'std_msgs/Float32',
-        });
-
-        lqrLoopTime.subscribe((msg) => this.emitLqrLoopTimeMessage(msg));
 
         const lqrState = new ROSLIB.Topic({
             ros: this.rbServer,
@@ -413,10 +401,6 @@ export class RosService {
         if (msg && msg.data.length === 8) {
             this.motorThrottlesFeedbackSource.next(msg);
         }
-    }
-
-    private emitLqrLoopTimeMessage(msg: any) {
-        this.controlLqrLoopTimeSource.next(msg);
     }
 
     private emitLqrStateMessage(msg: any) {
