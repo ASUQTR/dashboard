@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlInfoMessage,
     ControlLoopTimeMessage,
-    ControlStateFeedbackMessage,
+    LqrActiveFeedbackMessage,
     ControlSwitchMessage,
     DepthMessage,
     ImuMessage,
@@ -35,7 +35,6 @@ export class RosService {
     connected = RosState.Disconnected;
     joySource = new ReplaySubject<JoyMessage>(1);
     joyData = this.joySource.asObservable();
-    lqrKillSwitchSource = new Subject<boolean>();
     behaviorKillSwitchSource = new Subject<void>();
     statusIcon: string;
     statusIconColor: string;
@@ -55,8 +54,8 @@ export class RosService {
         data: [0, 0, 0, 0, 0, 0, 0, 0],
     });
     motorThrottlesFeedbackData = this.motorThrottlesFeedbackSource.asObservable();
-    private controlModeFeedbackSource = new BehaviorSubject<ControlStateFeedbackMessage>(null);
-    controlModeFeedbackData = this.controlModeFeedbackSource.asObservable();
+    private lqrActiveFeedbackSource = new BehaviorSubject<LqrActiveFeedbackMessage>(null);
+    lqrActiveFeedbackData = this.lqrActiveFeedbackSource.asObservable();
     private controlLqrLoopTimeSource = new BehaviorSubject<ControlLoopTimeMessage>({
         data: 0,
     });
@@ -141,14 +140,14 @@ export class RosService {
             this.emitMotorThrottlesFeedbackMessage(msg);
         });
 
-        const controlModeFeedback = new ROSLIB.Topic({
+        const lqrActiveFeedback = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/control/mode_feedback',
+            name: '/control/lqr_active_feedback',
             messageType: 'std_msgs/Bool',
         });
 
-        controlModeFeedback.subscribe((msg) => {
-            this.emitControlModeFeedbackMessage(msg);
+        lqrActiveFeedback.subscribe((msg) => {
+            this.emitLqrActiveFeedbackMessage(msg);
         });
 
         const depth = new ROSLIB.Topic({
@@ -235,20 +234,6 @@ export class RosService {
             joy.publish(joyData);
         });
 
-        const killSwitchLQR = new ROSLIB.Topic({
-            ros: this.rbServer,
-            name: '/control/switch',
-            messageType: 'std_msgs/Bool',
-        });
-        killSwitchLQR.advertise();
-
-        this.lqrKillSwitchSource.subscribe((data) => {
-            const msg: ControlSwitchMessage = {
-                data,
-            };
-            killSwitchLQR.publish(msg);
-        });
-
         const killSwitchBehavior = new ROSLIB.Topic({
             ros: this.rbServer,
             name: '/flexbe/commands/preempt',
@@ -272,6 +257,24 @@ export class RosService {
         this.imuMockSource.subscribe((msg: ImuMessage) => {
             imu.publish(msg);
         });
+    }
+
+    toggleLqrControl(lqrActive: boolean): void {
+        const toggleLqrService = new ROSLIB.Service({
+            ros: this.rbServer,
+            name: '/control/toggle_lqr_control',
+            serviceType: 'asuqtr_control_node/ToggleLqr',
+        });
+
+        const request = new ROSLIB.ServiceRequest({
+            lqr_active: lqrActive,
+        });
+
+        toggleLqrService.callService(
+            request,
+            (res) => this.toggleLqrControlServicePosResponse(res.status),
+            (err) => this.toggleLqrControlServiceError(err)
+        );
     }
 
     sendLqrParams(matrixQ: number[], matrixR: number[]): void {
@@ -356,8 +359,8 @@ export class RosService {
         this.motorThrottlesSource.next(msg);
     }
 
-    private emitControlModeFeedbackMessage(msg: any) {
-        this.controlModeFeedbackSource.next(msg);
+    private emitLqrActiveFeedbackMessage(msg: any) {
+        this.lqrActiveFeedbackSource.next(msg);
     }
 
     private getTopics() {
@@ -430,6 +433,25 @@ export class RosService {
 
     private emitImuMessage(msg: any) {
         this.imuSource.next(msg);
+    }
+
+    private toggleLqrControlServicePosResponse(status: number) {
+        if (status >= 200 && status < 300) {
+            this.toasterService.success('Nice', 'Successfully updated new LQR params');
+        } else {
+            this.toasterService.danger(
+                'Error ' + status + ': ' + getReasonPhrase(status),
+                `Failed to toggle LQR`
+            );
+        }
+    }
+
+    private toggleLqrControlServiceError(err: any) {
+        console.error(err);
+        this.toasterService.danger(
+            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
+            `Failed to toggle LQR`
+        );
     }
 
     private lqrParamServicePosResponse() {

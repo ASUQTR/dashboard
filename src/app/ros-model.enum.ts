@@ -24,7 +24,7 @@ export interface ImuMessage {
     linear_acceleration_covariance: number[] | null;
 }
 
-export interface ControlStateFeedbackMessage {
+export interface LqrActiveFeedbackMessage {
     data?: boolean | null;
 }
 

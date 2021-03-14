@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RosService } from '../ros.service';
-import { ControlStateFeedbackMessage } from '../ros-model.enum';
+import { LqrActiveFeedbackMessage } from '../ros-model.enum';
 import { Subscription } from 'rxjs';
 import { NbComponentStatus } from '@nebular/theme';
 
@@ -10,14 +10,14 @@ import { NbComponentStatus } from '@nebular/theme';
     styleUrls: ['./control-state-display.component.scss'],
 })
 export class ControlStateDisplayComponent implements OnInit, OnDestroy {
-    private controlModeFeedbackSubscription: Subscription;
-    controlMode = new ControlModeDisplay(false);
+    private lqrActiveFeedbackSubscription: Subscription;
+    lqrActive = new LqrActiveDisplay(false);
 
     constructor(private rs: RosService) {
-        this.controlModeFeedbackSubscription = this.rs.controlModeFeedbackData.subscribe(
-            (msg: ControlStateFeedbackMessage) => {
+        this.lqrActiveFeedbackSubscription = this.rs.lqrActiveFeedbackData.subscribe(
+            (msg: LqrActiveFeedbackMessage) => {
                 if (msg) {
-                    this.controlMode.updateState(msg.data);
+                    this.lqrActive.updateState(msg.data);
                 }
             }
         );
@@ -26,11 +26,11 @@ export class ControlStateDisplayComponent implements OnInit, OnDestroy {
     ngOnInit(): void {}
 
     ngOnDestroy() {
-        this.controlModeFeedbackSubscription.unsubscribe();
+        this.lqrActiveFeedbackSubscription.unsubscribe();
     }
 }
 
-class ControlModeDisplay {
+class LqrActiveDisplay {
     readonly successIcon = 'checkmark-circle-2';
     readonly failureIcon = 'close-circle';
     readonly successColor = 'success';
