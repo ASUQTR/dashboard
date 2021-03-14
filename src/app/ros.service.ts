@@ -351,12 +351,12 @@ export class RosService {
                 frame_id: '',
                 stamp: {
                     secs: Math.floor(timeNow.getTime() / 1000),
-                    nsecs: timeNow.getMilliseconds() * 1000000
-                }
+                    nsecs: timeNow.getMilliseconds() * 1000000,
+                },
             },
             ids: msg.ids,
-            throttles: msg.throttles
-        }
+            throttles: msg.throttles,
+        };
         this.motorThrottlesSource.next(newMsg);
     }
 
