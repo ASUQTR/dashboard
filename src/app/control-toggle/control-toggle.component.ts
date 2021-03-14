@@ -11,8 +11,12 @@ export class ControlToggleComponent implements OnInit {
 
     ngOnInit(): void {}
 
+    startLQR(): void {
+        this.rs.toggleLqrControl(true);
+    }
+
     killLQR(): void {
-        this.rs.lqrKillSwitchSource.next(false);
+        this.rs.toggleLqrControl(false);
         this.rs.behaviorKillSwitchSource.next();
     }
 }
