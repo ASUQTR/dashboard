@@ -164,7 +164,7 @@ export class RosService {
 
         const leakDriver = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/power_node/battery_leak_driver',
+            name: '/pod/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
 
@@ -172,7 +172,7 @@ export class RosService {
 
         const leakHelper = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/power_node/battery_leak_helper',
+            name: '/pod_node/battery_leak_helper',
             messageType: 'std_msgs/Bool',
         });
 
@@ -214,7 +214,7 @@ export class RosService {
     advertiseAllTopics(): void {
         const joy = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/joy',
+            name: '/dashboard/gamepad',
             messageType: 'sensor_msgs/Joy',
         });
         joy.advertise();
