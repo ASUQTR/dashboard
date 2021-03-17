@@ -56,10 +56,6 @@ export class RosService {
     motorThrottlesFeedbackData = this.motorThrottlesFeedbackSource.asObservable();
     private lqrActiveFeedbackSource = new BehaviorSubject<LqrActiveFeedbackMessage>(null);
     lqrActiveFeedbackData = this.lqrActiveFeedbackSource.asObservable();
-    private controlLqrLoopTimeSource = new BehaviorSubject<ControlLoopTimeMessage>({
-        data: 0,
-    });
-    controlLqrLoopTimeData = this.controlLqrLoopTimeSource.asObservable();
     private controlLqrStateSource = new BehaviorSubject<ControlInfoMessage>({
         header: {},
         data: [0, 0, 0, 0, 0, 0],
@@ -168,7 +164,7 @@ export class RosService {
 
         const leakDriver = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/power_node/battery_leak_driver',
+            name: '/pod/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
 
@@ -176,19 +172,11 @@ export class RosService {
 
         const leakHelper = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/power_node/battery_leak_helper',
+            name: '/pod_node/battery_leak_helper',
             messageType: 'std_msgs/Bool',
         });
 
         leakHelper.subscribe((msg) => this.emitLeakHelperMessage(msg));
-
-        const lqrLoopTime = new ROSLIB.Topic({
-            ros: this.rbServer,
-            name: '/control/loop_time',
-            messageType: 'std_msgs/Float32',
-        });
-
-        lqrLoopTime.subscribe((msg) => this.emitLqrLoopTimeMessage(msg));
 
         const lqrState = new ROSLIB.Topic({
             ros: this.rbServer,
@@ -226,7 +214,7 @@ export class RosService {
     advertiseAllTopics(): void {
         const joy = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/joy',
+            name: '/dashboard/gamepad',
             messageType: 'sensor_msgs/Joy',
         });
         joy.advertise();
@@ -356,7 +344,20 @@ export class RosService {
     }
 
     private emitMotorThrottlesMessage(msg: any) {
-        this.motorThrottlesSource.next(msg);
+        const timeNow = new Date();
+        const newMsg: MotorThrottlesMessage = {
+            header: {
+                seq: 0,
+                frame_id: '',
+                stamp: {
+                    secs: Math.floor(timeNow.getTime() / 1000),
+                    nsecs: timeNow.getMilliseconds() * 1000000,
+                },
+            },
+            ids: msg.ids,
+            throttles: msg.throttles,
+        };
+        this.motorThrottlesSource.next(newMsg);
     }
 
     private emitLqrActiveFeedbackMessage(msg: any) {
@@ -413,10 +414,6 @@ export class RosService {
         if (msg && msg.data.length === 8) {
             this.motorThrottlesFeedbackSource.next(msg);
         }
-    }
-
-    private emitLqrLoopTimeMessage(msg: any) {
-        this.controlLqrLoopTimeSource.next(msg);
     }
 
     private emitLqrStateMessage(msg: any) {
