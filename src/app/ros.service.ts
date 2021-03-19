@@ -247,6 +247,24 @@ export class RosService {
         });
     }
 
+    changeLqrAttenuationFactor(newAttenuationFactor: number): void {
+        const changeLqrAttenuationFactorService = new ROSLIB.Service({
+            ros: this.rbServer,
+            name: '/control/update_throttle_attenuation',
+            serviceType: 'asuqtr_control_node/UpdateAttenuation',
+        });
+
+        const request = new ROSLIB.ServiceRequest({
+            factor: newAttenuationFactor,
+        });
+
+        changeLqrAttenuationFactorService.callService(
+            request,
+            (res) => this.changeLqrAttenuationFactorServicePosResponse(res.status),
+            (err) => this.changeLqrAttenuationFactorServiceError(err)
+        );
+    }
+
     toggleLqrControl(lqrActive: boolean): void {
         const toggleLqrService = new ROSLIB.Service({
             ros: this.rbServer,
@@ -448,6 +466,25 @@ export class RosService {
         this.toasterService.danger(
             'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
             `Failed to toggle LQR`
+        );
+    }
+
+    private changeLqrAttenuationFactorServicePosResponse(status: number) {
+        if (status >= 200 && status < 300) {
+            this.toasterService.success('Nice', 'Successfully updated LQR attenuation factor');
+        } else {
+            this.toasterService.danger(
+                'Error ' + status + ': ' + getReasonPhrase(status),
+                `Failed to update LQR attenuation factor`
+            );
+        }
+    }
+
+    private changeLqrAttenuationFactorServiceError(err: any) {
+        console.error(err);
+        this.toasterService.danger(
+            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
+            `Failed to update LQR attenuation factor`
         );
     }
 

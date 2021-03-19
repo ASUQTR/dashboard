@@ -1,0 +1,10 @@
+:host {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 15px;
+}
+
+app-control-lqr-parameters {
+    grid-column-start: 1;
+    grid-column-end: 5;
+}
