@@ -1,0 +1,47 @@
+<nb-card>
+    <nb-card-body>
+        <p class="h6">Change LQR Rates</p>
+        <div class="col1">
+            <span class="rateTitle">Action server (Hz)</span>
+            <label>
+                <input
+                    nbInput
+                    number
+                    placeholder="Enter a number [0...&infin;]"
+                    [formControl]="actionServerRate"
+                    [status]="actionServerRate.valid ? 'basic' : 'danger'"
+                />
+            </label>
+            <button
+                nbButton
+                status="primary"
+                (click)="onClickActionServerRateSend()"
+                [disabled]="!actionServerRate.valid"
+                class="actionServer"
+            >
+                <nb-icon icon="upload"> </nb-icon>
+            </button>
+        </div>
+        <div class="col2">
+            <span class="rateTitle">LQR (Hz)</span>
+            <label>
+                <input
+                    nbInput
+                    number
+                    placeholder="Enter a number [0...&infin;]"
+                    [formControl]="lqrRate"
+                    [status]="lqrRate.valid ? 'basic' : 'danger'"
+                />
+            </label>
+            <button
+                nbButton
+                status="primary"
+                (click)="onClickLqrRateSend()"
+                [disabled]="!lqrRate.valid"
+                class="lqrRate"
+            >
+                <nb-icon icon="upload"> </nb-icon>
+            </button>
+        </div>
+    </nb-card-body>
+</nb-card>

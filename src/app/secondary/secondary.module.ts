@@ -8,6 +8,7 @@ import { NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbThemeModul
 import { ReactiveFormsModule } from '@angular/forms';
 import { LqrParametersSaveDialogComponent } from './lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
 import { ChangeLqrAttFactorComponent } from './change-lqr-att-factor/change-lqr-att-factor.component';
+import { ChangeLqrRatesComponent } from './change-lqr-rates/change-lqr-rates.component';
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import { ChangeLqrAttFactorComponent } from './change-lqr-att-factor/change-lqr-
         ControlLqrParametersComponent,
         LqrParametersSaveDialogComponent,
         ChangeLqrAttFactorComponent,
+        ChangeLqrRatesComponent,
     ],
     imports: [
         CommonModule,

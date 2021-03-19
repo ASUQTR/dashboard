@@ -1,10 +1,18 @@
 :host {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     grid-gap: 15px;
 }
 
 app-control-lqr-parameters {
     grid-column-start: 1;
     grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 5;
+}
+
+app-change-lqr-rates {
+    grid-column-start: 5;
+    grid-column-end: 7;
 }
