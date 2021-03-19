@@ -247,6 +247,42 @@ export class RosService {
         });
     }
 
+    changeLqrRate(newRate: number): void {
+        const changeLqrRateService = new ROSLIB.Service({
+            ros: this.rbServer,
+            name: '/control/update_max_lqr_rate',
+            serviceType: 'asuqtr_control_node/UpdateMaxLqrRate',
+        });
+
+        const request = new ROSLIB.ServiceRequest({
+            factor: newRate,
+        });
+
+        changeLqrRateService.callService(
+            request,
+            (res) => this.changeLqrRateServicePosResponse(res.status),
+            (err) => this.changeLqrRateServiceError(err)
+        );
+    }
+
+    changeLqrActionServerRate(newRate: number): void {
+        const changeLqrActionServerRateService = new ROSLIB.Service({
+            ros: this.rbServer,
+            name: '/control/update_action_server_rate',
+            serviceType: 'asuqtr_control_node/UpdateAsRate',
+        });
+
+        const request = new ROSLIB.ServiceRequest({
+            factor: newRate,
+        });
+
+        changeLqrActionServerRateService.callService(
+            request,
+            (res) => this.changeLqrActionServerRateServicePosResponse(res.status),
+            (err) => this.changeLqrActionServerRateServiceError(err)
+        );
+    }
+
     changeLqrAttenuationFactor(newAttenuationFactor: number): void {
         const changeLqrAttenuationFactorService = new ROSLIB.Service({
             ros: this.rbServer,
@@ -485,6 +521,44 @@ export class RosService {
         this.toasterService.danger(
             'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
             `Failed to update LQR attenuation factor`
+        );
+    }
+
+    private changeLqrRateServicePosResponse(status: number) {
+        if (status >= 200 && status < 300) {
+            this.toasterService.success('Nice', 'Successfully updated LQR loop rate');
+        } else {
+            this.toasterService.danger(
+                'Error ' + status + ': ' + getReasonPhrase(status),
+                `Failed to update LQR loop rate`
+            );
+        }
+    }
+
+    private changeLqrRateServiceError(err: any) {
+        console.error(err);
+        this.toasterService.danger(
+            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
+            `Failed to update LQR loop rate`
+        );
+    }
+
+    private changeLqrActionServerRateServicePosResponse(status: number) {
+        if (status >= 200 && status < 300) {
+            this.toasterService.success('Nice', 'Successfully updated LQR action server rate');
+        } else {
+            this.toasterService.danger(
+                'Error ' + status + ': ' + getReasonPhrase(status),
+                `Failed to update LQR action server rate`
+            );
+        }
+    }
+
+    private changeLqrActionServerRateServiceError(err: any) {
+        console.error(err);
+        this.toasterService.danger(
+            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
+            `Failed to update LQR action server rate`
         );
     }
 
