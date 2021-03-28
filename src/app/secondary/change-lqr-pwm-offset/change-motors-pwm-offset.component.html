@@ -1,0 +1,13 @@
+<nb-card>
+    <nb-card-body>
+        <p class="h6">Change Motors PWM Offset (%)</p>
+        <label>
+            <input nbInput number placeholder="Enter a number [0...100]%" [formControl]="newPwmOffset" [status]="newPwmOffset.valid ? 'basic' : 'danger'">
+        </label>
+        <button nbButton status="primary" (click)="onClickPwmOffsetSend()" [disabled]="!newPwmOffset.valid">
+            <nb-icon
+                icon="upload"
+            ></nb-icon>
+        </button>
+    </nb-card-body>
+</nb-card>
