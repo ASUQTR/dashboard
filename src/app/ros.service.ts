@@ -247,6 +247,42 @@ export class RosService {
         });
     }
 
+    changeLqrAngleThreshold(newThreshold: number): void {
+        const changeLqrAngleThresholdService = new ROSLIB.Service({
+            ros: this.rbServer,
+            name: '/control/update_angle_threshold',
+            serviceType: 'asuqtr_control_node/UpdateAngleThreshold',
+        });
+
+        const request = new ROSLIB.ServiceRequest({
+            factor: newThreshold,
+        });
+
+        changeLqrAngleThresholdService.callService(
+            request,
+            (res) => this.changeLqrAngleThresholdServicePosResponse(res.status),
+            (err) => this.changeLqrAngleThresholdServiceError(err)
+        );
+    }
+
+    changeLqrPositionThreshold(newThreshold: number): void {
+        const changeLqrPositionThresholdService = new ROSLIB.Service({
+            ros: this.rbServer,
+            name: '/control/update_position_threshold',
+            serviceType: 'asuqtr_control_node/UpdatePosThreshold',
+        });
+
+        const request = new ROSLIB.ServiceRequest({
+            factor: newThreshold,
+        });
+
+        changeLqrPositionThresholdService.callService(
+            request,
+            (res) => this.changeLqrPositionThresholdServicePosResponse(res.status),
+            (err) => this.changeLqrPositionThresholdServiceError(err)
+        );
+    }
+
     changeLqrRate(newRate: number): void {
         const changeLqrRateService = new ROSLIB.Service({
             ros: this.rbServer,
@@ -521,6 +557,44 @@ export class RosService {
         this.toasterService.danger(
             'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
             `Failed to update LQR attenuation factor`
+        );
+    }
+
+    private changeLqrPositionThresholdServicePosResponse(status: number) {
+        if (status >= 200 && status < 300) {
+            this.toasterService.success('Nice', 'Successfully updated LQR position threshold');
+        } else {
+            this.toasterService.danger(
+                'Error ' + status + ': ' + getReasonPhrase(status),
+                `Failed to update LQR position threshold`
+            );
+        }
+    }
+
+    private changeLqrPositionThresholdServiceError(err: any) {
+        console.error(err);
+        this.toasterService.danger(
+            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
+            `Failed to update LQR position threshold`
+        );
+    }
+
+    private changeLqrAngleThresholdServicePosResponse(status: number) {
+        if (status >= 200 && status < 300) {
+            this.toasterService.success('Nice', 'Successfully updated LQR angle threshold');
+        } else {
+            this.toasterService.danger(
+                'Error ' + status + ': ' + getReasonPhrase(status),
+                `Failed to update LQR angle threshold`
+            );
+        }
+    }
+
+    private changeLqrAngleThresholdServiceError(err: any) {
+        console.error(err);
+        this.toasterService.danger(
+            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
+            `Failed to update LQR angle threshold`
         );
     }
 
