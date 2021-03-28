@@ -283,6 +283,24 @@ export class RosService {
         );
     }
 
+    changeMotorsPwmOffsetFactor(newOffset: number): void {
+        const changeMotorsPwmOffsetService = new ROSLIB.Service({
+            ros: this.rbServer,
+            name: '/motors/update_pwm_offset',
+            serviceType: 'asuqtr_actuator_node/UpdatePwmOffset',
+        });
+
+        const request = new ROSLIB.ServiceRequest({
+            factor: newOffset,
+        });
+
+        changeMotorsPwmOffsetService.callService(
+            request,
+            (res) => this.changeMotorsPwmOffsetServicePosResponse(res.status),
+            (err) => this.changeMotorsPwmOffsetServiceError(err)
+        );
+    }
+
     changeLqrRate(newRate: number): void {
         const changeLqrRateService = new ROSLIB.Service({
             ros: this.rbServer,
@@ -385,6 +403,13 @@ export class RosService {
         return new ROSLIB.Param({
             ros: this.rbServer,
             name: 'control_node/motor_cost_matrix',
+        });
+    }
+
+    getMotorsPwmOffset(): any {
+        return new ROSLIB.Param({
+            ros: this.rbServer,
+            name: 'motors/pwm_offset',
         });
     }
 
@@ -576,6 +601,25 @@ export class RosService {
         this.toasterService.danger(
             'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
             `Failed to update LQR position threshold`
+        );
+    }
+
+    private changeMotorsPwmOffsetServicePosResponse(status: number) {
+        if (status >= 200 && status < 300) {
+            this.toasterService.success('Nice', 'Successfully updated motors PWM offset');
+        } else {
+            this.toasterService.danger(
+                'Error ' + status + ': ' + getReasonPhrase(status),
+                `Failed to update motors PWM offset`
+            );
+        }
+    }
+
+    private changeMotorsPwmOffsetServiceError(err: any) {
+        console.error(err);
+        this.toasterService.danger(
+            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
+            `Failed to update motors PWM offset`
         );
     }
 
