@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LqrParametersSaveDialogComponent } from './lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
 import { ChangeLqrAttFactorComponent } from './change-lqr-att-factor/change-lqr-att-factor.component';
 import { ChangeLqrRatesComponent } from './change-lqr-rates/change-lqr-rates.component';
+import { ChangeLqrPosAngleThresholdComponent } from './change-lqr-pos-angle-threshold/change-lqr-pos-angle-threshold.component';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { ChangeLqrRatesComponent } from './change-lqr-rates/change-lqr-rates.com
         LqrParametersSaveDialogComponent,
         ChangeLqrAttFactorComponent,
         ChangeLqrRatesComponent,
+        ChangeLqrPosAngleThresholdComponent,
     ],
     imports: [
         CommonModule,
