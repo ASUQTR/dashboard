@@ -14,6 +14,64 @@ This project is using [Angular][2] version 10.2.
 | ASUQTR-specific documentation  | [Confluence Page](https://confluence.asuqtr.com/x/w4CNAg) |
 | Angular CLI README             |                     [Angular CLI][1]                      |
 
+# Table of contents
+
+1. [Production](#production)
+2. [Development](#development)
+
+# Production
+
+## How to build and publish the Docker image
+
+1. Run `docker build -t docker-registry.asuqtr.com/asuqtr-dashboard:VERSION` to build the Docker image by replacing VERSION by the correct version tag you want (ex. 2.0.0, latest, pool-test, etc.).
+2. Run `docker image push docker-registry.asuqtr.com/asuqtr-dashboard:VERSION` to push the newly built image to the ASUQTR Docker registry. Don't forget to replace VERSION by the correct version tag used during build process.
+
+## How to use the published Docker image in a Docker-Compose environment
+
+1. Use the following docker-compose.yml:
+```yaml
+version: "3"
+services:
+    ros-master:
+        image: docker-registry.asuqtr.com/ros-base:test
+        container_name: ros-master
+        ports:
+            - "11311:11311"
+        command:
+            - roscore
+
+    ros-bridge:
+        image: docker-registry.asuqtr.com/ros-base:test
+        container_name: ros-bridge
+        environment:
+            - "ROS_HOSTNAME=ros-bridge"
+            - "ROS_MASTER_URI=http://ros-master:11311"
+        ports:
+            - "9090:9090"
+        depends_on:
+            - ros-master
+        command:
+            - roslaunch
+            - --wait
+            - rosbridge_server
+            - rosbridge_websocket.launch
+
+    asuqtr-dashboard:
+        image: docker-registry.asuqtr.com/asuqtr-dashboard:test
+        container_name: asuqtr-dashboard
+        ports:
+            - "80:80"
+        depends_on:
+            - ros-bridge
+            - ros-master
+
+```
+
+2. Run `docker-compose up -d`
+3. Open a browser and type `localhost`
+
+# Development
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change
