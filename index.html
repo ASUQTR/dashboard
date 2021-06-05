@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="style.css">		
+		<script type="text/javascript" src="roslib.js"></script>
+		<script type="text/javascript" src="ros_functions.js"></script>	
+	</head>
+   	<body>
+		<header>
+			<h1>ASUQTR</h1>				
+		</header>
+
+		<h3 id="feedback" style="background: #bdc3c7;"></h3>
+		<h3 id="gamepadinfo" style="background: #ecf0f1;"> En attente du joystick...</h3>	
+
+		//<h3> Cameras </h3>
+		
+		<div class="webcam_pannel"> 
+			<div class="column">
+              	<h3> Cameras POD1 </h3>
+				<img src="http://192.168.2.106:8080/stream?topic=/detectnet/overlay" height="400" width="400" align="middle"/>
+			</div>
+		</div>
+
+		<div id="container" style="width:100%;">                                   
+			<div class="motor_pannel"> 
+				<h3> Joy_Info </h3>
+				<table id="motorTable" cellpadding="10" cellspacing="5">
+					<tr>
+						<td>Stick left X</td>
+						<td>Stick left Y</td>	
+						<td>Stick right X</td>	
+						<td>Stick right Y</td>
+						<td>Trigger left</td>
+						<td>Trigger right</td>
+					</tr>
+					<tr>
+						<td><progress id="axis_stick_left_LR" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_stick_left_UD" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_stick_right_LR" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_stick_right_UD" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_trigger_left" type="progress" value="0" min="0" max="100"></progress></td>
+						<td><progress id="axis_trigger_right" type="progress" value="0" min="0" max="100"></progress></td>
+					</tr>						
+				</table>
+			</div>
+		</div>   	
+	</body>
+</html>

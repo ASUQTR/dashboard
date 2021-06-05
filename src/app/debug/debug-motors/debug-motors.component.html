@@ -1,7 +1,0 @@
-<nb-card>
-    <nb-card-body [ngSwitch]="display">
-        <app-motor-graph *ngSwitchCase="'graph'"></app-motor-graph>
-        <app-motor-table *ngSwitchCase="'table'"></app-motor-table>
-        <button nbButton status="basic" ghost shape="round" [nbContextMenu]="displayChoices" nbContextMenuTag="debugMotors"><nb-icon icon="more-vertical"></nb-icon></button>
-    </nb-card-body>
-</nb-card>
