@@ -31,7 +31,7 @@ rbServer.on('close', function() {
 
 var joy_topic = new ROSLIB.Topic({
     ros : rbServer,
-    name : '/joy',
+    name : '/dashboard/game_pad',
     messageType : 'sensor_msgs/Joy'
 });
 
