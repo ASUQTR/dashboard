@@ -43,26 +43,9 @@ export class RestApiService {
         );
     }
 
-    bitbucketGetLatestCommitLatestRelease(): Observable<any> {
+    bitbucketGetVersionOfLatestReleaseBranch(): Observable<any> {
         const apiUrl =
-            'https://bitbucket.asuqtr.com/rest/api/1.0/projects/SUBUQTR/repos/asuqtr_interface_web/commits?until=release%2Flatest&limit=1';
-
-        return this.http.get(apiUrl, {
-            headers: new HttpHeaders({
-                Authorization: 'Bearer NTI0MTE0MDg4NjExOk2JFFTgu+xAtH1vzOAP52Gg/TZp',
-                Accept: 'application/json',
-                'X-Atlassian-Token': 'no-check',
-            }),
-            withCredentials: true,
-            reportProgress: true,
-            responseType: 'json',
-        });
-    }
-
-    bitbucketGetVersionOfLatestReleaseBranch(commitID: string): Observable<any> {
-        const apiUrl =
-            'https://bitbucket.asuqtr.com/rest/api/1.0/projects/SUBUQTR/repos/asuqtr_interface_web/raw/package.json?' +
-            commitID;
+            'https://bitbucket.asuqtr.com/rest/api/1.0/projects/SUBUQTR/repos/asuqtr_interface_web/raw/package.json?at=release%2Flatest';
 
         return this.http.get(apiUrl, {
             headers: new HttpHeaders({

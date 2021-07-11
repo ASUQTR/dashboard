@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RosService } from '../../ros.service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { pluck } from 'rxjs/operators';
+import { bufferCount, map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-control-lqr-debug-info',
@@ -86,7 +86,18 @@ export class ControlLqrDebugInfoComponent implements OnInit, OnDestroy {
     loopTime: Observable<number>;
     private sub: Subscription;
     constructor(private rs: RosService) {
-        this.loopTime = this.rs.controlLqrLoopTimeData.pipe(pluck('data'));
+        this.loopTime = this.rs.motorThrottlesData.pipe(bufferCount(10, 1)).pipe(
+            map((throttleMessages) => {
+                const startTime =
+                    throttleMessages[0]?.header.stamp?.secs * 1000000000 +
+                    throttleMessages[0]?.header.stamp?.nsecs;
+                const endTime =
+                    throttleMessages[throttleMessages.length - 1]?.header.stamp?.secs * 1000000000 +
+                    throttleMessages[throttleMessages.length - 1]?.header.stamp?.nsecs;
+                const totalTime = endTime - startTime;
+                return 10 / (totalTime / 1000000000);
+            })
+        );
         this.sub = combineLatest([
             this.rs.controlLqrStateData,
             this.rs.controlLqrTargetStateData,

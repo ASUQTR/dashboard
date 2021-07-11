@@ -1,0 +1,34 @@
+version: "3"
+services:
+    ros-master:
+        image: docker-registry.asuqtr.com/ros-base:test
+        container_name: ros-master
+        ports:
+            - "11311:11311"
+        command:
+            - roscore
+
+    ros-bridge:
+        image: docker-registry.asuqtr.com/ros-base:test
+        container_name: ros-bridge
+        environment:
+            - "ROS_HOSTNAME=ros-bridge"
+            - "ROS_MASTER_URI=http://ros-master:11311"
+        ports:
+            - "9090:9090"
+        depends_on:
+            - ros-master
+        command:
+            - roslaunch
+            - --wait
+            - rosbridge_server
+            - rosbridge_websocket.launch
+
+    asuqtr-dashboard:
+        image: docker-registry.asuqtr.com/asuqtr-dashboard:test
+        container_name: asuqtr-dashboard
+        ports:
+            - "80:80"
+        depends_on:
+            - ros-bridge
+            - ros-master
