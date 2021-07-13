@@ -26,7 +26,13 @@ This project is using [Angular][2] version 10.2.
 1. Run `docker build -t docker-registry.asuqtr.com/asuqtr-dashboard:VERSION` to build the Docker image by replacing VERSION by the correct version tag you want (ex. 2.0.0, latest, pool-test, etc.).
 2. Run `docker image push docker-registry.asuqtr.com/asuqtr-dashboard:VERSION` to push the newly built image to the ASUQTR Docker registry. Don't forget to replace VERSION by the correct version tag used during build process.
 
-## How to use the published Docker image in a Docker-Compose environment
+## How to use the published Docker image in a Docker container
+
+1. Go to [ASUQTR's Docker Hub][3] and find the tag you want to use for the asuqtr-dashboard image ("latest" suggested)
+2. Run `docker run -p 80:80 docker-registry.asuqtr.com/asuqtr-dashboard:latest` if you chose the latest tag
+3. Access the asuqtr-dashboard via [localhost](http://localhost)
+
+## How to use the published Docker image in Docker-Compose
 
 1. Use the following docker-compose.yml:
 ```yaml
@@ -102,3 +108,4 @@ the [Angular CLI README][1].
 
 [1]: https://github.com/angular/angular-cli/blob/master/README.md
 [2]: https://angular.io/docs
+[3]: https://docker-hub.asuqtr.com
