@@ -8,4 +8,5 @@ RUN npm run build
 
 ### STAGE 2: Run ###
 FROM nginx
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/src/app/dist/asuqtr-dashboard /usr/share/nginx/html
