@@ -85,6 +85,7 @@ export class ControlLqrDebugInfoComponent implements OnInit, OnDestroy {
     ];
     loopTime: Observable<number>;
     private sub: Subscription;
+
     constructor(private rs: RosService) {
         this.loopTime = this.rs.motorThrottlesData.pipe(bufferCount(10, 1)).pipe(
             map((throttleMessages) => {
