@@ -14,7 +14,7 @@ import { FormControl } from '@angular/forms';
 })
 export class ThemeChangerComponent implements OnInit {
     readonly themeCookieName = 'nbThemeValue';
-    themes = ['syspref', 'dark', 'default'];
+    themes = ['syspref', 'dark', 'default', 'cosmic'];
     selectedThemeFormControl = new FormControl();
     selectedTheme = 'syspref';
 
@@ -45,6 +45,7 @@ export class ThemeChangerComponent implements OnInit {
             this.themeService.changeTheme(this.selectedTheme);
         } else {
             this.checkSystemPreferencesAndApply();
+            this.addDarkModeChangeListener();
         }
 
         this.selectedThemeFormControl.valueChanges.subscribe((value) => {
@@ -59,6 +60,10 @@ export class ThemeChangerComponent implements OnInit {
 
                 case '2':
                     this.selectedTheme = 'default';
+                    break;
+
+                case '3':
+                    this.selectedTheme = 'cosmic';
                     break;
 
                 default:
@@ -80,11 +85,10 @@ export class ThemeChangerComponent implements OnInit {
         const darkModeOn =
             window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-        // If dark mode is enabled then directly switch to the dark-theme
-        if (darkModeOn) {
-            this.themeService.changeTheme('dark');
-        }
+        this.themeService.changeTheme(darkModeOn ? 'dark' : 'default');
+    }
 
+    private addDarkModeChangeListener() {
         // Watch for changes of the preference
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
             if (this.selectedTheme === 'syspref') {

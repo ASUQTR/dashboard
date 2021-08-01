@@ -5,6 +5,7 @@
 @import "~@nebular/theme/styles/theming";
 @import "~@nebular/theme/styles/themes/default";
 @import "~@nebular/theme/styles/themes/dark";
+@import "~@nebular/theme/styles/themes/cosmic";
 
 $nb-themes: nb-register-theme(
     (
@@ -31,4 +32,14 @@ $nb-themes: nb-register-theme(
     ),
     dark,
     dark
+);
+
+$nb-themes: nb-register-theme(
+    (
+        // text-basic-color: color-basic-800,
+        // // some styles we changed
+        // text-disabled-color: color-basic-600,
+    ),
+    cosmic,
+    cosmic
 );
