@@ -2,7 +2,7 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
@@ -21,7 +21,7 @@ export const environment = {
         appId: '1:413426909710:web:e8b12c0ba63aee5e70b25f',
         measurementId: 'G-FYMS7GQF1D',
     },
-    version,
+    version: packageJson.version,
 };
 
 /*
@@ -31,4 +31,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
