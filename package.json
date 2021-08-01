@@ -13,7 +13,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^12.1.4",
-    "@angular/cdk": "^11.2.2",
+    "@angular/cdk": "^12.1.4",
     "@angular/common": "^12.1.4",
     "@angular/compiler": "^12.1.4",
     "@angular/core": "^12.1.4",
@@ -24,7 +24,7 @@
     "@angular/router": "^12.1.4",
     "@google/model-viewer": "^1.5.0",
     "@nebular/eva-icons": "7.0.0",
-    "@nebular/theme": "^7.0.0",
+    "@nebular/theme": "^8.0.0",
     "@types/roslib": "^1.1.1",
     "angular2-chartjs": "^0.5.1",
     "compare-versions": "^3.6.0",
