@@ -17,15 +17,16 @@ export class SidebarSettingsComponent implements OnInit {
             title: 'Home',
             link: '/main',
             icon: 'home-outline',
+            home: true,
         },
         {
             title: 'More',
-            link: 'secondary',
+            link: '/secondary',
             icon: 'more-horizontal',
         },
         {
             title: 'Debug',
-            link: 'debug',
+            link: '/debug',
             icon: 'activity',
         },
     ];

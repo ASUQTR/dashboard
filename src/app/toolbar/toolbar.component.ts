@@ -96,7 +96,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     }
 
     toggleSidebar(): boolean {
-        this.sidebarService.toggle(false);
+        this.sidebarService.toggle(true);
         return false;
     }
 
