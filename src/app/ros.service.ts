@@ -164,7 +164,7 @@ export class RosService {
 
         const leakDriver = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/pod/battery_leak_driver',
+            name: '/pod_node/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
 
