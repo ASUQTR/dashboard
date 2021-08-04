@@ -9,6 +9,7 @@ import {
     NbDialogModule,
     NbIconModule,
     NbLayoutModule,
+    NbMenuModule,
     NbSidebarModule,
     NbThemeModule,
     NbToastrModule,
@@ -36,6 +37,7 @@ describe('ToolbarComponent', () => {
                     NbSidebarModule.forRoot(),
                     RouterTestingModule.withRoutes([]),
                     NbDialogModule.forRoot(),
+                    NbMenuModule.forRoot(),
                 ],
             }).compileComponents();
         })
