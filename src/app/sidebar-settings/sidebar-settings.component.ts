@@ -3,7 +3,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { NbMenuItem } from '@nebular/theme';
+import { NbMenuItem, NbSidebarService, NbSidebarState } from '@nebular/theme';
 
 @Component({
     selector: 'app-sidebar-settings',
@@ -30,7 +30,15 @@ export class SidebarSettingsComponent implements OnInit {
             icon: 'activity',
         },
     ];
-    constructor() {}
+    private sidebarState: NbSidebarState;
+    constructor(public sidebarService: NbSidebarService) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.sidebarService.onToggle().subscribe(() => {
+            this.sidebarService.getSidebarState().subscribe((value) => {
+                this.sidebarState = value;
+                console.log(this.sidebarState);
+            });
+        });
+    }
 }
