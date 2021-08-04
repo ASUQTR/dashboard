@@ -2,7 +2,7 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NbMenuItem, NbSidebarService, NbSidebarState } from '@nebular/theme';
 
 @Component({
@@ -11,6 +11,7 @@ import { NbMenuItem, NbSidebarService, NbSidebarState } from '@nebular/theme';
     styleUrls: ['./sidebar-settings.component.scss'],
 })
 export class SidebarSettingsComponent implements OnInit {
+    @ViewChild('item') settingSectionAccordion;
     animationState: 'void' | 'enter' = 'enter';
     items: NbMenuItem[] = [
         {
@@ -30,15 +31,29 @@ export class SidebarSettingsComponent implements OnInit {
             icon: 'activity',
         },
     ];
-    private sidebarState: NbSidebarState;
+    sidebarState: NbSidebarState;
     constructor(public sidebarService: NbSidebarService) {}
 
     ngOnInit(): void {
         this.sidebarService.onToggle().subscribe(() => {
             this.sidebarService.getSidebarState().subscribe((value) => {
                 this.sidebarState = value;
-                console.log(this.sidebarState);
+                if (this.sidebarState !== 'expanded') {
+                    if (this.settingSectionAccordion.expanded) {
+                        this.settingSectionAccordion.toggle();
+                    }
+                }
             });
         });
+
+        this.sidebarService.onExpand().subscribe(() => {
+            this.sidebarState = 'expanded';
+        });
+    }
+
+    settingSectionCollapseEventListener(): void {
+        if (this.sidebarState !== 'expanded') {
+            this.sidebarService.expand();
+        }
     }
 }
