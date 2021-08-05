@@ -2,6 +2,8 @@
  * Copyright (c) 2020 ASUQTR student club at UQTR in Canada. All rights reserved.
  */
 
+@import "../../themes";
+
 .settings {
     padding-top: 50px;
 }
@@ -10,11 +12,52 @@ span {
     padding-left: 10px;
 }
 
-nb-accordion {
-    box-shadow: 0 0 0 0 #000000;
-    margin: 0 -1.25rem -1.25rem;
+@include nb-install-component {
+    nb-accordion {
+        box-shadow: 0 0 0 0 #000000;
+        margin: 0 -1.25rem -1.25rem;
+    }
+
+    nb-accordion-item-header:hover ::ng-deep nb-icon {
+        color: nb-theme(menu-item-icon-hover-color);
+    }
+
+    nb-accordion-item-header:hover ::ng-deep span {
+        color: nb-theme(menu-item-icon-hover-color);
+    }
+
+    nb-icon {
+        color: nb-theme(menu-item-icon-color);
+        margin: nb-theme(menu-item-icon-margin) !important;
+        width: nb-theme(menu-item-icon-width) !important;
+    }
+
+    span {
+        color: nb-theme(menu-submenu-text-color);
+        font-size: nb-theme(menu-text-font-size);
+    }
+
+    nb-accordion-item {
+        padding: nb-theme(menu-item-padding);
+    }
+
+    nb-accordion-item-header {
+        padding: 0 0 0.75rem 0;
+    }
+
+    nb-accordion-item-body ::ng-deep .item-body {
+        padding: 1.25rem 0 0 0;
+    }
 }
 
 .themeChanger {
     padding-bottom: 15px;
+}
+
+.accordionIconInvisible ::ng-deep nb-icon.expansion-indicator {
+    opacity: 0;
+}
+
+@include nb-install-component {
+
 }
