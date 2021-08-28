@@ -7,14 +7,8 @@ import { Subscription } from 'rxjs';
 import { ConnectionStatus } from '../connection-status.model';
 import { GamepadService } from '../gamepad.service';
 import { RosState } from '../ros-model.enum';
-import { RosService } from '../ros.service';
-import {
-    trigger,
-    state,
-    style,
-    animate,
-    transition,
-} from '@angular/animations';
+import { RoslibService } from '../roslib.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
     selector: 'app-popover',
@@ -57,7 +51,7 @@ export class PopoverComponent implements OnInit, OnDestroy {
     rosStateSubscription: Subscription;
     gamepadConnectedSubscription: Subscription;
     gamepadDisconnectedSubscription: Subscription;
-    constructor(public gs: GamepadService, public rs: RosService) {}
+    constructor(public gs: GamepadService, public rs: RoslibService) {}
 
     ngOnInit(): void {
         this.gamepadConnectedSubscription = this.gs.onGamepadConnected.subscribe(
@@ -81,28 +75,26 @@ export class PopoverComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.rosStateSubscription = this.rs.rosStateItem$.subscribe(
-            (newState) => {
-                this.statusList[0].statusText = this.rs.statusText;
-                this.statusList[0].connected = newState;
-                switch (newState) {
-                    case RosState.Connected:
-                        this.statusList[0].statusIcon = this.successIcon;
-                        this.statusList[0].statusIconColor = this.successColor;
-                        break;
+        this.rosStateSubscription = this.rs.rosStateItem$.subscribe((newState) => {
+            this.statusList[0].statusText = this.rs.statusText;
+            this.statusList[0].connected = newState;
+            switch (newState) {
+                case RosState.Connected:
+                    this.statusList[0].statusIcon = this.successIcon;
+                    this.statusList[0].statusIconColor = this.successColor;
+                    break;
 
-                    case RosState.Disconnected:
-                        this.statusList[0].statusIcon = this.failureIcon;
-                        this.statusList[0].statusIconColor = this.failureColor;
-                        break;
+                case RosState.Disconnected:
+                    this.statusList[0].statusIcon = this.failureIcon;
+                    this.statusList[0].statusIconColor = this.failureColor;
+                    break;
 
-                    case RosState.Error:
-                        this.statusList[0].statusIcon = this.failureIcon;
-                        this.statusList[0].statusIconColor = this.failureColor;
-                        break;
-                }
+                case RosState.Error:
+                    this.statusList[0].statusIcon = this.failureIcon;
+                    this.statusList[0].statusIconColor = this.failureColor;
+                    break;
             }
-        );
+        });
     }
 
     ngOnDestroy() {

@@ -3,7 +3,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../ros.service';
+import { RoslibService } from '../roslib.service';
 import { RosoutLevel, RosoutMessage } from '../ros-model.enum';
 
 @Component({
@@ -20,7 +20,7 @@ export class RosoutComponent implements OnInit {
     readonly levelWarn = RosoutLevel.WARN;
     rosoutLevel = RosoutLevel;
     date: Date;
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {
         this.rs.rosoutData.subscribe((msg) => {

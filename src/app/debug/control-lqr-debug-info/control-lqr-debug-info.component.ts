@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { bufferCount, map } from 'rxjs/operators';
 
@@ -86,7 +86,7 @@ export class ControlLqrDebugInfoComponent implements OnInit, OnDestroy {
     loopTime: Observable<number>;
     private sub: Subscription;
 
-    constructor(private rs: RosService) {
+    constructor(private rs: RoslibService) {
         this.loopTime = this.rs.motorThrottlesData.pipe(bufferCount(10, 1)).pipe(
             map((throttleMessages) => {
                 const startTime =

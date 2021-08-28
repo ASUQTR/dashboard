@@ -4,13 +4,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { RosService } from './ros.service';
+import { RoslibService } from './roslib.service';
 import { HttpClientModule } from '@angular/common/http';
 import { NbIconModule, NbLayoutModule, NbThemeModule, NbToastrModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
-describe('RosService', () => {
-    let service: RosService;
+describe('RoslibService', () => {
+    let service: RoslibService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -23,7 +23,7 @@ describe('RosService', () => {
                 NbIconModule,
             ],
         });
-        service = TestBed.inject(RosService);
+        service = TestBed.inject(RoslibService);
     });
 
     it('should be created', () => {

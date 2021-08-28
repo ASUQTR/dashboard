@@ -59,6 +59,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { CameraFeedComponent } from './camera-feed/camera-feed.component';
 import { HttpClientModule } from '@angular/common/http';
 
+import { NgxRoslibService } from 'ngx-roslib';
+
 import { TrueFalsePipe } from './true-false.pipe';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
@@ -145,6 +147,7 @@ import { UpdateAvailableDialogComponent } from './update-available-dialog/update
         DeviceDetectorService,
         NbToastrService,
         ScreenTrackingService,
+        NgxRoslibService,
     ],
     bootstrap: [AppComponent],
 })

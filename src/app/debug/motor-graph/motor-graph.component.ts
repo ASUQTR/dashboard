@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { NbColorHelper, NbThemeService } from '@nebular/theme';
 import { ChartComponent } from 'angular2-chartjs';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { interval, Subscription } from 'rxjs';
 import { throttle } from 'rxjs/operators';
 
@@ -17,7 +17,7 @@ export class MotorGraphComponent implements AfterViewInit, OnDestroy {
     @ViewChild(ChartComponent) chartComponent: ChartComponent;
     private motorDataSubscription: Subscription;
 
-    constructor(private theme: NbThemeService, private rs: RosService) {
+    constructor(private theme: NbThemeService, private rs: RoslibService) {
         this.themeSubscription = this.theme.getJsTheme().subscribe((config) => {
             const colors: any = config.variables;
 
@@ -160,7 +160,7 @@ export class MotorGraphComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.motorDataSubscription = this.rs.motorThrottlesData
-            .pipe(throttle((ev) => interval(500)))
+            .pipe(throttle(() => interval(500)))
             .subscribe((throttlesMsg) => {
                 if (throttlesMsg) {
                     this.addChartData(throttlesMsg.throttles);

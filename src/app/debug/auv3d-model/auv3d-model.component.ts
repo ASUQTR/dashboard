@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import '@google/model-viewer';
 import { FormControl, Validators } from '@angular/forms';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { Euler, Quaternion } from 'three';
 import ROSLIB from 'roslib';
 import { ImuMessage } from '../../ros-model.enum';
@@ -31,7 +31,7 @@ export class Auv3dModelComponent implements AfterViewInit {
     ]);
     manualMode = false;
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngAfterViewInit(): void {
         this.rs.imuData.subscribe((msg: ImuMessage) => {

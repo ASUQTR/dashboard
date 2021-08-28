@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 
 @Component({
     selector: 'app-change-lqr-pos-angle-threshold',
@@ -11,7 +11,7 @@ export class ChangeLqrPosAngleThresholdComponent implements OnInit {
     posThreshold = new FormControl(0, [Validators.required, Validators.min(0)]);
     angleThreshold = new FormControl(0, [Validators.required, Validators.min(0)]);
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {}
 

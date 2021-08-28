@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../ros.service';
+import { RoslibService } from '../roslib.service';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
@@ -12,13 +12,15 @@ export class CameraFeedComponent implements OnInit {
     cam1Url =
         'http://' +
         location.hostname +
-        ':8080/stream?topic=/detectnet/overlay&type=mjpeg&quality=20';
+        ':8080/stream?topic=' +
+        this.cameraTopic +
+        '&type=mjpeg&quality=20';
     cam2Url = this.cam1Url;
     camTopicExist = false;
-    constructor(private rs: RosService) {
+    constructor(private rs: RoslibService) {
         this.rs.topicsListData.pipe(distinctUntilChanged()).subscribe((allTopics) => {
             if (allTopics) {
-                this.camTopicExist = allTopics.includes('/detectnet/overlay');
+                this.camTopicExist = allTopics?.includes(this.cameraTopic);
             }
         });
     }

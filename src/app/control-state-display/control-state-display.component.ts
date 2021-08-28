@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RosService } from '../ros.service';
+import { RoslibService } from '../roslib.service';
 import { LqrActiveFeedbackMessage } from '../ros-model.enum';
 import { Subscription } from 'rxjs';
 import { NbComponentStatus } from '@nebular/theme';
@@ -13,7 +13,7 @@ export class ControlStateDisplayComponent implements OnInit, OnDestroy {
     private lqrActiveFeedbackSubscription: Subscription;
     lqrActive = new LqrActiveDisplay(false);
 
-    constructor(private rs: RosService) {
+    constructor(private rs: RoslibService) {
         this.lqrActiveFeedbackSubscription = this.rs.lqrActiveFeedbackData.subscribe(
             (msg: LqrActiveFeedbackMessage) => {
                 if (msg) {

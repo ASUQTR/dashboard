@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 
@@ -56,7 +56,7 @@ export class MotorTableComponent implements OnInit, OnDestroy {
         },
     ];
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {
         this.motorThrottlesData$ = this.rs.motorThrottlesData.pipe(pluck('throttles'));

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -14,7 +14,7 @@ export class ChangeLqrAttFactorComponent implements OnInit {
         Validators.max(1),
     ]);
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {}
 

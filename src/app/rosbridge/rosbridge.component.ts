@@ -3,7 +3,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../ros.service';
+import { RoslibService } from '../roslib.service';
 
 @Component({
     selector: 'app-rosbridge',
@@ -11,7 +11,7 @@ import { RosService } from '../ros.service';
     styleUrls: ['./rosbridge.component.scss'],
 })
 export class RosbridgeComponent implements OnInit {
-    constructor(public rb: RosService) {}
+    constructor(public rb: RoslibService) {}
 
     ngOnInit(): void {}
 }
