@@ -34,7 +34,7 @@
     "ng-keyboard-shortcuts": "^10.1.17",
     "ngx-cookie-service": "^11.0.2",
     "ngx-device-detector": "^2.0.6",
-    "ngx-roslib": "^1.0.0",
+    "ngx-roslib": "^1.0.1",
     "popper.js": "^1.16.1",
     "rxfire": "^6.0.0",
     "rxjs": "^6.6.6",

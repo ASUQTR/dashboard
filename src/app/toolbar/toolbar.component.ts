@@ -92,7 +92,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
 
         setTimeout(() => this.verifyUpdate(this.cdr), 1000);
-        this.menuService.onItemClick().subscribe(() => this.sidebarService.toggle(false));
     }
 
     toggleSidebar(): boolean {
