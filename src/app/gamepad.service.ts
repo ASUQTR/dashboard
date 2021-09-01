@@ -6,9 +6,9 @@ import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/cor
 import { BehaviorSubject, fromEventPattern, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RoslibService } from './roslib.service';
-import { JoyMessage } from './ros-model.enum';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
+import { JoyMessage } from 'ngx-roslib';
 
 @Injectable({
     providedIn: 'root',

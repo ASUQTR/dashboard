@@ -4,7 +4,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RoslibService } from '../roslib.service';
-import { RosoutLevel, RosoutMessage } from '../ros-model.enum';
+import { RosoutLevel, RosoutMessage } from 'ngx-roslib';
 
 @Component({
     selector: 'app-rosout',

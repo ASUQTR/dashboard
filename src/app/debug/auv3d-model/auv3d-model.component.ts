@@ -3,8 +3,7 @@ import '@google/model-viewer';
 import { FormControl, Validators } from '@angular/forms';
 import { RoslibService } from '../../roslib.service';
 import { Euler, Quaternion } from 'three';
-import ROSLIB from 'roslib';
-import { ImuMessage } from '../../ros-model.enum';
+import { ImuMessage, Vector3Message } from 'ngx-roslib';
 
 @Component({
     selector: 'app-auv3d-model',
@@ -69,7 +68,7 @@ export class Auv3dModelComponent implements AfterViewInit {
         }
     }
 
-    set orientation(newValue: ROSLIB.Vector3Like) {
+    set orientation(newValue: Vector3Message) {
         this.auvElement.nativeElement.orientation = `${newValue.x}deg ${newValue.y}deg ${newValue.z}deg`;
     }
 

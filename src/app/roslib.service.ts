@@ -11,19 +11,18 @@ import {
     RosoutMessage,
     RosService,
     RosParam,
+    JoyMessage,
+    ImuMessage,
 } from 'ngx-roslib';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlInfoMessage,
     DepthMessage,
-    ImuMessage,
-    JoyMessage,
     LeakSensorMessage,
     LqrActiveFeedbackMessage,
     MotorThrottlesFeedbackMessage,
     MotorThrottlesMessage,
     PcbTempMessage,
-    // RosoutMessage,
     RosState,
 } from './ros-model.enum';
 import { environment } from '../environments/environment';
@@ -113,8 +112,6 @@ export class RoslibService {
     }
 
     subscribeAllTopics(): void {
-        this.getSimpleParam();
-
         const rosout = new RosTopic<RosoutMessage>({
             ros: this.rbServer,
             name: '/rosout',
@@ -261,7 +258,6 @@ export class RoslibService {
         this.advertiseAllTopics();
         this.getTopics();
         this.getNodes();
-        setTimeout(() => this.toggleLqrControl(false), 1000);
     }
 
     private getTopics() {
@@ -302,17 +298,6 @@ export class RoslibService {
 
     private retryConnection() {
         this.connectionTimer = setInterval(() => this.rbServer.connect(environment.rosUrl), 1000);
-    }
-
-    getSimpleParam() {
-        const param = new RosParam<number>({
-            ros: this.rbServer,
-            name: '/rosbridge_websocket/port',
-        });
-
-        param.get((res) => {
-            console.log(res);
-        });
     }
 
     getLqrParamsMatrixQ(): RosParam<number[]> {
