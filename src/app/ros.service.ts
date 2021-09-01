@@ -5,12 +5,10 @@
 
 import { Injectable } from '@angular/core';
 import ROSLIB from 'roslib';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlInfoMessage,
-    ControlLoopTimeMessage,
     LqrActiveFeedbackMessage,
-    ControlSwitchMessage,
     DepthMessage,
     ImuMessage,
     JoyMessage,
@@ -164,7 +162,7 @@ export class RosService {
 
         const leakDriver = new ROSLIB.Topic({
             ros: this.rbServer,
-            name: '/pod/battery_leak_driver',
+            name: '/pod_node/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
 
@@ -459,20 +457,7 @@ export class RosService {
     }
 
     private emitMotorThrottlesMessage(msg: any) {
-        const timeNow = new Date();
-        const newMsg: MotorThrottlesMessage = {
-            header: {
-                seq: 0,
-                frame_id: '',
-                stamp: {
-                    secs: Math.floor(timeNow.getTime() / 1000),
-                    nsecs: timeNow.getMilliseconds() * 1000000,
-                },
-            },
-            ids: msg.ids,
-            throttles: msg.throttles,
-        };
-        this.motorThrottlesSource.next(newMsg);
+        this.motorThrottlesSource.next(msg);
     }
 
     private emitLqrActiveFeedbackMessage(msg: any) {

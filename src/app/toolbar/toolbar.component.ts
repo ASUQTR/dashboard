@@ -3,7 +3,12 @@
  */
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { NbComponentStatus, NbDialogService, NbSidebarService } from '@nebular/theme';
+import {
+    NbComponentStatus,
+    NbDialogService,
+    NbMenuService,
+    NbSidebarService,
+} from '@nebular/theme';
 import { Subscription } from 'rxjs';
 import { GamepadService } from '../gamepad.service';
 import { PopoverComponent } from '../popover/popover.component';
@@ -12,7 +17,6 @@ import { RosService } from '../ros.service';
 import { environment } from '../../environments/environment';
 import compareVersions from 'compare-versions';
 import { RestApiService } from '../rest-api.service';
-import { LqrParametersSaveDialogComponent } from '../secondary/lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
 import { UpdateAvailableDialogComponent } from '../update-available-dialog/update-available-dialog.component';
 
 @Component({
@@ -37,13 +41,15 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     gamepadConnectedSubscription: Subscription;
     gamepadDisconnectedSubscription: Subscription;
     updateAvailable = false;
+
     constructor(
         private rs: RosService,
         private gs: GamepadService,
         private cdr: ChangeDetectorRef,
         private sidebarService: NbSidebarService,
         private restApi: RestApiService,
-        private dialogService: NbDialogService
+        private dialogService: NbDialogService,
+        private menuService: NbMenuService
     ) {}
 
     ngOnInit(): void {
@@ -86,6 +92,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
 
         setTimeout(() => this.verifyUpdate(this.cdr), 1000);
+        this.menuService.onItemClick().subscribe(() => this.sidebarService.toggle(false));
     }
 
     toggleSidebar(): boolean {
