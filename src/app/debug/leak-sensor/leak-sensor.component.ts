@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { pluck } from 'rxjs/operators';
 import { combineLatest, Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ export class LeakSensorComponent implements OnInit, OnDestroy {
     leak = false;
     private sub: Subscription;
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {
         const leakDriver$ = this.rs.leakSensorDriverData.pipe(pluck('data'));

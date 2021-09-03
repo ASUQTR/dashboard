@@ -4,41 +4,49 @@
  */
 
 import { Injectable } from '@angular/core';
-import ROSLIB from 'roslib';
+import {
+    NgxRoslibService,
+    RosTopic,
+    Rosbridge,
+    RosoutMessage,
+    RosService,
+    RosParam,
+    JoyMessage,
+    ImuMessage,
+} from 'ngx-roslib';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlInfoMessage,
-    LqrActiveFeedbackMessage,
     DepthMessage,
-    ImuMessage,
-    JoyMessage,
     LeakSensorMessage,
+    LqrActiveFeedbackMessage,
     MotorThrottlesFeedbackMessage,
     MotorThrottlesMessage,
     PcbTempMessage,
-    RosoutMessage,
     RosState,
 } from './ros-model.enum';
 import { environment } from '../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { NbToastrService } from '@nebular/theme';
 import { getReasonPhrase } from 'http-status-codes';
+
+type FactorNumber = { factor: number };
+
+type StatusNumber = { status: number };
 
 @Injectable({
     providedIn: 'root',
 })
-export class RosService {
-    rbServer: ROSLIB.Ros;
+export class RoslibService {
+    rbServer: Rosbridge;
     statusText = 'Connecting to ROS server...';
     connected = RosState.Disconnected;
-    joySource = new ReplaySubject<JoyMessage>(1);
-    joyData = this.joySource.asObservable();
-    behaviorKillSwitchSource = new Subject<void>();
     statusIcon: string;
     statusIconColor: string;
     connectionTimer: NodeJS.Timeout;
     private rosStateItemSource = new BehaviorSubject<RosState>(RosState.Disconnected);
     rosStateItem$ = this.rosStateItemSource.asObservable();
+    joySource = new ReplaySubject<JoyMessage>(1);
+    joyData = this.joySource.asObservable();
     private rosoutSource = new ReplaySubject<RosoutMessage>(); // Will replay all rosout message at subscribe
     rosoutData = this.rosoutSource.asObservable();
     private motorThrottlesSource = new BehaviorSubject<MotorThrottlesMessage>({
@@ -94,18 +102,17 @@ export class RosService {
     private imuSource = new Subject<ImuMessage>();
     imuData = this.imuSource.asObservable();
     imuMockSource = new Subject<ImuMessage>();
+    behaviorKillSwitchSource = new Subject<void>();
 
-    constructor(private http: HttpClient, private toasterService: NbToastrService) {
-        this.rbServer = new ROSLIB.Ros({
-            url: environment.rosUrl,
-        });
-        this.rbServer.on('connection', () => this.onConnect());
-        this.rbServer.on('error', () => this.errorOnConnection());
-        this.rbServer.on('close', () => this.connectionClosed());
+    constructor(public roslibService: NgxRoslibService, private toasterService: NbToastrService) {
+        this.rbServer = this.roslibService.connect(environment.rosUrl);
+        this.roslibService.onOpen.subscribe(() => this.onConnect());
+        this.roslibService.onClose.subscribe(() => this.connectionClosed());
+        this.roslibService.onError.subscribe(() => this.errorOnConnection());
     }
 
     subscribeAllTopics(): void {
-        const rosout = new ROSLIB.Topic({
+        const rosout = new RosTopic<RosoutMessage>({
             ros: this.rbServer,
             name: '/rosout',
             messageType: 'rosgraph_msgs/Log',
@@ -114,103 +121,96 @@ export class RosService {
             this.emitRosoutMessage(msg);
         });
 
-        const motorThrottles = new ROSLIB.Topic({
+        const motorThrottles = new RosTopic<MotorThrottlesMessage>({
             ros: this.rbServer,
             name: '/motors',
             messageType: 'asuqtr_actuator_node/ActuatorThrottle',
         });
-
         motorThrottles.subscribe((msg) => {
             this.emitMotorThrottlesMessage(msg);
         });
 
-        const motorThrottlesFeedback = new ROSLIB.Topic({
+        const motorThrottlesFeedback = new RosTopic<MotorThrottlesFeedbackMessage>({
             ros: this.rbServer,
             name: '/motors/pulses',
             messageType: 'std_msgs/Int16MultiArray',
         });
-
         motorThrottlesFeedback.subscribe((msg) => {
             this.emitMotorThrottlesFeedbackMessage(msg);
         });
 
-        const lqrActiveFeedback = new ROSLIB.Topic({
+        const lqrActiveFeedback = new RosTopic<LqrActiveFeedbackMessage>({
             ros: this.rbServer,
             name: '/control/lqr_active_feedback',
             messageType: 'std_msgs/Bool',
         });
-
         lqrActiveFeedback.subscribe((msg) => {
             this.emitLqrActiveFeedbackMessage(msg);
         });
 
-        const depth = new ROSLIB.Topic({
+        const depth = new RosTopic<DepthMessage>({
             ros: this.rbServer,
             name: '/sensors/depth',
             messageType: 'std_msgs/Float32',
         });
-
         depth.subscribe((msg) => this.emitDepthMessage(msg));
 
-        const pcbTemp = new ROSLIB.Topic({
+        const pcbTemp = new RosTopic<PcbTempMessage>({
             ros: this.rbServer,
             name: '/pcb_temp',
             messageType: 'std_msgs/Int32',
         });
-
         pcbTemp.subscribe((msg) => this.emitPcbTempMessage(msg));
 
-        const leakDriver = new ROSLIB.Topic({
+        const leakDriver = new RosTopic<LeakSensorMessage>({
             ros: this.rbServer,
             name: '/pod_node/battery_leak_driver',
             messageType: 'std_msgs/Bool',
         });
-
         leakDriver.subscribe((msg) => this.emitLeakDriverMessage(msg));
 
-        const leakHelper = new ROSLIB.Topic({
+        const leakHelper = new RosTopic<LeakSensorMessage>({
             ros: this.rbServer,
             name: '/pod_node/battery_leak_helper',
             messageType: 'std_msgs/Bool',
         });
-
         leakHelper.subscribe((msg) => this.emitLeakHelperMessage(msg));
 
-        const lqrState = new ROSLIB.Topic({
+        const lqrState = new RosTopic<ControlInfoMessage>({
             ros: this.rbServer,
             name: '/control/state',
             messageType: 'std_msgs/Float32MultiArray',
         });
-
         lqrState.subscribe((msg) => this.emitLqrStateMessage(msg));
 
-        const lqrTargetState = new ROSLIB.Topic({
+        const lqrTargetState = new RosTopic<ControlInfoMessage>({
             ros: this.rbServer,
             name: '/control/target_state',
             messageType: 'std_msgs/Float32MultiArray',
         });
-
         lqrTargetState.subscribe((msg) => this.emitLqrTargetStateMessage(msg));
 
-        const lqrError = new ROSLIB.Topic({
+        const lqrError = new RosTopic<ControlInfoMessage>({
             ros: this.rbServer,
             name: '/control/lqr_error',
             messageType: 'std_msgs/Float32MultiArray',
         });
-
         lqrError.subscribe((msg) => this.emitLqrErrorMessage(msg));
 
-        const imuData = new ROSLIB.Topic({
+        const imuData = new RosTopic<ImuMessage>({
             ros: this.rbServer,
             name: '/vectornav/IMU',
             messageType: 'sensor_msgs/Imu',
         });
-
         imuData.subscribe((msg) => this.emitImuMessage(msg));
     }
 
+    private emitRosoutMessage(msg: RosoutMessage) {
+        this.rosoutSource.next(msg);
+    }
+
     advertiseAllTopics(): void {
-        const joy = new ROSLIB.Topic({
+        const joy = new RosTopic<JoyMessage>({
             ros: this.rbServer,
             name: '/dashboard/gamepad',
             messageType: 'sensor_msgs/Joy',
@@ -220,7 +220,7 @@ export class RosService {
             joy.publish(joyData);
         });
 
-        const killSwitchBehavior = new ROSLIB.Topic({
+        const killSwitchBehavior = new RosTopic<unknown>({
             ros: this.rbServer,
             name: '/flexbe/commands/preempt',
             messageType: 'std_msgs/Empty',
@@ -232,7 +232,7 @@ export class RosService {
             killSwitchBehavior.publish(msg);
         });
 
-        const imu = new ROSLIB.Topic({
+        const imu = new RosTopic<ImuMessage>({
             ros: this.rbServer,
             name: '/vectornav/IMU',
             messageType: 'sensor_msgs/Imu',
@@ -242,172 +242,6 @@ export class RosService {
 
         this.imuMockSource.subscribe((msg: ImuMessage) => {
             imu.publish(msg);
-        });
-    }
-
-    changeLqrAngleThreshold(newThreshold: number): void {
-        const changeLqrAngleThresholdService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/control/update_angle_threshold',
-            serviceType: 'asuqtr_control_node/UpdateAngleThreshold',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            factor: newThreshold,
-        });
-
-        changeLqrAngleThresholdService.callService(
-            request,
-            (res) => this.changeLqrAngleThresholdServicePosResponse(res.status),
-            (err) => this.changeLqrAngleThresholdServiceError(err)
-        );
-    }
-
-    changeLqrPositionThreshold(newThreshold: number): void {
-        const changeLqrPositionThresholdService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/control/update_position_threshold',
-            serviceType: 'asuqtr_control_node/UpdatePosThreshold',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            factor: newThreshold,
-        });
-
-        changeLqrPositionThresholdService.callService(
-            request,
-            (res) => this.changeLqrPositionThresholdServicePosResponse(res.status),
-            (err) => this.changeLqrPositionThresholdServiceError(err)
-        );
-    }
-
-    changeMotorsPwmOffsetFactor(newOffset: number): void {
-        const changeMotorsPwmOffsetService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/motors/update_pwm_offset',
-            serviceType: 'asuqtr_actuator_node/UpdatePwmOffset',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            factor: newOffset,
-        });
-
-        changeMotorsPwmOffsetService.callService(
-            request,
-            (res) => this.changeMotorsPwmOffsetServicePosResponse(res.status),
-            (err) => this.changeMotorsPwmOffsetServiceError(err)
-        );
-    }
-
-    changeLqrRate(newRate: number): void {
-        const changeLqrRateService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/control/update_max_lqr_rate',
-            serviceType: 'asuqtr_control_node/UpdateMaxLqrRate',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            factor: newRate,
-        });
-
-        changeLqrRateService.callService(
-            request,
-            (res) => this.changeLqrRateServicePosResponse(res.status),
-            (err) => this.changeLqrRateServiceError(err)
-        );
-    }
-
-    changeLqrActionServerRate(newRate: number): void {
-        const changeLqrActionServerRateService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/control/update_action_server_rate',
-            serviceType: 'asuqtr_control_node/UpdateAsRate',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            factor: newRate,
-        });
-
-        changeLqrActionServerRateService.callService(
-            request,
-            (res) => this.changeLqrActionServerRateServicePosResponse(res.status),
-            (err) => this.changeLqrActionServerRateServiceError(err)
-        );
-    }
-
-    changeLqrAttenuationFactor(newAttenuationFactor: number): void {
-        const changeLqrAttenuationFactorService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/control/update_throttle_attenuation',
-            serviceType: 'asuqtr_control_node/UpdateAttenuation',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            factor: newAttenuationFactor,
-        });
-
-        changeLqrAttenuationFactorService.callService(
-            request,
-            (res) => this.changeLqrAttenuationFactorServicePosResponse(res.status),
-            (err) => this.changeLqrAttenuationFactorServiceError(err)
-        );
-    }
-
-    toggleLqrControl(lqrActive: boolean): void {
-        const toggleLqrService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/control/toggle_lqr_control',
-            serviceType: 'asuqtr_control_node/ToggleLqr',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            lqr_active: lqrActive,
-        });
-
-        toggleLqrService.callService(
-            request,
-            (res) => this.toggleLqrControlServicePosResponse(res.status),
-            (err) => this.toggleLqrControlServiceError(err)
-        );
-    }
-
-    sendLqrParams(matrixQ: number[], matrixR: number[]): void {
-        const lqrService = new ROSLIB.Service({
-            ros: this.rbServer,
-            name: '/tune_lqr_matrix',
-            serviceType: 'asuqtr_control_node/TuneMatrix',
-        });
-
-        const request = new ROSLIB.ServiceRequest({
-            Q: matrixQ,
-            R: matrixR,
-        });
-
-        lqrService.callService(
-            request,
-            () => this.lqrParamServicePosResponse(),
-            (err) => this.lqrParamServiceError(err)
-        );
-    }
-
-    getLqrParamsMatrixQ(): any {
-        return new ROSLIB.Param({
-            ros: this.rbServer,
-            name: 'control_node/state_cost_matrix',
-        });
-    }
-
-    getLqrParamsMatrixR(): any {
-        return new ROSLIB.Param({
-            ros: this.rbServer,
-            name: 'control_node/motor_cost_matrix',
-        });
-    }
-
-    getMotorsPwmOffset(): any {
-        return new ROSLIB.Param({
-            ros: this.rbServer,
-            name: 'motors/pwm_offset',
         });
     }
 
@@ -424,6 +258,24 @@ export class RosService {
         this.advertiseAllTopics();
         this.getTopics();
         this.getNodes();
+    }
+
+    private getTopics() {
+        if (this.connected) {
+            this.rbServer.getTopics((allTopics) => {
+                this.topicsListSource.next(allTopics);
+            });
+            setTimeout(() => this.getTopics(), 2000);
+        }
+    }
+
+    private getNodes() {
+        if (this.connected) {
+            this.rbServer.getNodes((allNodes) => {
+                this.nodesListSource.next(allNodes);
+            });
+            setTimeout(() => this.getNodes(), 2000);
+        }
     }
 
     private errorOnConnection() {
@@ -444,12 +296,158 @@ export class RosService {
         this.retryConnection();
     }
 
-    private emitRosoutMessage(msg: any) {
-        this.rosoutSource.next(msg);
-    }
-
     private retryConnection() {
         this.connectionTimer = setInterval(() => this.rbServer.connect(environment.rosUrl), 1000);
+    }
+
+    getLqrParamsMatrixQ(): RosParam<number[]> {
+        return new RosParam<number[]>({
+            ros: this.rbServer,
+            name: 'control_node/state_cost_matrix',
+        });
+    }
+
+    getLqrParamsMatrixR(): RosParam<number[]> {
+        return new RosParam<number[]>({
+            ros: this.rbServer,
+            name: 'control_node/motor_cost_matrix',
+        });
+    }
+
+    getMotorsPwmOffset(): RosParam<number> {
+        return new RosParam<number>({
+            ros: this.rbServer,
+            name: 'motors/pwm_offset',
+        });
+    }
+
+    changeLqrAngleThreshold(newThreshold: number): void {
+        const changeLqrAngleThresholdService = new RosService<FactorNumber, StatusNumber>({
+            ros: this.rbServer,
+            name: '/control/update_angle_threshold',
+            serviceType: 'asuqtr_control_node/UpdateAngleThreshold',
+        });
+
+        changeLqrAngleThresholdService.call(
+            {
+                factor: newThreshold,
+            },
+            (res) => this.changeLqrAngleThresholdServicePosResponse(res.status),
+            (err) => this.changeLqrAngleThresholdServiceError(err)
+        );
+    }
+
+    changeLqrPositionThreshold(newThreshold: number): void {
+        const changeLqrPositionThresholdService = new RosService<FactorNumber, StatusNumber>({
+            ros: this.rbServer,
+            name: '/control/update_position_threshold',
+            serviceType: 'asuqtr_control_node/UpdatePosThreshold',
+        });
+
+        changeLqrPositionThresholdService.call(
+            {
+                factor: newThreshold,
+            },
+            (res) => this.changeLqrPositionThresholdServicePosResponse(res.status),
+            (err) => this.changeLqrPositionThresholdServiceError(err)
+        );
+    }
+
+    changeMotorsPwmOffsetFactor(newOffset: number): void {
+        const changeMotorsPwmOffsetService = new RosService<FactorNumber, StatusNumber>({
+            ros: this.rbServer,
+            name: '/motors/update_pwm_offset',
+            serviceType: 'asuqtr_actuator_node/UpdatePwmOffset',
+        });
+
+        changeMotorsPwmOffsetService.call(
+            {
+                factor: newOffset,
+            },
+            (res) => this.changeMotorsPwmOffsetServicePosResponse(res.status),
+            (err) => this.changeMotorsPwmOffsetServiceError(err)
+        );
+    }
+
+    changeLqrRate(newRate: number): void {
+        const changeLqrRateService = new RosService<FactorNumber, StatusNumber>({
+            ros: this.rbServer,
+            name: '/control/update_max_lqr_rate',
+            serviceType: 'asuqtr_control_node/UpdateMaxLqrRate',
+        });
+
+        changeLqrRateService.call(
+            {
+                factor: newRate,
+            },
+            (res) => this.changeLqrRateServicePosResponse(res.status),
+            (err) => this.changeLqrRateServiceError(err)
+        );
+    }
+
+    changeLqrActionServerRate(newRate: number): void {
+        const changeLqrActionServerRateService = new RosService<FactorNumber, StatusNumber>({
+            ros: this.rbServer,
+            name: '/control/update_action_server_rate',
+            serviceType: 'asuqtr_control_node/UpdateAsRate',
+        });
+
+        changeLqrActionServerRateService.call(
+            {
+                factor: newRate,
+            },
+            (res) => this.changeLqrActionServerRateServicePosResponse(res.status),
+            (err) => this.changeLqrActionServerRateServiceError(err)
+        );
+    }
+
+    changeLqrAttenuationFactor(newAttenuationFactor: number): void {
+        const changeLqrAttenuationFactorService = new RosService<FactorNumber, StatusNumber>({
+            ros: this.rbServer,
+            name: '/control/update_throttle_attenuation',
+            serviceType: 'asuqtr_control_node/UpdateAttenuation',
+        });
+
+        changeLqrAttenuationFactorService.call(
+            {
+                factor: newAttenuationFactor,
+            },
+            (res) => this.changeLqrAttenuationFactorServicePosResponse(res.status),
+            (err) => this.changeLqrAttenuationFactorServiceError(err)
+        );
+    }
+
+    toggleLqrControl(lqrActive: boolean): void {
+        const toggleLqrService = new RosService<{ lqr_active: boolean }, StatusNumber>({
+            ros: this.rbServer,
+            name: '/control/toggle_lqr_control',
+            serviceType: 'asuqtr_control_node/ToggleLqr',
+        });
+
+        toggleLqrService.call(
+            {
+                lqr_active: lqrActive,
+            },
+            (res) => this.toggleLqrControlServicePosResponse(res.status),
+            (err) => this.toggleLqrControlServiceError(err)
+        );
+    }
+
+    sendLqrParams(matrixQ: number[], matrixR: number[]): void {
+        const lqrService = new RosService<{ Q: number[]; R: number[] }, {}>({
+            ros: this.rbServer,
+            name: '/tune_lqr_matrix',
+            serviceType: 'asuqtr_control_node/TuneMatrix',
+        });
+
+        lqrService.call(
+            {
+                Q: matrixQ,
+                R: matrixR,
+            },
+            () => this.lqrParamServicePosResponse(),
+            (err) => this.lqrParamServiceError(err)
+        );
     }
 
     private emitNewRosState(newState: RosState) {
@@ -462,22 +460,6 @@ export class RosService {
 
     private emitLqrActiveFeedbackMessage(msg: any) {
         this.lqrActiveFeedbackSource.next(msg);
-    }
-
-    private getTopics() {
-        if (this.connected) {
-            this.rbServer.getTopics((allTopics) => {
-                this.topicsListSource.next(allTopics.topics);
-            });
-            setTimeout(() => this.getTopics(), 2000);
-        }
-    }
-
-    private getNodes() {
-        if (this.connected) {
-            this.rbServer.getNodes((allNodes) => this.nodesListSource.next(allNodes));
-            setTimeout(() => this.getNodes(), 2000);
-        }
     }
 
     private emitDepthMessage(msg: any) {
@@ -543,12 +525,8 @@ export class RosService {
         }
     }
 
-    private toggleLqrControlServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
-            `Failed to toggle LQR`
-        );
+    private toggleLqrControlServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to toggle LQR`);
     }
 
     private changeLqrAttenuationFactorServicePosResponse(status: number) {
@@ -562,12 +540,8 @@ export class RosService {
         }
     }
 
-    private changeLqrAttenuationFactorServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
-            `Failed to update LQR attenuation factor`
-        );
+    private changeLqrAttenuationFactorServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to update LQR attenuation factor`);
     }
 
     private changeLqrPositionThresholdServicePosResponse(status: number) {
@@ -581,12 +555,8 @@ export class RosService {
         }
     }
 
-    private changeLqrPositionThresholdServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
-            `Failed to update LQR position threshold`
-        );
+    private changeLqrPositionThresholdServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to update LQR position threshold`);
     }
 
     private changeMotorsPwmOffsetServicePosResponse(status: number) {
@@ -600,12 +570,8 @@ export class RosService {
         }
     }
 
-    private changeMotorsPwmOffsetServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
-            `Failed to update motors PWM offset`
-        );
+    private changeMotorsPwmOffsetServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to update motors PWM offset`);
     }
 
     private changeLqrAngleThresholdServicePosResponse(status: number) {
@@ -619,12 +585,8 @@ export class RosService {
         }
     }
 
-    private changeLqrAngleThresholdServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
-            `Failed to update LQR angle threshold`
-        );
+    private changeLqrAngleThresholdServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to update LQR angle threshold`);
     }
 
     private changeLqrRateServicePosResponse(status: number) {
@@ -638,12 +600,8 @@ export class RosService {
         }
     }
 
-    private changeLqrRateServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
-            `Failed to update LQR loop rate`
-        );
+    private changeLqrRateServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to update LQR loop rate`);
     }
 
     private changeLqrActionServerRateServicePosResponse(status: number) {
@@ -657,23 +615,15 @@ export class RosService {
         }
     }
 
-    private changeLqrActionServerRateServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err?.status + ': ' + getReasonPhrase(err?.status),
-            `Failed to update LQR action server rate`
-        );
+    private changeLqrActionServerRateServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to update LQR action server rate`);
     }
 
     private lqrParamServicePosResponse() {
         this.toasterService.success('Nice', 'Successfully updated new LQR params');
     }
 
-    private lqrParamServiceError(err: any) {
-        console.error(err);
-        this.toasterService.danger(
-            'Error ' + err.status + ': ' + getReasonPhrase(err.status),
-            `Failed to save LQR params config`
-        );
+    private lqrParamServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to save LQR params config`);
     }
 }

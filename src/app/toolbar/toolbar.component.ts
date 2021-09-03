@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 import { GamepadService } from '../gamepad.service';
 import { PopoverComponent } from '../popover/popover.component';
 import { RosState } from '../ros-model.enum';
-import { RosService } from '../ros.service';
+import { RoslibService } from '../roslib.service';
 import { environment } from '../../environments/environment';
 import compareVersions from 'compare-versions';
 import { RestApiService } from '../rest-api.service';
@@ -43,7 +43,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     updateAvailable = false;
 
     constructor(
-        private rs: RosService,
+        private rs: RoslibService,
         private gs: GamepadService,
         private cdr: ChangeDetectorRef,
         private sidebarService: NbSidebarService,
@@ -92,11 +92,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         });
 
         setTimeout(() => this.verifyUpdate(this.cdr), 1000);
-        this.menuService.onItemClick().subscribe(() => this.sidebarService.toggle(false));
     }
 
     toggleSidebar(): boolean {
-        this.sidebarService.toggle(false);
+        this.sidebarService.toggle(true);
         return false;
     }
 

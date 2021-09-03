@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class PcbTempMeterComponent implements OnInit {
     temp: Observable<number>;
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {
         this.temp = this.rs.pcbTempData.pipe(pluck('data'));

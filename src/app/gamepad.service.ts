@@ -5,10 +5,10 @@
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, fromEventPattern, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RosService } from './ros.service';
-import { JoyMessage } from './ros-model.enum';
+import { RoslibService } from './roslib.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
+import { JoyMessage } from 'ngx-roslib';
 
 @Injectable({
     providedIn: 'root',
@@ -29,7 +29,7 @@ export class GamepadService implements OnDestroy {
 
     constructor(
         private rendererFactory2: RendererFactory2,
-        private rs: RosService,
+        private rs: RoslibService,
         private cookies: CookieService,
         private router: Router
     ) {

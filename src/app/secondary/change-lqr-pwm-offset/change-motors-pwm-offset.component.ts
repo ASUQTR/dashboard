@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 
 @Component({
     selector: 'app-change-motors-pwm-offset',
@@ -14,7 +14,7 @@ export class ChangeMotorsPwmOffsetComponent implements OnInit {
         Validators.max(100),
     ]);
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {
         const motorsPwmOffsetParam = this.rs.getMotorsPwmOffset();

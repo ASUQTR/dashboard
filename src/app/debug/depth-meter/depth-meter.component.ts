@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class DepthMeterComponent implements OnInit {
     depth: Observable<number>;
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {
         this.depth = this.rs.depthData.pipe(pluck('data'));

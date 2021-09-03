@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import '@google/model-viewer';
 import { FormControl, Validators } from '@angular/forms';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { Euler, Quaternion } from 'three';
-import ROSLIB from 'roslib';
-import { ImuMessage } from '../../ros-model.enum';
+import { ImuMessage, Vector3Message } from 'ngx-roslib';
 
 @Component({
     selector: 'app-auv3d-model',
@@ -31,7 +30,7 @@ export class Auv3dModelComponent implements AfterViewInit {
     ]);
     manualMode = false;
 
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngAfterViewInit(): void {
         this.rs.imuData.subscribe((msg: ImuMessage) => {
@@ -69,7 +68,7 @@ export class Auv3dModelComponent implements AfterViewInit {
         }
     }
 
-    set orientation(newValue: ROSLIB.Vector3Like) {
+    set orientation(newValue: Vector3Message) {
         this.auvElement.nativeElement.orientation = `${newValue.x}deg ${newValue.y}deg ${newValue.z}deg`;
     }
 

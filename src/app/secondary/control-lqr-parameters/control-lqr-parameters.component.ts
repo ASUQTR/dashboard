@@ -1,6 +1,6 @@
-import { Component, OnInit, Optional, TemplateRef } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { FormArray, FormControl, Validators } from '@angular/forms';
-import { RosService } from '../../ros.service';
+import { RoslibService } from '../../roslib.service';
 import { NbDialogService } from '@nebular/theme';
 import { LqrParametersSaveDialogComponent } from '../lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
 import { RestApiService } from '../../rest-api.service';
@@ -117,7 +117,7 @@ export class ControlLqrParametersComponent implements OnInit {
     ]);
 
     constructor(
-        private rs: RosService,
+        private rs: RoslibService,
         @Optional() private dialogService: NbDialogService,
         private restService: RestApiService
     ) {}

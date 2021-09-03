@@ -3,7 +3,7 @@
  */
 
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -59,16 +59,19 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { CameraFeedComponent } from './camera-feed/camera-feed.component';
 import { HttpClientModule } from '@angular/common/http';
 
+import { NgxRoslibService } from 'ngx-roslib';
+
 import { TrueFalsePipe } from './true-false.pipe';
-import { AngularFireModule } from '@angular/fire';
+import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
-import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { AngularFirePerformanceModule } from '@angular/fire/compat/performance';
 import { FlexbeCardComponent } from './flexbe-card/flexbe-card.component';
 import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/flexbe-behavior-killswitch.component';
 import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/compat/analytics';
 
 @NgModule({
     declarations: [
@@ -145,6 +148,7 @@ import { UpdateAvailableDialogComponent } from './update-available-dialog/update
         DeviceDetectorService,
         NbToastrService,
         ScreenTrackingService,
+        NgxRoslibService,
     ],
     bootstrap: [AppComponent],
 })

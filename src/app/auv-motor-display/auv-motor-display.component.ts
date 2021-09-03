@@ -4,7 +4,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RosService } from '../ros.service';
+import { RoslibService } from '../roslib.service';
 import { MotorThrottlesMessage } from '../ros-model.enum';
 
 @Component({
@@ -16,7 +16,7 @@ export class AuvMotorDisplayComponent implements OnInit, OnDestroy {
     motors = new Array<MotorDisplay>();
     private motorThrottlesDataSubscription: Subscription;
 
-    constructor(public rs: RosService) {}
+    constructor(public rs: RoslibService) {}
 
     /**
      * Init function to initialize the motors object array and to subscribe to the motorThrottle Subject coming from the RosService
@@ -49,8 +49,7 @@ export class AuvMotorDisplayComponent implements OnInit, OnDestroy {
     extractMotorThrottlesData(motorThrottles: MotorThrottlesMessage): void {
         motorThrottles.throttles.forEach((intensity, index) => {
             this.motors[index].forwardIntensity = intensity > 0 ? intensity : 0;
-            this.motors[index].backwardIntensity =
-                intensity < 0 ? intensity * -1 : 0;
+            this.motors[index].backwardIntensity = intensity < 0 ? intensity * -1 : 0;
             this.motors[index].fillOpacity = (Math.abs(intensity) * 4) / 3;
         });
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RosService } from '../ros.service';
+import { RoslibService } from '../roslib.service';
 
 @Component({
     selector: 'app-control-toggle',
@@ -7,7 +7,7 @@ import { RosService } from '../ros.service';
     styleUrls: ['./control-toggle.component.scss'],
 })
 export class ControlToggleComponent implements OnInit {
-    constructor(private rs: RosService) {}
+    constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {}
 
