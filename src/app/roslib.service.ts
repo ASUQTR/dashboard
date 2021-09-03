@@ -33,6 +33,8 @@ type FactorNumber = { factor: number };
 
 type StatusNumber = { status: number };
 
+type Valid = { valid: boolean };
+
 @Injectable({
     providedIn: 'root',
 })
@@ -321,6 +323,22 @@ export class RoslibService {
         });
     }
 
+    requestReposition(reqPosX: number, reqPosY: number, reqPosZ: number): void {
+        const navRepositionService = new RosService<{ request_position: number[] }, Valid>({
+            ros: this.rbServer,
+            name: '/nav_node/reposition',
+            serviceType: 'Reposition',
+        });
+
+        navRepositionService.call(
+            { request_position: [reqPosX, reqPosY, reqPosZ] },
+            (res) => {
+                this.navRepositionServicePosResponse(res.valid);
+            },
+            (err) => this.navRepositionServiceError(err)
+        );
+    }
+
     changeLqrAngleThreshold(newThreshold: number): void {
         const changeLqrAngleThresholdService = new RosService<FactorNumber, StatusNumber>({
             ros: this.rbServer,
@@ -587,6 +605,21 @@ export class RoslibService {
 
     private changeLqrAngleThresholdServiceError(err: string) {
         this.toasterService.danger('Error: ' + err, `Failed to update LQR angle threshold`);
+    }
+
+    private navRepositionServicePosResponse(valid: boolean) {
+        if (valid) {
+            this.toasterService.success('Nice', 'Successfully repositioned navigation algorithm');
+        } else {
+            this.toasterService.danger(
+                'Error while requesting reposition',
+                `Navigation node services failure`
+            );
+        }
+    }
+
+    private navRepositionServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to reposition navigation algorithm`);
     }
 
     private changeLqrRateServicePosResponse(status: number) {

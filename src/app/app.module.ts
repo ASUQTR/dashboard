@@ -32,6 +32,7 @@ import {
     NbSidebarModule,
     NbSidebarService,
     NbSpinnerModule,
+    NbTabsetModule,
     NbThemeModule,
     NbThemeService,
     NbToastrModule,
@@ -70,8 +71,9 @@ import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/
 import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/compat/analytics';
+import { AuvDisplayTabsComponent } from './auv-display-tabs/auv-display-tabs.component';
+import { NavRepositionComponent } from './nav-reposition/nav-reposition.component';
 
 @NgModule({
     declarations: [
@@ -99,6 +101,8 @@ import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire
         FlexbeBehaviorKillswitchComponent,
         GamepadShellComponent,
         UpdateAvailableDialogComponent,
+        AuvDisplayTabsComponent,
+        NavRepositionComponent,
     ],
     imports: [
         BrowserModule,
@@ -140,6 +144,7 @@ import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire
         NbSelectModule,
         ReactiveFormsModule,
         NbBadgeModule,
+        NbTabsetModule,
     ],
     providers: [
         CookieService,
