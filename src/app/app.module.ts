@@ -74,6 +74,7 @@ import { UpdateAvailableDialogComponent } from './update-available-dialog/update
 import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/compat/analytics';
 import { AuvDisplayTabsComponent } from './auv-display-tabs/auv-display-tabs.component';
 import { NavRepositionComponent } from './nav-reposition/nav-reposition.component';
+import { NavTagPositionComponent } from './nav-tag-position/nav-tag-position.component';
 
 @NgModule({
     declarations: [
@@ -103,6 +104,7 @@ import { NavRepositionComponent } from './nav-reposition/nav-reposition.componen
         UpdateAvailableDialogComponent,
         AuvDisplayTabsComponent,
         NavRepositionComponent,
+        NavTagPositionComponent,
     ],
     imports: [
         BrowserModule,

@@ -339,6 +339,22 @@ export class RoslibService {
         );
     }
 
+    requestTagPosition(name: string): void {
+        const tagPositionService = new RosService<{ name: string }, Valid>({
+            ros: this.rbServer,
+            name: '/nav_node/tag_position',
+            serviceType: 'TagPosition',
+        });
+
+        tagPositionService.call(
+            { name },
+            (res) => {
+                this.tagPositionServicePosResponse(res.valid);
+            },
+            (err) => this.tagPositionServiceError(err)
+        );
+    }
+
     changeLqrAngleThreshold(newThreshold: number): void {
         const changeLqrAngleThresholdService = new RosService<FactorNumber, StatusNumber>({
             ros: this.rbServer,
@@ -620,6 +636,27 @@ export class RoslibService {
 
     private navRepositionServiceError(err: string) {
         this.toasterService.danger('Error: ' + err, `Failed to reposition navigation algorithm`);
+    }
+
+    private tagPositionServicePosResponse(valid: boolean) {
+        if (valid) {
+            this.toasterService.success(
+                'Nice',
+                'Successfully tagged a position in the navigation algorithm'
+            );
+        } else {
+            this.toasterService.danger(
+                'Error while tagging position',
+                `Navigation node services failure`
+            );
+        }
+    }
+
+    private tagPositionServiceError(err: string) {
+        this.toasterService.danger(
+            'Error: ' + err,
+            `Failed to tag a position in the navigation algorithm`
+        );
     }
 
     private changeLqrRateServicePosResponse(status: number) {

@@ -1,0 +1,10 @@
+.tagPositionInput {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 0.5rem;
+}
+
+button {
+    width: 40px;
+    justify-self: end;
+}
