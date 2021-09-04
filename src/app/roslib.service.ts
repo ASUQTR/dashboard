@@ -14,6 +14,7 @@ import {
     JoyMessage,
     ImuMessage,
     Vector3Message,
+    PointStampedMessage,
 } from 'ngx-roslib';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
@@ -108,6 +109,8 @@ export class RoslibService {
     behaviorKillSwitchSource = new Subject<void>();
     private getPositionSource = new Subject<Vector3Message>();
     getPositionData = this.getPositionSource.asObservable();
+    private currentPositionSource = new BehaviorSubject<Vector3Message>({ x: 0, y: 0, z: 0 });
+    currentPositionData = this.currentPositionSource.asObservable();
 
     constructor(public roslibService: NgxRoslibService, private toasterService: NbToastrService) {
         this.rbServer = this.roslibService.connect(environment.rosUrl);
@@ -208,6 +211,13 @@ export class RoslibService {
             messageType: 'sensor_msgs/Imu',
         });
         imuData.subscribe((msg) => this.emitImuMessage(msg));
+
+        const currentNavPosition = new RosTopic<PointStampedMessage>({
+            ros: this.rbServer,
+            name: '/nav_node/position',
+            messageType: 'geometry_msgs/PointStamped',
+        });
+        currentNavPosition.subscribe((msg) => this.emitCurrentNavPositionMessage(msg));
     }
 
     private emitRosoutMessage(msg: RosoutMessage) {
@@ -568,6 +578,10 @@ export class RoslibService {
 
     private emitImuMessage(msg: any) {
         this.imuSource.next(msg);
+    }
+
+    private emitCurrentNavPositionMessage(msg: PointStampedMessage) {
+        this.currentPositionSource.next(msg.point);
     }
 
     private toggleLqrControlServicePosResponse(status: number) {

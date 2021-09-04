@@ -77,6 +77,7 @@ import { NavRepositionComponent } from './nav-reposition/nav-reposition.componen
 import { NavTagPositionComponent } from './nav-tag-position/nav-tag-position.component';
 import { NavGetPositionComponent } from './nav-get-position/nav-get-position.component';
 import { Vector3dPipe } from './vector3d.pipe';
+import { NavCurrentPositionDisplayComponent } from './nav-current-position-display/nav-current-position-display.component';
 
 @NgModule({
     declarations: [
@@ -109,6 +110,7 @@ import { Vector3dPipe } from './vector3d.pipe';
         NavTagPositionComponent,
         NavGetPositionComponent,
         Vector3dPipe,
+        NavCurrentPositionDisplayComponent,
     ],
     imports: [
         BrowserModule,

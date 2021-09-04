@@ -1,0 +1,8 @@
+<div class="h5">
+    Current position
+</div>
+<div>
+    <div class="h3">
+        {{ rs.currentPositionData | async | vector3d }}
+    </div>
+</div>
