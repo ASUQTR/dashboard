@@ -123,7 +123,7 @@ export class MotorGraphComponent implements AfterViewInit, OnDestroy {
                         {
                             type: 'time',
                             time: {
-                                unit: 'months',
+                                unit: 'second',
                             },
                             gridLines: {
                                 display: true,

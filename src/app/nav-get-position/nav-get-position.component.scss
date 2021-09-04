@@ -1,0 +1,11 @@
+.getPositionInput {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 0.5rem;
+    align-items: center;
+}
+
+button {
+    width: 40px;
+    justify-self: end;
+}

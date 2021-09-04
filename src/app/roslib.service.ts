@@ -13,6 +13,7 @@ import {
     RosParam,
     JoyMessage,
     ImuMessage,
+    Vector3Message,
 } from 'ngx-roslib';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
@@ -105,6 +106,8 @@ export class RoslibService {
     imuData = this.imuSource.asObservable();
     imuMockSource = new Subject<ImuMessage>();
     behaviorKillSwitchSource = new Subject<void>();
+    private getPositionSource = new Subject<Vector3Message>();
+    getPositionData = this.getPositionSource.asObservable();
 
     constructor(public roslibService: NgxRoslibService, private toasterService: NbToastrService) {
         this.rbServer = this.roslibService.connect(environment.rosUrl);
@@ -352,6 +355,25 @@ export class RoslibService {
                 this.tagPositionServicePosResponse(res.valid);
             },
             (err) => this.tagPositionServiceError(err)
+        );
+    }
+
+    requestGetPosition(name: string): void {
+        const getPositionService = new RosService<
+            { name: string },
+            Valid & { new_position: number[] }
+        >({
+            ros: this.rbServer,
+            name: '/nav_node/get_position',
+            serviceType: 'GetPosition',
+        });
+
+        getPositionService.call(
+            { name },
+            (res) => {
+                this.getPositionServicePosResponse(res.valid, res.new_position, name);
+            },
+            (err) => this.getPositionServiceError(err)
         );
     }
 
@@ -656,6 +678,35 @@ export class RoslibService {
         this.toasterService.danger(
             'Error: ' + err,
             `Failed to tag a position in the navigation algorithm`
+        );
+    }
+
+    private getPositionServicePosResponse(valid: boolean, position: number[], name: string) {
+        if (valid) {
+            if (position.length <= 3) {
+                this.toasterService.success(
+                    `${name} -> x: ${position[0]}, y: ${position[1]}, z: ${position[2]}`,
+                    'Successfully requested a position from the navigation algorithm'
+                );
+                this.getPositionSource.next({ x: position[0], y: position[1], z: position[2] });
+            } else {
+                this.toasterService.danger(
+                    `Error while getting position, invalid response length of ${position.length}`,
+                    `Navigation node services failure`
+                );
+            }
+        } else {
+            this.toasterService.danger(
+                'Error while getting position',
+                `Navigation node services failure`
+            );
+        }
+    }
+
+    private getPositionServiceError(err: string) {
+        this.toasterService.danger(
+            'Error: ' + err,
+            `Failed to get a position from the navigation algorithm`
         );
     }
 

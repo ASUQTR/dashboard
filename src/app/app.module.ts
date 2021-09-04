@@ -75,6 +75,8 @@ import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire
 import { AuvDisplayTabsComponent } from './auv-display-tabs/auv-display-tabs.component';
 import { NavRepositionComponent } from './nav-reposition/nav-reposition.component';
 import { NavTagPositionComponent } from './nav-tag-position/nav-tag-position.component';
+import { NavGetPositionComponent } from './nav-get-position/nav-get-position.component';
+import { Vector3dPipe } from './vector3d.pipe';
 
 @NgModule({
     declarations: [
@@ -105,6 +107,8 @@ import { NavTagPositionComponent } from './nav-tag-position/nav-tag-position.com
         AuvDisplayTabsComponent,
         NavRepositionComponent,
         NavTagPositionComponent,
+        NavGetPositionComponent,
+        Vector3dPipe,
     ],
     imports: [
         BrowserModule,
