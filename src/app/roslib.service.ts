@@ -135,7 +135,7 @@ export class RoslibService {
 
         const motorThrottles = new RosTopic<MotorThrottlesMessage>({
             ros: this.rbServer,
-            name: '/motors',
+            name: '/actuator/motors',
             messageType: 'asuqtr_actuator_node/ActuatorThrottle',
         });
         motorThrottles.subscribe((msg) => {
@@ -444,7 +444,7 @@ export class RoslibService {
     changeMotorsPwmOffsetFactor(newOffset: number): void {
         const changeMotorsPwmOffsetService = new RosService<FactorNumber, StatusNumber>({
             ros: this.rbServer,
-            name: '/motors/update_pwm_offset',
+            name: '/actuator/update_motor_pwm_offset',
             serviceType: 'asuqtr_actuator_node/UpdatePwmOffset',
         });
 
