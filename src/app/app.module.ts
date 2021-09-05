@@ -78,6 +78,7 @@ import { NavTagPositionComponent } from './nav-tag-position/nav-tag-position.com
 import { NavGetPositionComponent } from './nav-get-position/nav-get-position.component';
 import { Vector3dPipe } from './vector3d.pipe';
 import { NavCurrentPositionDisplayComponent } from './nav-current-position-display/nav-current-position-display.component';
+import { ChartModule } from 'angular2-chartjs';
 
 @NgModule({
     declarations: [
@@ -153,6 +154,7 @@ import { NavCurrentPositionDisplayComponent } from './nav-current-position-displ
         ReactiveFormsModule,
         NbBadgeModule,
         NbTabsetModule,
+        ChartModule,
     ],
     providers: [
         CookieService,

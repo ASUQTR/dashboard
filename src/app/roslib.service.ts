@@ -109,8 +109,10 @@ export class RoslibService {
     behaviorKillSwitchSource = new Subject<void>();
     private getPositionSource = new Subject<Vector3Message>();
     getPositionData = this.getPositionSource.asObservable();
-    private currentPositionSource = new BehaviorSubject<Vector3Message>({ x: 0, y: 0, z: 0 });
+    private currentPositionSource = new Subject<Vector3Message>();
     currentPositionData = this.currentPositionSource.asObservable();
+    private tagRequestsSource = new Subject<string>();
+    tagRequestsData = this.tagRequestsSource.asObservable();
 
     constructor(public roslibService: NgxRoslibService, private toasterService: NbToastrService) {
         this.rbServer = this.roslibService.connect(environment.rosUrl);
@@ -358,6 +360,8 @@ export class RoslibService {
             name: '/nav_node/tag_position',
             serviceType: 'TagPosition',
         });
+
+        this.tagRequestsSource.next(name);
 
         tagPositionService.call(
             { name },

@@ -3,6 +3,7 @@
 </div>
 <div>
     <div class="h3">
+        <chart type="scatter" [data]="data" [options]="options"></chart>
         {{ rs.currentPositionData | async | vector3d }}
     </div>
 </div>
