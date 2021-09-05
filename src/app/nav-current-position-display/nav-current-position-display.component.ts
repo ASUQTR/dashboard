@@ -114,29 +114,14 @@ export class NavCurrentPositionDisplayComponent implements OnInit, AfterViewInit
     ngOnInit(): void {}
 
     ngAfterViewInit(): void {
+        this.getAllTags();
         this.tagSubscription = this.rs.tagRequestsData
             .pipe(
                 withLatestFrom(this.rs.currentPositionData),
                 map(([name, position]) => ({ name, position }))
             )
-            .subscribe((tag) => {
-                this.data.datasets.push({
-                    label: tag.name,
-                    pointStyle: 'crossRot',
-                    borderColor: this.colors[this.numberOfTags % (this.numberOfColors - 1)],
-                    backgroundColor: NbColorHelper.hexToRgbA(
-                        this.colors[this.numberOfTags++ % (this.numberOfColors - 1)],
-                        1
-                    ),
-                    data: [
-                        {
-                            x: tag.position.x,
-                            y: tag.position.y,
-                        },
-                    ],
-                    radius: 10,
-                });
-                this.chartComponent.chart.update();
+            .subscribe(() => {
+                this.getAllTags();
             });
 
         this.currentPositionDataSubscription = this.rs.currentPositionData.subscribe((pos) => {
@@ -146,6 +131,35 @@ export class NavCurrentPositionDisplayComponent implements OnInit, AfterViewInit
                 this.chartComponent.chart.update();
             }
         });
+    }
+
+    private getAllTags() {
+        this.rs.requestAllTags((allTags) => {
+            this.data.datasets.slice(0, 2);
+            allTags.name_tags.forEach((name, index) => {
+                this.addTagToGraph({ name, position: allTags.positions[index] });
+            });
+        });
+    }
+
+    private addTagToGraph(tag: { name: string; position: Vector3Message }) {
+        this.data.datasets.push({
+            label: tag.name,
+            pointStyle: 'crossRot',
+            borderColor: this.colors[this.numberOfTags % (this.numberOfColors - 1)],
+            backgroundColor: NbColorHelper.hexToRgbA(
+                this.colors[this.numberOfTags++ % (this.numberOfColors - 1)],
+                1
+            ),
+            data: [
+                {
+                    x: tag.position.x,
+                    y: tag.position.y,
+                },
+            ],
+            radius: 10,
+        });
+        this.chartComponent.chart.update();
     }
 
     ngOnDestroy(): void {

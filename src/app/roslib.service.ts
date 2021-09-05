@@ -37,6 +37,8 @@ type StatusNumber = { status: number };
 
 type Valid = { valid: boolean };
 
+type AllTagsServiceResponse = { name_tags: string[]; positions: Vector3Message[] };
+
 @Injectable({
     providedIn: 'root',
 })
@@ -349,6 +351,22 @@ export class RoslibService {
             { request_position: [reqPosX, reqPosY, reqPosZ] },
             (res) => {
                 this.navRepositionServicePosResponse(res.valid);
+            },
+            (err) => this.navRepositionServiceError(err)
+        );
+    }
+
+    requestAllTags(callback: (res: AllTagsServiceResponse) => void): void {
+        const navAllTagsRequestService = new RosService<{}, AllTagsServiceResponse>({
+            ros: this.rbServer,
+            name: '/nav_node/read_all_tags',
+            serviceType: 'ReadAllTags',
+        });
+
+        navAllTagsRequestService.call(
+            {},
+            (res) => {
+                callback(res);
             },
             (err) => this.navRepositionServiceError(err)
         );
