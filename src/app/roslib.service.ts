@@ -5,16 +5,16 @@
 
 import { Injectable } from '@angular/core';
 import {
+    ImuMessage,
+    JoyMessage,
     NgxRoslibService,
-    RosTopic,
+    PointStampedMessage,
     Rosbridge,
     RosoutMessage,
-    RosService,
     RosParam,
-    JoyMessage,
-    ImuMessage,
+    RosService,
+    RosTopic,
     Vector3Message,
-    PointStampedMessage,
 } from 'ngx-roslib';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
@@ -108,10 +108,15 @@ export class RoslibService {
     private imuSource = new Subject<ImuMessage>();
     imuData = this.imuSource.asObservable();
     imuMockSource = new Subject<ImuMessage>();
+    bodyPositionRequestSource = new Subject<Vector3Message>();
+    relativeNedPositionRequestSource = new Subject<Vector3Message>();
+    absoluteNedPositionRequestSource = new Subject<Vector3Message>();
+    relativeAngleRequestSource = new Subject<Vector3Message>();
+    absoluteAngleRequestSource = new Subject<Vector3Message>();
     behaviorKillSwitchSource = new Subject<void>();
     private getPositionSource = new Subject<Vector3Message>();
     getPositionData = this.getPositionSource.asObservable();
-    private currentPositionSource = new Subject<Vector3Message>();
+    private currentPositionSource = new ReplaySubject<Vector3Message>(1);
     currentPositionData = this.currentPositionSource.asObservable();
     private tagRequestsSource = new Subject<string>();
     tagRequestsData = this.tagRequestsSource.asObservable();
@@ -261,6 +266,66 @@ export class RoslibService {
 
         this.imuMockSource.subscribe((msg: ImuMessage) => {
             imu.publish(msg);
+        });
+
+        const bodyPositionRequest = new RosTopic<Vector3Message>({
+            ros: this.rbServer,
+            name: '/control/body_pos_target',
+            messageType: 'geometry_msgs/Point',
+        });
+
+        bodyPositionRequest.advertise();
+
+        this.bodyPositionRequestSource.subscribe((msg) => {
+            bodyPositionRequest.publish(msg);
+        });
+
+        const relativeNedPositionRequest = new RosTopic<Vector3Message>({
+            ros: this.rbServer,
+            name: '/control/rel_ned_pos_target',
+            messageType: 'geometry_msgs/Point',
+        });
+
+        relativeNedPositionRequest.advertise();
+
+        this.relativeNedPositionRequestSource.subscribe((msg) => {
+            relativeNedPositionRequest.publish(msg);
+        });
+
+        const absoluteNedPositionRequest = new RosTopic<Vector3Message>({
+            ros: this.rbServer,
+            name: '/control/abs_ned_pos_target',
+            messageType: 'geometry_msgs/Point',
+        });
+
+        absoluteNedPositionRequest.advertise();
+
+        this.absoluteNedPositionRequestSource.subscribe((msg) => {
+            absoluteNedPositionRequest.publish(msg);
+        });
+
+        const relativeAngleRequest = new RosTopic<Vector3Message>({
+            ros: this.rbServer,
+            name: '/control/rel_angle_target',
+            messageType: 'geometry_msgs/Point',
+        });
+
+        relativeAngleRequest.advertise();
+
+        this.relativeAngleRequestSource.subscribe((msg) => {
+            relativeAngleRequest.publish(msg);
+        });
+
+        const absoluteAngleRequest = new RosTopic<Vector3Message>({
+            ros: this.rbServer,
+            name: '/control/abs_angle_target',
+            messageType: 'geometry_msgs/Point',
+        });
+
+        absoluteAngleRequest.advertise();
+
+        this.absoluteAngleRequestSource.subscribe((msg) => {
+            absoluteAngleRequest.publish(msg);
         });
     }
 
@@ -603,6 +668,7 @@ export class RoslibService {
     }
 
     private emitCurrentNavPositionMessage(msg: PointStampedMessage) {
+        console.log(msg);
         this.currentPositionSource.next(msg.point);
     }
 

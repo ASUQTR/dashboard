@@ -79,6 +79,7 @@ import { NavGetPositionComponent } from './nav-get-position/nav-get-position.com
 import { Vector3dPipe } from './vector3d.pipe';
 import { NavCurrentPositionDisplayComponent } from './nav-current-position-display/nav-current-position-display.component';
 import { ChartModule } from 'angular2-chartjs';
+import { NavRequestComponent } from './nav-position-request/nav-request.component';
 
 @NgModule({
     declarations: [
@@ -112,6 +113,7 @@ import { ChartModule } from 'angular2-chartjs';
         NavGetPositionComponent,
         Vector3dPipe,
         NavCurrentPositionDisplayComponent,
+        NavRequestComponent,
     ],
     imports: [
         BrowserModule,

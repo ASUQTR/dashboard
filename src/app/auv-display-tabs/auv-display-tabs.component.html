@@ -10,6 +10,20 @@
                 <app-nav-reposition></app-nav-reposition>
                 <app-nav-tag-position></app-nav-tag-position>
                 <app-nav-get-position></app-nav-get-position>
+                <hr>
+                <app-nav-request title="Request new position relative to body"
+                                 tooltipMessage="This position according to body fixed reference. Ex: x=3 will make the AUV go forward by 3 meters"
+                                 [dataSource]="rs.bodyPositionRequestSource"></app-nav-request>
+                <app-nav-request title="Request new position relative to NED"
+                                 tooltipMessage="This position is according to NED (North East Down) reference. Ex: x=3 will make the AUV go towards north by 3 meters"
+                                 [dataSource]="rs.relativeNedPositionRequestSource"></app-nav-request>
+                <app-nav-request title="Request new absolute position in NED"
+                                 tooltipMessage="This position is according to NED (North East Down) reference. Ex: x=3 will make the AUV go to 3 meters north of the origin (0, 0, 0)"
+                                 [dataSource]="rs.absoluteNedPositionRequestSource"></app-nav-request>
+                <app-nav-request title="Request new relative angle"
+                                 [dataSource]="rs.relativeAngleRequestSource"></app-nav-request>
+                <app-nav-request title="Request new absolute angle"
+                                 [dataSource]="rs.absoluteAngleRequestSource"></app-nav-request>
             </nb-tab>
         </nb-tabset>
     </nb-card-body>

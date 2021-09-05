@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NbTabComponent } from '@nebular/theme';
 import { CookieService } from 'ngx-cookie-service';
+import { RoslibService } from '../roslib.service';
 
 @Component({
     selector: 'app-auv-display-tabs',
@@ -11,7 +12,7 @@ export class AuvDisplayTabsComponent implements OnInit {
     tab1Active = false;
     readonly tabSelectedCookieName = 'tab1Active';
 
-    constructor(private cookie: CookieService) {}
+    constructor(private cookie: CookieService, public rs: RoslibService) {}
 
     ngOnInit(): void {
         if (this.cookie.check(this.tabSelectedCookieName)) {

@@ -1,0 +1,10 @@
+<span class="h5"
+      [nbTooltip]=tooltipMessage [nbTooltipTrigger]="!!tooltipMessage ? hint : noop">{{ title }}</span>
+<div class="repositionInputs">
+    <input nbInput type="number" placeholder="x" [formControl]="newPositionX">
+    <input nbInput type="number" placeholder="y" [formControl]="newPositionY">
+    <input nbInput type="number" placeholder="z" [formControl]="newPositionZ">
+    <button nbButton status="primary" (click)="requestPosition()">
+        <nb-icon icon="upload"></nb-icon>
+    </button>
+</div>
