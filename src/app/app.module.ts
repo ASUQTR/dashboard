@@ -32,6 +32,7 @@ import {
     NbSidebarModule,
     NbSidebarService,
     NbSpinnerModule,
+    NbTabsetModule,
     NbThemeModule,
     NbThemeService,
     NbToastrModule,
@@ -70,8 +71,14 @@ import { FlexbeBehaviorKillswitchComponent } from './flexbe-behavior-killswitch/
 import { GamepadShellComponent } from './gamepad-shell/gamepad-shell.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UpdateAvailableDialogComponent } from './update-available-dialog/update-available-dialog.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/compat/analytics';
+import { AuvDisplayTabsComponent } from './auv-display-tabs/auv-display-tabs.component';
+import { NavRepositionComponent } from './nav-reposition/nav-reposition.component';
+import { NavTagPositionComponent } from './nav-tag-position/nav-tag-position.component';
+import { NavGetPositionComponent } from './nav-get-position/nav-get-position.component';
+import { Vector3dPipe } from './vector3d.pipe';
+import { NavCurrentPositionDisplayComponent } from './nav-current-position-display/nav-current-position-display.component';
+import { ChartModule } from 'angular2-chartjs';
 
 @NgModule({
     declarations: [
@@ -99,6 +106,12 @@ import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire
         FlexbeBehaviorKillswitchComponent,
         GamepadShellComponent,
         UpdateAvailableDialogComponent,
+        AuvDisplayTabsComponent,
+        NavRepositionComponent,
+        NavTagPositionComponent,
+        NavGetPositionComponent,
+        Vector3dPipe,
+        NavCurrentPositionDisplayComponent,
     ],
     imports: [
         BrowserModule,
@@ -140,6 +153,8 @@ import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire
         NbSelectModule,
         ReactiveFormsModule,
         NbBadgeModule,
+        NbTabsetModule,
+        ChartModule,
     ],
     providers: [
         CookieService,

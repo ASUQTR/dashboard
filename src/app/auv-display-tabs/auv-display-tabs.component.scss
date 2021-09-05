@@ -1,0 +1,9 @@
+@import "../../themes";
+
+@include nb-install-component {
+    hr {
+        border-top: nb-theme(divider-width) nb-theme(divider-style);
+        border-color: nb-theme(divider-color);
+        background-color: nb-theme(divider-color);
+    }
+}

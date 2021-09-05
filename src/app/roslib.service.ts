@@ -13,6 +13,8 @@ import {
     RosParam,
     JoyMessage,
     ImuMessage,
+    Vector3Message,
+    PointStampedMessage,
 } from 'ngx-roslib';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
@@ -32,6 +34,10 @@ import { getReasonPhrase } from 'http-status-codes';
 type FactorNumber = { factor: number };
 
 type StatusNumber = { status: number };
+
+type Valid = { valid: boolean };
+
+type AllTagsServiceResponse = { name_tags: string[]; positions: Vector3Message[] };
 
 @Injectable({
     providedIn: 'root',
@@ -103,6 +109,12 @@ export class RoslibService {
     imuData = this.imuSource.asObservable();
     imuMockSource = new Subject<ImuMessage>();
     behaviorKillSwitchSource = new Subject<void>();
+    private getPositionSource = new Subject<Vector3Message>();
+    getPositionData = this.getPositionSource.asObservable();
+    private currentPositionSource = new Subject<Vector3Message>();
+    currentPositionData = this.currentPositionSource.asObservable();
+    private tagRequestsSource = new Subject<string>();
+    tagRequestsData = this.tagRequestsSource.asObservable();
 
     constructor(public roslibService: NgxRoslibService, private toasterService: NbToastrService) {
         this.rbServer = this.roslibService.connect(environment.rosUrl);
@@ -203,6 +215,13 @@ export class RoslibService {
             messageType: 'sensor_msgs/Imu',
         });
         imuData.subscribe((msg) => this.emitImuMessage(msg));
+
+        const currentNavPosition = new RosTopic<PointStampedMessage>({
+            ros: this.rbServer,
+            name: '/nav_node/position',
+            messageType: 'geometry_msgs/PointStamped',
+        });
+        currentNavPosition.subscribe((msg) => this.emitCurrentNavPositionMessage(msg));
     }
 
     private emitRosoutMessage(msg: RosoutMessage) {
@@ -319,6 +338,75 @@ export class RoslibService {
             ros: this.rbServer,
             name: 'motors/pwm_offset',
         });
+    }
+
+    requestReposition(reqPosX: number, reqPosY: number, reqPosZ: number): void {
+        const navRepositionService = new RosService<{ request_position: number[] }, Valid>({
+            ros: this.rbServer,
+            name: '/nav_node/reposition',
+            serviceType: 'Reposition',
+        });
+
+        navRepositionService.call(
+            { request_position: [reqPosX, reqPosY, reqPosZ] },
+            (res) => {
+                this.navRepositionServicePosResponse(res.valid);
+            },
+            (err) => this.navRepositionServiceError(err)
+        );
+    }
+
+    requestAllTags(callback: (res: AllTagsServiceResponse) => void): void {
+        const navAllTagsRequestService = new RosService<{}, AllTagsServiceResponse>({
+            ros: this.rbServer,
+            name: '/nav_node/read_all_tags',
+            serviceType: 'ReadAllTags',
+        });
+
+        navAllTagsRequestService.call(
+            {},
+            (res) => {
+                callback(res);
+            },
+            (err) => this.navRepositionServiceError(err)
+        );
+    }
+
+    requestTagPosition(name: string): void {
+        const tagPositionService = new RosService<{ name: string }, Valid>({
+            ros: this.rbServer,
+            name: '/nav_node/tag_position',
+            serviceType: 'TagPosition',
+        });
+
+        this.tagRequestsSource.next(name);
+
+        tagPositionService.call(
+            { name },
+            (res) => {
+                this.tagPositionServicePosResponse(res.valid);
+            },
+            (err) => this.tagPositionServiceError(err)
+        );
+    }
+
+    requestGetPosition(name: string): void {
+        const getPositionService = new RosService<
+            { name: string },
+            Valid & { new_position: number[] }
+        >({
+            ros: this.rbServer,
+            name: '/nav_node/get_position',
+            serviceType: 'GetPosition',
+        });
+
+        getPositionService.call(
+            { name },
+            (res) => {
+                this.getPositionServicePosResponse(res.valid, res.new_position, name);
+            },
+            (err) => this.getPositionServiceError(err)
+        );
     }
 
     changeLqrAngleThreshold(newThreshold: number): void {
@@ -514,6 +602,10 @@ export class RoslibService {
         this.imuSource.next(msg);
     }
 
+    private emitCurrentNavPositionMessage(msg: PointStampedMessage) {
+        this.currentPositionSource.next(msg.point);
+    }
+
     private toggleLqrControlServicePosResponse(status: number) {
         if (status >= 200 && status < 300) {
             this.toasterService.success('Nice', 'Successfully updated new LQR params');
@@ -587,6 +679,71 @@ export class RoslibService {
 
     private changeLqrAngleThresholdServiceError(err: string) {
         this.toasterService.danger('Error: ' + err, `Failed to update LQR angle threshold`);
+    }
+
+    private navRepositionServicePosResponse(valid: boolean) {
+        if (valid) {
+            this.toasterService.success('Nice', 'Successfully repositioned navigation algorithm');
+        } else {
+            this.toasterService.danger(
+                'Error while requesting reposition',
+                `Navigation node services failure`
+            );
+        }
+    }
+
+    private navRepositionServiceError(err: string) {
+        this.toasterService.danger('Error: ' + err, `Failed to reposition navigation algorithm`);
+    }
+
+    private tagPositionServicePosResponse(valid: boolean) {
+        if (valid) {
+            this.toasterService.success(
+                'Nice',
+                'Successfully tagged a position in the navigation algorithm'
+            );
+        } else {
+            this.toasterService.danger(
+                'Error while tagging position',
+                `Navigation node services failure`
+            );
+        }
+    }
+
+    private tagPositionServiceError(err: string) {
+        this.toasterService.danger(
+            'Error: ' + err,
+            `Failed to tag a position in the navigation algorithm`
+        );
+    }
+
+    private getPositionServicePosResponse(valid: boolean, position: number[], name: string) {
+        if (valid) {
+            if (position.length <= 3) {
+                this.toasterService.success(
+                    `${name} -> x: ${position[0]}, y: ${position[1]}, z: ${position[2]}`,
+                    'Successfully requested a position from the navigation algorithm'
+                );
+                this.getPositionSource.next({ x: position[0], y: position[1], z: position[2] });
+            } else {
+                this.toasterService.danger(
+                    `Error while getting position, invalid response length of ${position.length}`,
+                    `Navigation node services failure`
+                );
+            }
+        } else {
+            this.toasterService.danger(
+                'Error while getting position',
+                `Navigation node services failure`
+            );
+        }
+    }
+
+    private getPositionServiceError(err: string) {
+        this.toasterService.danger(
+            'Error: ' + err,
+            `Failed to get a position from the navigation algorithm`
+        );
     }
 
     private changeLqrRateServicePosResponse(status: number) {

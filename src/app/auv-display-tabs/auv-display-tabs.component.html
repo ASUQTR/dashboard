@@ -1,0 +1,16 @@
+<nb-card>
+    <nb-card-body>
+        <nb-tabset fullWidth (changeTab)="tabUpdated($event)">
+            <nb-tab tabTitle="Motor Throttles" tabIcon="eye-outline" [active]="tab1Active">
+                <app-auv-motor-display></app-auv-motor-display>
+            </nb-tab>
+            <nb-tab tabTitle="Nav Display" tabIcon="compass-outline" [active]="!tab1Active">
+                <app-nav-current-position-display></app-nav-current-position-display>
+                <hr>
+                <app-nav-reposition></app-nav-reposition>
+                <app-nav-tag-position></app-nav-tag-position>
+                <app-nav-get-position></app-nav-get-position>
+            </nb-tab>
+        </nb-tabset>
+    </nb-card-body>
+</nb-card>

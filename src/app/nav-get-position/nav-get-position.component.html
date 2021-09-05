@@ -1,0 +1,8 @@
+<span class="h5">Get a position from a tag's name</span>
+<div class="getPositionInput">
+    <input nbInput type="text" placeholder="name" [formControl]="posName" nbTooltip="Enter the name of the tag you wish to retrieve the position from">
+    <div class="subtitle text-hint">
+        {{ rs.getPositionData | async | vector3d }}
+    </div>
+    <button nbButton status="primary" (click)="getPosition()" [disabled]="!posName.valid"><nb-icon icon="upload"></nb-icon></button>
+</div>
