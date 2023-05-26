@@ -1,7 +1,7 @@
 name: Deploy the code to docker registry with latest-dev and arm-dev tags
 on: [push]
 jobs:
- Build and deploy x86:
+ Build and deploy on x86:
     runs-on: ubuntu-latest
     steps:
       - name: Install Node.js
