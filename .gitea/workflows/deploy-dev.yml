@@ -21,7 +21,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Login to private docker registry
-        run: docker --version && docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} https://docker-registry-submarine.asuqtr.com
+        run: docker --version && docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_URL }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
