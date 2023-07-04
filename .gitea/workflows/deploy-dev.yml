@@ -1,0 +1,37 @@
+name: Deploy the code to docker registry with latest-dev and arm-dev tags
+on: [push]
+jobs:
+ Build and deploy on x86:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+    
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to private docker registry
+        run: docker --version && docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_URL }}
+
+      - name: Build and push
+        run: |
+          docker build -t ${{ secrets.REGISTRY_URL }}/asuqtr_dashboard:latest-dev  .
+          docker push ${{ secrets.REGISTRY_URL }}/asuqtr_dashboard:latest-dev
+
+ Build and deploy on ARM:
+    runs-on: ubuntu-arm-latest
+    steps:
+ 
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to private docker registry
+        run: docker --version && docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_URL }}
+
+      - name: Build and push
+        run: |
+          docker build -t ${{ secrets.REGISTRY_URL }}/asuqtr_dashboard:arm-dev  .
+          docker push ${{ secrets.REGISTRY_URL }}/asuqtr_dashboard:arm-dev
