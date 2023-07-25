@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoslibService } from '../roslib.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-nav-reposition',
@@ -8,9 +8,9 @@ import { FormControl } from '@angular/forms';
     styleUrls: ['./nav-reposition.component.scss'],
 })
 export class NavRepositionComponent implements OnInit {
-    repositionX = new FormControl();
-    repositionY = new FormControl();
-    repositionZ = new FormControl();
+    repositionX = new UntypedFormControl();
+    repositionY = new UntypedFormControl();
+    repositionZ = new UntypedFormControl();
 
     constructor(private rs: RoslibService) {}
 

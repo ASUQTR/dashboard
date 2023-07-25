@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { RoslibService } from '../../roslib.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { RoslibService } from '../../roslib.service';
     styleUrls: ['./change-motors-pwm-offset.component.scss'],
 })
 export class ChangeMotorsPwmOffsetComponent implements OnInit {
-    newPwmOffset = new FormControl(0, [
+    newPwmOffset = new UntypedFormControl(0, [
         Validators.required,
         Validators.min(0),
         Validators.max(100),

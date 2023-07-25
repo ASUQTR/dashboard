@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { RoslibService } from '../../roslib.service';
 
 @Component({
@@ -8,8 +8,8 @@ import { RoslibService } from '../../roslib.service';
     styleUrls: ['./change-lqr-rates.component.scss'],
 })
 export class ChangeLqrRatesComponent implements OnInit {
-    actionServerRate = new FormControl(0, [Validators.required, Validators.min(0)]);
-    lqrRate = new FormControl(0, [Validators.required, Validators.min(0)]);
+    actionServerRate = new UntypedFormControl(0, [Validators.required, Validators.min(0)]);
+    lqrRate = new UntypedFormControl(0, [Validators.required, Validators.min(0)]);
 
     constructor(private rs: RoslibService) {}
 

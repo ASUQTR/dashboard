@@ -1,5 +1,5 @@
 import { Component, OnInit, Optional } from '@angular/core';
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, Validators } from '@angular/forms';
 import { RoslibService } from '../../roslib.service';
 import { NbDialogService } from '@nebular/theme';
 import { LqrParametersSaveDialogComponent } from '../lqr-parameters-save-dialog/lqr-parameters-save-dialog.component';
@@ -11,105 +11,105 @@ import { RestApiService } from '../../rest-api.service';
     styleUrls: ['./control-lqr-parameters.component.scss'],
 })
 export class ControlLqrParametersComponent implements OnInit {
-    matrixQ = new FormArray([
-        new FormControl(0, [
+    matrixQ = new UntypedFormArray([
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
     ]);
-    matrixR = new FormArray([
-        new FormControl(0, [
+    matrixR = new UntypedFormArray([
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),
         ]),
-        new FormControl(0, [
+        new UntypedFormControl(0, [
             Validators.required,
             Validators.min(0),
             Validators.max(Math.pow(2, 127) * (2 - Math.pow(2, -23))),

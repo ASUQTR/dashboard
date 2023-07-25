@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-lqr-parameters-save-dialog',
@@ -8,7 +8,7 @@ import { FormControl } from '@angular/forms';
     styleUrls: ['./lqr-parameters-save-dialog.component.scss'],
 })
 export class LqrParametersSaveDialogComponent implements OnInit {
-    name = new FormControl('');
+    name = new UntypedFormControl('');
 
     constructor(@Optional() protected dialogRef: NbDialogRef<any>) {}
 

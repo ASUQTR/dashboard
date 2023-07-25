@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import '@google/model-viewer';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { RoslibService } from '../../roslib.service';
 import { Euler, Quaternion } from 'three';
 import { ImuMessage, Vector3Message } from 'ngx-roslib';
@@ -13,17 +13,17 @@ import { ImuMessage, Vector3Message } from 'ngx-roslib';
 export class Auv3dModelComponent implements AfterViewInit {
     @ViewChild('auv') auvElement: ElementRef;
     camTarget = '0deg 0deg 1m';
-    pitch = new FormControl({ value: 0, disabled: true }, [
+    pitch = new UntypedFormControl({ value: 0, disabled: true }, [
         Validators.required,
         Validators.min(-359),
         Validators.max(359),
     ]);
-    roll = new FormControl({ value: 0, disabled: true }, [
+    roll = new UntypedFormControl({ value: 0, disabled: true }, [
         Validators.required,
         Validators.min(-359),
         Validators.max(359),
     ]);
-    yaw = new FormControl({ value: 0, disabled: true }, [
+    yaw = new UntypedFormControl({ value: 0, disabled: true }, [
         Validators.required,
         Validators.min(-359),
         Validators.max(359),

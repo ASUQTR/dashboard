@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoslibService } from '../roslib.service';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-nav-get-position',
@@ -8,7 +8,7 @@ import { FormControl, Validators } from '@angular/forms';
     styleUrls: ['./nav-get-position.component.scss'],
 })
 export class NavGetPositionComponent implements OnInit {
-    posName = new FormControl(null, Validators.required);
+    posName = new UntypedFormControl(null, Validators.required);
 
     constructor(public rs: RoslibService) {}
 

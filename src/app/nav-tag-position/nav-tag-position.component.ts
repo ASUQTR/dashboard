@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { RoslibService } from '../roslib.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { RoslibService } from '../roslib.service';
     styleUrls: ['./nav-tag-position.component.scss'],
 })
 export class NavTagPositionComponent implements OnInit {
-    tagName = new FormControl(null, Validators.required);
+    tagName = new UntypedFormControl(null, Validators.required);
 
     constructor(private rs: RoslibService) {}
 

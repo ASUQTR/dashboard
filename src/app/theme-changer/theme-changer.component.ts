@@ -5,7 +5,7 @@
 import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { NbThemeService } from '@nebular/theme';
 import { CookieService } from 'ngx-cookie-service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-theme-changer',
@@ -15,7 +15,7 @@ import { FormControl } from '@angular/forms';
 export class ThemeChangerComponent implements OnInit {
     readonly themeCookieName = 'nbThemeValue';
     themes = ['syspref', 'dark', 'default', 'cosmic'];
-    selectedThemeFormControl = new FormControl();
+    selectedThemeFormControl = new UntypedFormControl();
     selectedTheme = 'syspref';
 
     constructor(
