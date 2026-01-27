@@ -506,7 +506,7 @@ export class RoslibService {
     }
 
     toggleLqrControl(lqrActive: boolean): void {
-        const toggleLqrService = new RosService<{ lqr_active: boolean }, StatusNumber>({
+        const toggleLqrService = new RosService<{ lqr_enabled: boolean }, StatusNumber>({
             ros: this.rbServer,
             name: '/control/toggle_lqr_control',
             serviceType: 'asuqtr_control_node/ToggleLqr',
@@ -514,7 +514,7 @@ export class RoslibService {
 
         toggleLqrService.call(
             {
-                lqr_active: lqrActive,
+                lqr_enabled: lqrActive,
             },
             (res) => this.toggleLqrControlServicePosResponse(res.status),
             (err) => this.toggleLqrControlServiceError(err)
