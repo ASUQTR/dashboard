@@ -40,7 +40,7 @@ export interface ControlInfoMessage {
 }
 
 export interface PcbTempMessage {
-    data?: number | null;
+    data?: boolean | null;
 }
 
 export interface MotorThrottlesMessage {

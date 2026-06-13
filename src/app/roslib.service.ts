@@ -92,7 +92,7 @@ export class RoslibService {
     });
     depthData = this.depthSource.asObservable();
     private pcbTempSource = new BehaviorSubject<PcbTempMessage>({
-        data: 0,
+        data: false,
     });
     pcbTempData = this.pcbTempSource.asObservable();
     private leakSensorDriverSource = new BehaviorSubject<LeakSensorMessage>({
@@ -133,81 +133,63 @@ export class RoslibService {
             this.emitRosoutMessage(msg);
         });
 
-        const motorThrottles = new RosTopic<MotorThrottlesMessage>({
+        // Motor throttles — topic and type renamed in ROS2 rewrite
+        // was: /actuator/motors (asuqtr_actuator_node/ActuatorThrottle)
+        const motorThrottles = new RosTopic({
             ros: this.rbServer,
-            name: '/actuator/motors',
-            messageType: 'asuqtr_actuator_node/ActuatorThrottle',
+            name: 'thruster_cmd',
+            messageType: 'sub_interfaces/ThrusterCommand',
         });
-        motorThrottles.subscribe((msg) => {
-            this.emitMotorThrottlesMessage(msg);
-        });
+        motorThrottles.subscribe((msg) => this.emitMotorThrottlesMessage(msg));
+        // /motors/pulses (motor encoder feedback) removed — no equivalent in ROS2
+        // /control/lqr_active_feedback removed — no equivalent in ROS2 control_node
 
-        const motorThrottlesFeedback = new RosTopic<MotorThrottlesFeedbackMessage>({
+        // Depth sensor — topic renamed, now published as nav_msgs/Odometry
+        // was: /sensors/depth (std_msgs/Float32)
+        const depth = new RosTopic({
             ros: this.rbServer,
-            name: '/motors/pulses',
-            messageType: 'std_msgs/Int16MultiArray',
-        });
-        motorThrottlesFeedback.subscribe((msg) => {
-            this.emitMotorThrottlesFeedbackMessage(msg);
-        });
-
-        const lqrActiveFeedback = new RosTopic<LqrActiveFeedbackMessage>({
-            ros: this.rbServer,
-            name: '/control/lqr_active_feedback',
-            messageType: 'std_msgs/Bool',
-        });
-        lqrActiveFeedback.subscribe((msg) => {
-            this.emitLqrActiveFeedbackMessage(msg);
-        });
-
-        const depth = new RosTopic<DepthMessage>({
-            ros: this.rbServer,
-            name: '/sensors/depth',
-            messageType: 'std_msgs/Float32',
+            name: 'depth',
+            messageType: 'nav_msgs/Odometry',
         });
         depth.subscribe((msg) => this.emitDepthMessage(msg));
 
-        const pcbTemp = new RosTopic<PcbTempMessage>({
+        // Temperature alert — now a boolean GPIO signal, not a temperature value
+        // was: /pcb_temp (std_msgs/Int32)
+        const tempAlert = new RosTopic({
             ros: this.rbServer,
-            name: '/pcb_temp',
-            messageType: 'std_msgs/Int32',
-        });
-        pcbTemp.subscribe((msg) => this.emitPcbTempMessage(msg));
-
-        const leakDriver = new RosTopic<LeakSensorMessage>({
-            ros: this.rbServer,
-            name: '/pod_node/battery_leak_driver',
+            name: 'temperature_alert',
             messageType: 'std_msgs/Bool',
         });
-        leakDriver.subscribe((msg) => this.emitLeakDriverMessage(msg));
+        tempAlert.subscribe((msg) => this.emitPcbTempMessage(msg));
 
-        const leakHelper = new RosTopic<LeakSensorMessage>({
+        // Water leak — consolidated to single sensor
+        // was: /pod_node/battery_leak_driver + /pod_node/battery_leak_helper (ROS1, removed)
+        const waterLeak = new RosTopic({
             ros: this.rbServer,
-            name: '/pod_node/battery_leak_helper',
+            name: 'water_leak',
             messageType: 'std_msgs/Bool',
         });
-        leakHelper.subscribe((msg) => this.emitLeakHelperMessage(msg));
+        waterLeak.subscribe((msg) => this.emitLeakDriverMessage(msg));
+        // leakSensorHelperSource stays at default false — only one water leak sensor in ROS2
 
-        const lqrState = new RosTopic<ControlInfoMessage>({
+        // Odometry — provides current state (position + orientation + velocity) and nav position
+        // replaces: /control/state (Float32MultiArray) + /nav_node/position (PointStamped)
+        const odometry = new RosTopic({
             ros: this.rbServer,
-            name: '/control/state',
-            messageType: 'std_msgs/Float32MultiArray',
+            name: 'odometry/filtered',
+            messageType: 'nav_msgs/Odometry',
         });
-        lqrState.subscribe((msg) => this.emitLqrStateMessage(msg));
+        odometry.subscribe((msg) => this.emitOdometryMessage(msg));
+        // /control/target_state removed — control_node no longer publishes a target state topic
 
-        const lqrTargetState = new RosTopic<ControlInfoMessage>({
+        // LQR angle debug — closest equivalent to old /control/lqr_error
+        // was: /control/lqr_error (std_msgs/Float32MultiArray)
+        const lqrAngles = new RosTopic({
             ros: this.rbServer,
-            name: '/control/target_state',
-            messageType: 'std_msgs/Float32MultiArray',
+            name: 'debug/lqr_angles',
+            messageType: 'std_msgs/Float64MultiArray',
         });
-        lqrTargetState.subscribe((msg) => this.emitLqrTargetStateMessage(msg));
-
-        const lqrError = new RosTopic<ControlInfoMessage>({
-            ros: this.rbServer,
-            name: '/control/lqr_error',
-            messageType: 'std_msgs/Float32MultiArray',
-        });
-        lqrError.subscribe((msg) => this.emitLqrErrorMessage(msg));
+        lqrAngles.subscribe((msg) => this.emitLqrErrorMessage(msg));
 
         const imuData = new RosTopic<ImuMessage>({
             ros: this.rbServer,
@@ -215,13 +197,6 @@ export class RoslibService {
             messageType: 'sensor_msgs/Imu',
         });
         imuData.subscribe((msg) => this.emitImuMessage(msg));
-
-        const currentNavPosition = new RosTopic<PointStampedMessage>({
-            ros: this.rbServer,
-            name: '/nav_node/position',
-            messageType: 'geometry_msgs/PointStamped',
-        });
-        currentNavPosition.subscribe((msg) => this.emitCurrentNavPositionMessage(msg));
     }
 
     private emitRosoutMessage(msg: RosoutMessage) {
@@ -543,19 +518,60 @@ export class RoslibService {
     }
 
     private emitMotorThrottlesMessage(msg: any) {
-        this.motorThrottlesSource.next(msg);
-    }
-
-    private emitLqrActiveFeedbackMessage(msg: any) {
-        this.lqrActiveFeedbackSource.next(msg);
+        // ThrusterCommand has {header, efforts: float64[8]}
+        // Adapt to legacy MotorThrottlesMessage shape so motor-table keeps working
+        this.motorThrottlesSource.next({
+            header: msg.header ?? {},
+            ids: [1, 2, 3, 4, 5, 6, 7, 8],
+            throttles: msg.efforts ?? [],
+        });
     }
 
     private emitDepthMessage(msg: any) {
-        this.depthSource.next(msg);
+        // depth topic is now nav_msgs/Odometry; depth in metres is pose.pose.position.z
+        this.depthSource.next({ data: msg.pose?.pose?.position?.z ?? 0 });
     }
 
     private emitPcbTempMessage(msg: any) {
-        this.pcbTempSource.next(msg);
+        // temperature_alert is now a boolean GPIO signal (true = overtemp alert)
+        this.pcbTempSource.next({ data: msg.data ?? false });
+    }
+
+    private emitOdometryMessage(msg: any) {
+        const pos = msg.pose?.pose?.position ?? { x: 0, y: 0, z: 0 };
+        const ori = msg.pose?.pose?.orientation ?? { x: 0, y: 0, z: 0, w: 1 };
+        const linVel = msg.twist?.twist?.linear ?? { x: 0, y: 0, z: 0 };
+        const angVel = msg.twist?.twist?.angular ?? { x: 0, y: 0, z: 0 };
+        const { roll, pitch, yaw } = this.quaternionToEuler(ori);
+
+        // 12-element state vector [x, y, z, roll, pitch, yaw, u, v, w, p, q, r]
+        this.controlLqrStateSource.next({
+            header: msg.header ?? {},
+            data: [
+                pos.x, pos.y, pos.z,
+                roll, pitch, yaw,
+                linVel.x, linVel.y, linVel.z,
+                angVel.x, angVel.y, angVel.z,
+            ],
+        });
+
+        // Also feed the nav position display
+        this.currentPositionSource.next({ x: pos.x, y: pos.y, z: pos.z });
+    }
+
+    private quaternionToEuler(q: { x: number; y: number; z: number; w: number }): { roll: number; pitch: number; yaw: number } {
+        const sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+        const cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+        const roll = Math.atan2(sinr_cosp, cosr_cosp);
+
+        const sinp = 2 * (q.w * q.y - q.z * q.x);
+        const pitch = Math.abs(sinp) >= 1 ? (Math.PI / 2) * Math.sign(sinp) : Math.asin(sinp);
+
+        const siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+        const cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+        const yaw = Math.atan2(siny_cosp, cosy_cosp);
+
+        return { roll, pitch, yaw };
     }
 
     private emitLeakDriverMessage(msg: any) {
@@ -569,41 +585,12 @@ export class RoslibService {
         this.leakSensorDriverSource.next(msg);
     }
 
-    private emitLeakHelperMessage(msg: any) {
-        const newLeakState = msg?.data ?? false;
-        if (newLeakState && newLeakState !== this.oldLeakStateHelper) {
-            this.toasterService.danger('Leak detected in HELPER pod', 'DANGER', {
-                duration: 0,
-            });
-        }
-        this.oldLeakStateHelper = newLeakState;
-        this.leakSensorHelperSource.next(msg);
-    }
-
-    private emitMotorThrottlesFeedbackMessage(msg: any) {
-        if (msg && msg.data.length === 8) {
-            this.motorThrottlesFeedbackSource.next(msg);
-        }
-    }
-
-    private emitLqrStateMessage(msg: any) {
-        this.controlLqrStateSource.next(msg);
-    }
-
-    private emitLqrTargetStateMessage(msg: any) {
-        this.controlLqrTargetStateSource.next(msg);
-    }
-
     private emitLqrErrorMessage(msg: any) {
         this.controlLqrErrorSource.next(msg);
     }
 
     private emitImuMessage(msg: any) {
         this.imuSource.next(msg);
-    }
-
-    private emitCurrentNavPositionMessage(msg: PointStampedMessage) {
-        this.currentPositionSource.next(msg.point);
     }
 
     private toggleLqrControlServicePosResponse(status: number) {

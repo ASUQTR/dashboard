@@ -9,11 +9,11 @@ import { Observable } from 'rxjs';
     styleUrls: ['./pcb-temp-meter.component.scss'],
 })
 export class PcbTempMeterComponent implements OnInit {
-    temp: Observable<number>;
+    tempAlert: Observable<boolean>;
 
     constructor(private rs: RoslibService) {}
 
     ngOnInit(): void {
-        this.temp = this.rs.pcbTempData.pipe(pluck('data'));
+        this.tempAlert = this.rs.pcbTempData.pipe(pluck('data'));
     }
 }
