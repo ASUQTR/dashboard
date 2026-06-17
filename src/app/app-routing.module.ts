@@ -18,6 +18,10 @@ const routes: Routes = [
         path: 'secondary',
         loadChildren: () => import('./secondary/secondary.module').then((m) => m.SecondaryModule),
     },
+    {
+        path: 'raw-data',
+        loadChildren: () => import('./raw-data/raw-data.module').then((m) => m.RawDataModule),
+    },
     { path: '**', component: PageNotFoundComponent },
 ];
 

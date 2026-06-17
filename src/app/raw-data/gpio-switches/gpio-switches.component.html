@@ -1,0 +1,33 @@
+<nb-card>
+    <nb-card-body>
+        <nb-list>
+            <nb-list-item>
+                <div class="h6">GPIO Switches</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">kill_switch</div>
+                <nb-icon
+                    [icon]="killSwitch ? 'checkmark-circle-2' : 'close-circle'"
+                    [status]="killSwitch ? 'success' : 'danger'"
+                ></nb-icon>
+                <div class="state-text" [class.active]="killSwitch">{{ killSwitch ? 'ACTIVE' : 'INACTIVE' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">magnetic_switch_2</div>
+                <nb-icon
+                    [icon]="magneticSwitch2 ? 'checkmark-circle-2' : 'close-circle'"
+                    [status]="magneticSwitch2 ? 'success' : 'basic'"
+                ></nb-icon>
+                <div class="state-text" [class.active]="magneticSwitch2">{{ magneticSwitch2 ? 'ACTIVE' : 'INACTIVE' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">magnetic_switch_3</div>
+                <nb-icon
+                    [icon]="magneticSwitch3 ? 'checkmark-circle-2' : 'close-circle'"
+                    [status]="magneticSwitch3 ? 'success' : 'basic'"
+                ></nb-icon>
+                <div class="state-text" [class.active]="magneticSwitch3">{{ magneticSwitch3 ? 'ACTIVE' : 'INACTIVE' }}</div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+</nb-card>

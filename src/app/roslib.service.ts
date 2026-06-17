@@ -20,12 +20,15 @@ import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import {
     ControlInfoMessage,
     DepthMessage,
+    Float64MultiArrayMessage,
     LeakSensorMessage,
     LqrActiveFeedbackMessage,
     MotorThrottlesFeedbackMessage,
     MotorThrottlesMessage,
     PcbTempMessage,
+    PoseStampedMessage,
     RosState,
+    TwistWithCovarianceStampedMessage,
 } from './ros-model.enum';
 import { environment } from '../environments/environment';
 import { NbToastrService } from '@nebular/theme';
@@ -115,6 +118,22 @@ export class RoslibService {
     currentPositionData = this.currentPositionSource.asObservable();
     private tagRequestsSource = new Subject<string>();
     tagRequestsData = this.tagRequestsSource.asObservable();
+    private lqrVelocitySource = new BehaviorSubject<Float64MultiArrayMessage>({ data: [] });
+    lqrVelocityData = this.lqrVelocitySource.asObservable();
+    private lqrAccelCmdSource = new BehaviorSubject<Float64MultiArrayMessage>({ data: [] });
+    lqrAccelCmdData = this.lqrAccelCmdSource.asObservable();
+    private lqrDynamicsSource = new BehaviorSubject<Float64MultiArrayMessage>({ data: [] });
+    lqrDynamicsData = this.lqrDynamicsSource.asObservable();
+    private dvlVelocitiesSource = new BehaviorSubject<TwistWithCovarianceStampedMessage>({});
+    dvlVelocitiesData = this.dvlVelocitiesSource.asObservable();
+    private dvlAltitudeSource = new BehaviorSubject<PoseStampedMessage>({});
+    dvlAltitudeData = this.dvlAltitudeSource.asObservable();
+    private killSwitchSource = new BehaviorSubject<LeakSensorMessage>({ data: false });
+    killSwitchData = this.killSwitchSource.asObservable();
+    private magneticSwitch2Source = new BehaviorSubject<LeakSensorMessage>({ data: false });
+    magneticSwitch2Data = this.magneticSwitch2Source.asObservable();
+    private magneticSwitch3Source = new BehaviorSubject<LeakSensorMessage>({ data: false });
+    magneticSwitch3Data = this.magneticSwitch3Source.asObservable();
 
     constructor(public roslibService: NgxRoslibService, private toasterService: NbToastrService) {
         this.rbServer = this.roslibService.connect(environment.rosUrl);
@@ -197,6 +216,62 @@ export class RoslibService {
             messageType: 'sensor_msgs/Imu',
         });
         imuData.subscribe((msg) => this.emitImuMessage(msg));
+
+        const lqrVelocity = new RosTopic<Float64MultiArrayMessage>({
+            ros: this.rbServer,
+            name: 'debug/lqr_velocity',
+            messageType: 'std_msgs/Float64MultiArray',
+        });
+        lqrVelocity.subscribe((msg) => this.lqrVelocitySource.next(msg));
+
+        const lqrAccelCmd = new RosTopic<Float64MultiArrayMessage>({
+            ros: this.rbServer,
+            name: 'debug/lqr_accel_cmd',
+            messageType: 'std_msgs/Float64MultiArray',
+        });
+        lqrAccelCmd.subscribe((msg) => this.lqrAccelCmdSource.next(msg));
+
+        const lqrDynamics = new RosTopic<Float64MultiArrayMessage>({
+            ros: this.rbServer,
+            name: 'debug/lqr_dynamics',
+            messageType: 'std_msgs/Float64MultiArray',
+        });
+        lqrDynamics.subscribe((msg) => this.lqrDynamicsSource.next(msg));
+
+        const dvlVelocities = new RosTopic<TwistWithCovarianceStampedMessage>({
+            ros: this.rbServer,
+            name: 'dvl/velocities',
+            messageType: 'geometry_msgs/TwistWithCovarianceStamped',
+        });
+        dvlVelocities.subscribe((msg) => this.dvlVelocitiesSource.next(msg));
+
+        const dvlAltitude = new RosTopic<PoseStampedMessage>({
+            ros: this.rbServer,
+            name: 'dvl/altitude',
+            messageType: 'geometry_msgs/PoseStamped',
+        });
+        dvlAltitude.subscribe((msg) => this.dvlAltitudeSource.next(msg));
+
+        const killSwitch = new RosTopic<LeakSensorMessage>({
+            ros: this.rbServer,
+            name: 'kill_switch',
+            messageType: 'std_msgs/Bool',
+        });
+        killSwitch.subscribe((msg) => this.killSwitchSource.next(msg));
+
+        const magneticSwitch2 = new RosTopic<LeakSensorMessage>({
+            ros: this.rbServer,
+            name: 'magnetic_switch_2',
+            messageType: 'std_msgs/Bool',
+        });
+        magneticSwitch2.subscribe((msg) => this.magneticSwitch2Source.next(msg));
+
+        const magneticSwitch3 = new RosTopic<LeakSensorMessage>({
+            ros: this.rbServer,
+            name: 'magnetic_switch_3',
+            messageType: 'std_msgs/Bool',
+        });
+        magneticSwitch3.subscribe((msg) => this.magneticSwitch3Source.next(msg));
     }
 
     private emitRosoutMessage(msg: RosoutMessage) {

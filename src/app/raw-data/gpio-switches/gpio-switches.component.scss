@@ -1,0 +1,18 @@
+.label {
+    font-family: monospace;
+    flex: 1;
+}
+
+nb-icon {
+    margin-right: 0.5rem;
+}
+
+.state-text {
+    opacity: 0.5;
+    font-size: 0.8rem;
+
+    &.active {
+        opacity: 1;
+        font-weight: bold;
+    }
+}

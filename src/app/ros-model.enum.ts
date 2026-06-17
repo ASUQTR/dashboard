@@ -53,3 +53,25 @@ export interface MotorThrottlesFeedbackMessage {
     header: RosMsgHeader;
     data?: number[] | null;
 }
+
+export interface Float64MultiArrayMessage {
+    data?: number[] | null;
+}
+
+export interface TwistWithCovarianceStampedMessage {
+    header?: any;
+    twist?: {
+        twist?: {
+            linear?: { x: number; y: number; z: number };
+            angular?: { x: number; y: number; z: number };
+        };
+    };
+}
+
+export interface PoseStampedMessage {
+    header?: any;
+    pose?: {
+        position?: { x: number; y: number; z: number };
+        orientation?: { x: number; y: number; z: number; w: number };
+    };
+}

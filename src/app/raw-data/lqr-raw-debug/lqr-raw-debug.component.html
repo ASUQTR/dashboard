@@ -1,0 +1,42 @@
+<nb-card>
+    <nb-card-body>
+        <nb-list>
+            <nb-list-item>
+                <div class="h6">LQR Raw Debug</div>
+            </nb-list-item>
+
+            <nb-list-item class="section-header">
+                <div class="topic-name">debug/lqr_velocity</div>
+            </nb-list-item>
+            <nb-list-item *ngFor="let val of lqrVelocity; index as i">
+                <div class="index">[{{ i }}]</div>
+                <div class="value">{{ val | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item *ngIf="lqrVelocity.length === 0">
+                <div class="no-data">No data</div>
+            </nb-list-item>
+
+            <nb-list-item class="section-header">
+                <div class="topic-name">debug/lqr_accel_cmd</div>
+            </nb-list-item>
+            <nb-list-item *ngFor="let val of lqrAccelCmd; index as i">
+                <div class="index">[{{ i }}]</div>
+                <div class="value">{{ val | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item *ngIf="lqrAccelCmd.length === 0">
+                <div class="no-data">No data</div>
+            </nb-list-item>
+
+            <nb-list-item class="section-header">
+                <div class="topic-name">debug/lqr_dynamics</div>
+            </nb-list-item>
+            <nb-list-item *ngFor="let val of lqrDynamics; index as i">
+                <div class="index">[{{ i }}]</div>
+                <div class="value">{{ val | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item *ngIf="lqrDynamics.length === 0">
+                <div class="no-data">No data</div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+</nb-card>

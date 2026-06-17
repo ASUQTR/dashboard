@@ -1,0 +1,53 @@
+<nb-card>
+    <nb-card-body>
+        <nb-list>
+            <nb-list-item>
+                <div class="h6">DVL Raw Data</div>
+            </nb-list-item>
+
+            <nb-list-item class="section-header">
+                <div class="topic-name">dvl/velocities</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">linear.x</div>
+                <div class="value">{{ velocities?.twist?.twist?.linear?.x | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">linear.y</div>
+                <div class="value">{{ velocities?.twist?.twist?.linear?.y | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">linear.z</div>
+                <div class="value">{{ velocities?.twist?.twist?.linear?.z | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">angular.x</div>
+                <div class="value">{{ velocities?.twist?.twist?.angular?.x | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">angular.y</div>
+                <div class="value">{{ velocities?.twist?.twist?.angular?.y | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">angular.z</div>
+                <div class="value">{{ velocities?.twist?.twist?.angular?.z | number: '.4' }}</div>
+            </nb-list-item>
+
+            <nb-list-item class="section-header">
+                <div class="topic-name">dvl/altitude</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">position.x</div>
+                <div class="value">{{ altitude?.pose?.position?.x | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">position.y</div>
+                <div class="value">{{ altitude?.pose?.position?.y | number: '.4' }}</div>
+            </nb-list-item>
+            <nb-list-item>
+                <div class="label">position.z</div>
+                <div class="value">{{ altitude?.pose?.position?.z | number: '.4' }}</div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+</nb-card>
