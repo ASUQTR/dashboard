@@ -1,8 +1,15 @@
-# ASUQTR  -  Joy Webpage
+# Manual Assisted Pilot Dashboard
 
-ASUQTR - Webpage for sending Xbox controller data to ROS network via rosbridge websocket. The data is sent to /joy topic in raw/unprocessed format.
+Standalone browser dashboard for MANUAL_ASSISTED control tests.
 
-1. Put file from Webpage folder into /var/www/html/
-2. Start rosbridge with : 
+Features:
 
-    <pre><code>roslaunch rosbridge_server rosbridge_websocket.launch</code></pre>
+- gamepad commands on `/dashboard/gamepad`;
+- Start/Select safety controls;
+- Unity cameras through rosbridge with physical-camera fallback;
+- runtime depth-limit configuration;
+- trajectory recording and playback;
+- control and connection diagnostics.
+
+Serve `index.html`, enter the ROS host address, then select **Connecter**.
+The ROS2 launch must provide rosbridge on port `9090`.
