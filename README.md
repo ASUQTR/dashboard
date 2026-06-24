@@ -11,5 +11,9 @@ Features:
 - trajectory recording and playback;
 - control and connection diagnostics.
 
-Serve `index.html`, enter the ROS host address, then select **Connecter**.
-The ROS2 launch must provide rosbridge on port `9090`.
+The complete dashboard source is stored in `manual_assisted_dashboard.html`.
+`index.html` is the same page under the default filename expected by a web
+server.
+
+Serve `index.html`, enter the ROS host address, then select **Connecter**. The
+ROS2 launch must provide rosbridge on port `9090`.
