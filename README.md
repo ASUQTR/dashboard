@@ -11,9 +11,15 @@ Features:
 - trajectory recording and playback;
 - control and connection diagnostics.
 
-The complete dashboard source is stored in `manual_assisted_dashboard.html`.
-`index.html` is the same page under the default filename expected by a web
-server.
+The canonical dashboard source is `manual_assisted_dashboard.html`.
+`index.html` only redirects web servers to that file.
+
+The ROS workspace keeps a generated copy for its standalone pool-test launch.
+After changing the dashboard, update that copy with:
+
+```bash
+./sync_ros2_copy.sh
+```
 
 Serve `index.html`, enter the ROS host address, then select **Connecter**. The
 ROS2 launch must provide rosbridge on port `9090`.
