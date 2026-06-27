@@ -9,6 +9,8 @@ Features:
 - Unity cameras through rosbridge with physical-camera fallback;
 - runtime depth-limit configuration;
 - trajectory recording and playback;
+- live odometry, target error, thruster and safety telemetry;
+- persistent ROS event stream for switches, playback, topics and rosbridge;
 - control and connection diagnostics.
 
 The canonical dashboard source is `manual_assisted_dashboard.html`.
